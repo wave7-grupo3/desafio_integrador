@@ -18,7 +18,7 @@ public class InboundOrderController {
     public IInboundOrderService service;
 
     @PostMapping
-    public ResponseEntity<BatchStockDTO> save(@RequestBody InboundOrder inboundOrder) {
+    public ResponseEntity<BatchStockDTO> save(@RequestBody InboundOrder inboundOrder) throws Exception {
         return new ResponseEntity<>(service.save(inboundOrder), HttpStatus.OK);
     }
 

@@ -6,7 +6,7 @@ import com.group03.desafio_integrador.entities.InboundOrder;
 import java.util.List;
 
 public interface IInboundOrderService {
-    BatchStockDTO save(InboundOrder inboundOrder);
+    BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
 
     List<InboundOrder> getAll();
 }
