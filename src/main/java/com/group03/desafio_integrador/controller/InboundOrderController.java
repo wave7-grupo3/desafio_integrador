@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.controller;
 
+import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.InboundOrder;
 import com.group03.desafio_integrador.service.IInboundOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ public class InboundOrderController {
     public IInboundOrderService service;
 
     @PostMapping
-    public ResponseEntity<InboundOrder> save(@RequestBody InboundOrder inboundOrder) {
+    public ResponseEntity<BatchStockDTO> save(@RequestBody InboundOrder inboundOrder) {
         return new ResponseEntity<>(service.save(inboundOrder), HttpStatus.OK);
     }
 
