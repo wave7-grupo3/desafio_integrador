@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -20,25 +21,25 @@ public class Batch {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long batchId;
 
-    private Long productId;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "product_id")
+    private ProductAdvertising productId;
 
     private Float currentTemperature;
 
     private Integer productQuantity;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     private LocalDate fabricationDate;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss", timezone="GMT")
     private LocalDateTime fabricationTime;
 
     private Float volume;
 
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     private LocalDate expirationDate;
 
     private BigDecimal price;
-
-    @ManyToOne
-    @JoinColumn(name = "inbound_order_id")
-    @JsonIgnoreProperties("batchList")
-    private InboundOrder inboundOrder;
 
 }
