@@ -22,7 +22,6 @@ public class Batch {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long batchId;
 
     @OneToOne(fetch = FetchType.EAGER)

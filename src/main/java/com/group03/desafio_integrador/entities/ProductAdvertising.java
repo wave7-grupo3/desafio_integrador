@@ -52,5 +52,8 @@ public class ProductAdvertising {
     @Valid
     private Seller seller;
 
+    @Valid
+    private CategoryEnum category;
+
 
 }

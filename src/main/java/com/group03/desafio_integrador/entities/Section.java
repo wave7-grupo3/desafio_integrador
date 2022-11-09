@@ -27,6 +27,9 @@ public class Section {
     @NotBlank
     private String name;
 
+    @NotNull
+    private Double capacity;
+
     @Valid
     private CategoryEnum category;
 
