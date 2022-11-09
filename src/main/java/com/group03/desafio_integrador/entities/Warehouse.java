@@ -6,6 +6,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -19,17 +22,17 @@ public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @NotNull
     private Long warehouseId;
 
+    @NotNull
+    @DecimalMin(value = "100", message = "The minimum warehouse capacity value is 100m²")
     private Double capacity;
-
-//    @OneToMany(mappedBy = "warehouse", fetch = FetchType.LAZY)
-//    @JsonIgnoreProperties("warehouse")
-//    private List<Section> sectionList;
 
     @JsonIgnore
     @OneToOne
     @JoinColumn(name = "manager_id")
+    @Valid
     private Manager manager;
 
 }
