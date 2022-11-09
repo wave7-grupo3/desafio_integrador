@@ -19,15 +19,36 @@ public class InboundOrderService implements IInboundOrderService{
 
     private final InboundOrderRepository inboundOrderRepository;
 
-    private final ProductAdvertisingService productService;
+    private final IProductAdvertisingService productService;
 
-    private final WarehouseService warehouseService;
+    private final IWarehouseService warehouseService;
 
-    private final SectionService sectionService;
+    private final ISectionService sectionService;
+
+    private final IBatchService batchService;
 
     @Override
     public List<InboundOrder> getAll() {
         return inboundOrderRepository.findAll();
+    }
+
+    @Override
+    public Batch update(Batch batch) {
+        Batch oldBatch = batchService.getById(batch.getBatchId());
+
+        Float updateVolume = oldBatch.getVolume() - batch.getVolume();
+
+        Section section = sectionService.findByCategory(oldBatch.getProductId().getCategory());
+
+        if ((updateVolume + section.getCapacity()) < 0) {
+            throw new NotFoundException("Capacity not available");
+        }
+
+        section.setCapacity(updateVolume + section.getCapacity());
+
+        sectionService.save(section);
+
+        return batchService.save(batch);
     }
 
     @Override
