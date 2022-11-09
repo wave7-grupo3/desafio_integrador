@@ -43,6 +43,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
                 .timeStamp(LocalDateTime.now())
+                .errors(ex.getErrors())
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
     }
