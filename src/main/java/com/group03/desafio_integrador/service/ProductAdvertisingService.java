@@ -27,10 +27,11 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por retornar o produto de acordo com o Id informado.
-     * @author Gabriel Morais
+     *
      * @param id - Long
      * @return ProductAdvertising - Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
+     * @author Gabriel Morais
      */
     @Override
     public ProductAdvertising getById(Long id) throws NotFoundException {
@@ -40,9 +41,10 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por retornar todos os produtos cadastrados.
-     * @author Mariana Saraiva
+     *
      * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
+     * @author Mariana Saraiva
      */
     @Override
     public List<ProductAdvertising> getAll() throws NotFoundException {
@@ -56,10 +58,11 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por retornar todos os produtos cadastrados por categoria.
-     * @author Mariana Saraiva
+     *
      * @param category - String
      * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
+     * @author Mariana Saraiva
      */
     @Override
     public List<ProductAdvertising> getAllByCategory(String category) {
@@ -82,7 +85,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
         Set<ProductAdvertising> products = new HashSet<>();
 
-        for(ProductDTO product : purchase.getProducts()) {
+        for (ProductDTO product : purchase.getProducts()) {
             products.add(getById(product.getProductId()));
         }
 
@@ -131,6 +134,13 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 errorDetails.add(
                         ValidationErrorDetail.builder()
                                 .field("productQuantity").message("Product " + idProduct + " quantity not available in stock!")
+                                .build());
+            }
+
+            if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
+                errorDetails.add(
+                        ValidationErrorDetail.builder()
+                                .field("expirationDate").message("Product " + idProduct + " with validation date expired!")
                                 .build());
             }
 
