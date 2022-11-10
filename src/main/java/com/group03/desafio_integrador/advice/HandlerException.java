@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.advice;
 
+import com.group03.desafio_integrador.advice.exeptions.NotAcceptableException;
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -62,5 +63,16 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .errors(ex.getErrors())
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(NotAcceptableException.class)
+    public ResponseEntity<ExceptionDetails> handlerNotAcceptableException(NotAcceptableException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Not Exception!")
+                .status(HttpStatus.NOT_ACCEPTABLE.value())
+                .message(ex.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
     }
 }
