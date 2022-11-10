@@ -15,12 +15,25 @@ public class BatchService implements IBatchService {
 
     private final BatchRepository repository;
 
+    /**
+     * Método responsável por retornar o lote de acordo com o Id informado.
+     * @author Gabriel Morais
+     * @param id - Long
+     * @return Batch - Retorna uma entidade do tipo Batch.
+     * @throws NotFoundException
+     */
     @Override
     public Batch getById(Long id) throws NotFoundException {
         Optional<Batch> batch = repository.findById(id);
         return batch.orElseThrow(() -> new NotFoundException("Batch not found!"));
     }
 
+    /**
+     * Método responsável por salvar um novo lote.
+     * @author Gabriel Morais
+     * @param batch - Batch
+     * @return Batch - Retorna uma entidade do tipo Batch.
+     */
     @Override
     public Batch save(Batch batch) {
         return repository.save(batch);

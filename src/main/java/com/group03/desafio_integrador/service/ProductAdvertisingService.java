@@ -15,6 +15,13 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     private final ProductAdvertisingRepository repository;
 
+    /**
+     * Método responsável por retornar o produto de acordo com o Id informado.
+     * @author Gabriel Morais
+     * @param id - Long
+     * @return ProductAdvertising - Retorna uma entidade do tipo ProductAdvertising.
+     * @throws NotFoundException
+     */
     @Override
     public ProductAdvertising getById(Long id) throws NotFoundException {
         Optional<ProductAdvertising> product = repository.findById(id);
