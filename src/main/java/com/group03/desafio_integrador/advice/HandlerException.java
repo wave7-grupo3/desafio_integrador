@@ -16,6 +16,16 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class HandlerException extends ResponseEntityExceptionHandler {
+
+    /**
+     * Método responsável pelo tratamento das exceções geradas ao validar os campos de uma entidade.
+     * @author Ingrid Paulino
+     * @param ex - MethodArgumentNotValidException
+     * @param headers - HttpHeaders
+     * @param status - HttpStatus
+     * @param request - WebRequest
+     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     */
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<ValidationErrorDetail> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> ValidationErrorDetail.builder()
@@ -36,6 +46,12 @@ public class HandlerException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errorDetail, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
+    /**
+     * Método responsável pelo tratamento das exceções geradas quando a solicitação não for encontrada.
+     * @author Ingrid Paulino
+     * @param ex - NotFoundException
+     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionDetails> handlerNotFoundException(NotFoundException ex) {
         ExceptionDetails exceptionDetails = ExceptionDetails.builder()
