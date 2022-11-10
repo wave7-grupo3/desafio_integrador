@@ -31,10 +31,4 @@ public class Buyer {
     @Email
     private String email;
 
-    @OneToMany
-    @Valid
-    @JsonIgnoreProperties("buyer")
-    private List<ShoppingCart> shoppingCartList;
-
-
 }
