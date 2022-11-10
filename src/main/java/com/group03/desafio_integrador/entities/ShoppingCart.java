@@ -39,7 +39,7 @@ public class ShoppingCart {
     @Valid
     private OrderStatusEnum orderStatus;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Valid
     @JoinColumn(name = "buyer_id")
     @JsonIgnoreProperties("shoppingCartList")
