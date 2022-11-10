@@ -99,7 +99,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param Warehouse - warehouseId
      * @throws Exception
      */
-    private void validateWarehouse(Warehouse warehouseId) throws Exception {
+    public void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
 //        if (warehouse.getManager() == null) {
@@ -139,7 +139,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param InboundOrder - inboundOrder
      * @throws NotFoundException
      */
-    private void validateSection(InboundOrder inboundOrder) {
+    public void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
         Section sectionExists = sectionService.getById(section.getSectionId());
