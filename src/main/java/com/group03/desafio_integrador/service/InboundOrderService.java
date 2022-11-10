@@ -27,11 +27,22 @@ public class InboundOrderService implements IInboundOrderService{
 
     private final IBatchService batchService;
 
+    /**
+     * Método responsável por listar todos os pedidos de ordem do armazem.
+     * @author Gabriel Morais
+     * @return List<InboundOrder> - Retorna uma entidade do tipo InboundOrder.
+     */
     @Override
     public List<InboundOrder> getAll() {
         return inboundOrderRepository.findAll();
     }
 
+    /**
+     * Método responsável por atualizar as informações do lote contido no armazem e validar se a capacidade do armazem suporta o recebimento da carga.
+     * @author Gabriel Morais
+     * @param Batch - batch
+     * @return Batch - Retorna uma entidade do tipo Batch.
+     */
     @Override
     public Batch update(Batch batch) {
         Batch oldBatch = batchService.getById(batch.getBatchId());
@@ -51,6 +62,13 @@ public class InboundOrderService implements IInboundOrderService{
         return batchService.save(batch);
     }
 
+    /**
+     * Método responsável por salvar um novo lote no pedido de ordem do armazem.
+     * @author Gabriel Morais
+     * @param InboundOrder - inboundOrder
+     * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
+     * @throws Exception
+     */
     @Override
     public BatchStockDTO save(InboundOrder inboundOrder) throws Exception {
         validateOrder(inboundOrder);
@@ -61,6 +79,12 @@ public class InboundOrderService implements IInboundOrderService{
         return dto;
     }
 
+    /**
+     * Método responsável por realizar a validação do pedido de ordem.
+     * @author Gabriel Morais
+     * @param InboundOrder - inboundOrder
+     * @throws Exception
+     */
     public void validateOrder(InboundOrder inboundOrder) throws Exception {
         List<Batch> batchList = inboundOrder.getBatchList();
 
@@ -69,6 +93,12 @@ public class InboundOrderService implements IInboundOrderService{
         validateSection(inboundOrder);
     }
 
+    /**
+     * Método responsável por realizar a verificação se o armazem existe.
+     * @author Gabriel Morais
+     * @param Warehouse - warehouseId
+     * @throws Exception
+     */
     private void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
@@ -77,6 +107,12 @@ public class InboundOrderService implements IInboundOrderService{
 //        }
     }
 
+    /**
+     * Método responsável por realizar a verificação das informações dos produtos no lote.
+     * @author Gabriel Morais
+     * @param List<Batch> - batchList
+     * @throws NotFoundException
+     */
     public void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
@@ -97,6 +133,12 @@ public class InboundOrderService implements IInboundOrderService{
         }
     }
 
+    /**
+     * Método responsável por realizar a verificação da sessão.
+     * @author Gabriel Morais
+     * @param InboundOrder - inboundOrder
+     * @throws NotFoundException
+     */
     private void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
