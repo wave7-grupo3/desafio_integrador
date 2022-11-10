@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -55,5 +56,6 @@ public class ProductAdvertising {
     @Valid
     private CategoryEnum category;
 
+    private BigDecimal productPrice;
 
 }
