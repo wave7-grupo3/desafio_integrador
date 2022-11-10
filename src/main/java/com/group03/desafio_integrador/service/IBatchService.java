@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
+import com.group03.desafio_integrador.entities.ProductAdvertising;
 
 public interface IBatchService {
 
@@ -22,6 +23,6 @@ public interface IBatchService {
      */
     Batch save(Batch batch);
 
-    Batch findBatchByProductId(Long id);
+    Batch findBatchByProductId(ProductAdvertising id);
 
 }

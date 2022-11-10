@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
+import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.repository.BatchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,9 +40,7 @@ public class BatchService implements IBatchService {
     }
 
     @Override
-    public Batch findBatchByProductId(Long id) {
-        return repository.findBatchByProductId(id);
+    public Batch findBatchByProductId(ProductAdvertising id) {
+        return repository.findByProductId(id);
     }
-
-
 }
