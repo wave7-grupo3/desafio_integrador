@@ -2,7 +2,6 @@ package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
-import com.group03.desafio_integrador.entities.ProductAdvertising;
 
 public interface IBatchService {
 
@@ -22,4 +21,7 @@ public interface IBatchService {
      * @return Batch - Retorna uma entidade do tipo Batch.
      */
     Batch save(Batch batch);
+
+    Batch findBatchByProductId(Long id);
+
 }
