@@ -11,4 +11,6 @@ public interface ICartProductService {
     CartProduct save(CartProduct cartProduct);
 
     List<CartProduct> saveAll(List<CartProduct> listCart);
+
+    List<CartProduct> getCartProducts(Long id);
 }
