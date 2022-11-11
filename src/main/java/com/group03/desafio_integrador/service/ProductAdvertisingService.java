@@ -79,17 +79,12 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     @Override
     public ShoppingCartTotalDTO registerOrder(PurchaseOrderDTO purchase) {
-
         verifyStock(purchase);
-
+        
         Buyer buyer = buyerService.getById(purchase.getBuyerId());
-
+        
         Set<ProductAdvertising> products = new HashSet<>();
-
-
-//        for (ProductDTO product : purchase.getProducts()) {
-//            products.add(getById(product.getProductId()));
-//        }
+        
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (ProductDTO product : purchase.getProducts()) {
@@ -101,15 +96,22 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
-//                .productAdvertisingList(products)
                 .buyer(buyer)
                 .date(LocalDate.now())
                 .orderStatus(OrderStatusEnum.ABERTO)
                 .totalCartPrice(Double.valueOf(String.valueOf(totalPrice)))
                 .build();
 
-        ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
+        saveShoppingCart(products, shoppingCart);
 
+        return ShoppingCartTotalDTO.builder()
+                .totalPrice(Double.valueOf(String.valueOf(totalPrice)))
+                .build();
+    }
+
+    // Associa o produto ao carrinho
+    private void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
+        ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
         List<CartProduct> cartProductList = new ArrayList<>();
 
         for (ProductAdvertising product : products) {
@@ -120,15 +122,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                     .build();
 
             cartProductList.add(cartProduct);
-
         }
-
         cartService.saveAll(cartProductList);
-
-        return ShoppingCartTotalDTO.builder()
-                .totalPrice(Double.valueOf(String.valueOf(totalPrice)))
-                .build();
-
     }
 
     public void verifyStock(PurchaseOrderDTO purchase) {
@@ -138,46 +133,48 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
             ProductAdvertising productId = ProductAdvertising.builder().productId(product.getProductId()).build();
             Batch batch = batchService.findBatchByProductId(productId);
 
-            if (batch == null) {
-                throw new NotFoundException("No batch found with this product!");
-            }
+            if (batch == null) throw new NotFoundException("No batch found with this product!");
 
             Long idProduct = batch.getProductId().getProductId();
+            verifyProductExists(errorDetails, idProduct);
+            verifyProductStockQuantity(errorDetails, product, batch, idProduct);
+            verifyProductExpirationDate(errorDetails, batch, idProduct);
 
-            try {
-                getById(idProduct);
-
-            } catch (Exception ex) {
-                errorDetails.add(
-                        ValidationErrorDetail.builder()
-                                .field("productId").message("Product " + idProduct + " not found!")
-                                .build());
-            }
-
-            if (batch.getProductQuantity() >= product.getQuantity()) {
-                Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
-                batch.setProductQuantity(updatedQuantity);
-            } else {
-                errorDetails.add(
-                        ValidationErrorDetail.builder()
-                                .field("productQuantity").message("Product " + idProduct + " quantity not available in stock!")
-                                .build());
-            }
-
-            if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
-                errorDetails.add(
-                        ValidationErrorDetail.builder()
-                                .field("expirationDate").message("Product " + idProduct + " with validation date expired!")
-                                .build());
-            }
-
-            if (!errorDetails.isEmpty()) {
-                throw new NotFoundException("Products not found", errorDetails);
-            }
-
+            if (!errorDetails.isEmpty()) throw new NotFoundException("Products not found", errorDetails);
+            
             batchService.save(batch);
-
         }
+    }
 
+    private static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+        if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
+            errorDetails.add(
+                    ValidationErrorDetail.builder()
+                            .field("expirationDate").message("Product " + idProduct + " with validation date expired!")
+                            .build());
+        }
+    }
+
+    private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
+        if (batch.getProductQuantity() >= product.getQuantity()) {
+            Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
+            batch.setProductQuantity(updatedQuantity);
+        } else {
+            errorDetails.add(
+                    ValidationErrorDetail.builder()
+                            .field("productQuantity").message("Product " + idProduct + " quantity not available in stock!")
+                            .build());
+        }
+    }
+
+    private void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
+        try {
+            getById(idProduct);
+        } catch (Exception ex) {
+            errorDetails.add(
+                    ValidationErrorDetail.builder()
+                            .field("productId").message("Product " + idProduct + " not found!")
+                            .build());
+        }
     }
 }
