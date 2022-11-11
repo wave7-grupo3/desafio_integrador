@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.entities.Warehouse;
@@ -18,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -48,5 +50,14 @@ class WarehouseServiceTest {
 
         assertThat(warehouseById).isNotNull();
         assertThat(warehouseById).isEqualTo(mockWarehouse);
+    }
+
+    @Test
+    void getById_returnRunTimeException_whenWarehouseIdNotFound() {
+        BDDMockito.when(warehouseRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> warehouseService.getById(1L));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Warehouse not found!");
     }
 }
