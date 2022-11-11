@@ -10,6 +10,7 @@ import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -85,8 +86,17 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
         Set<ProductAdvertising> products = new HashSet<>();
 
+
+//        for (ProductDTO product : purchase.getProducts()) {
+//            products.add(getById(product.getProductId()));
+//        }
+        BigDecimal totalPrice = BigDecimal.ZERO;
+
         for (ProductDTO product : purchase.getProducts()) {
             products.add(getById(product.getProductId()));
+            ProductAdvertising productAdvertising = getById(product.getProductId());
+            BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
+            totalPrice = totalPrice.add(productPrice);
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
@@ -99,7 +109,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         shoppingCartService.save(shoppingCart);
 
         return ShoppingCartTotalDTO.builder()
-                .totalPrice(10.0)
+                .totalPrice(Double.valueOf(String.valueOf(totalPrice)))
                 .build();
 
     }
