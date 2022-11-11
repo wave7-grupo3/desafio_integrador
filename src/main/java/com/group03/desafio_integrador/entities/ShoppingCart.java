@@ -39,9 +39,12 @@ public class ShoppingCart {
     @Valid
     private OrderStatusEnum orderStatus;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Valid
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
-    @JsonIgnoreProperties("shoppingCartList")
+    @JsonIgnoreProperties("orderList")
     private Buyer buyer;
+
+    private Double totalCartPrice;
+
 }

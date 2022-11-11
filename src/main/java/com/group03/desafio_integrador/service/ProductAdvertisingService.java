@@ -97,6 +97,9 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
             ProductAdvertising productAdvertising = getById(product.getProductId());
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
+
+            // buyer.getOrderList().add(product);
+
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
@@ -104,6 +107,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .buyer(buyer)
                 .date(LocalDate.now())
                 .orderStatus(OrderStatusEnum.ABERTO)
+                .totalCartPrice(Double.valueOf(String.valueOf(totalPrice)))
                 .build();
 
         shoppingCartService.save(shoppingCart);
