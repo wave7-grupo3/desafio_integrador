@@ -26,6 +26,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     private final IBatchService batchService;
 
+    private final ICartProductService cartService;
+
     /**
      * Método responsável por retornar o produto de acordo com o Id informado.
      *
@@ -93,13 +95,11 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (ProductDTO product : purchase.getProducts()) {
-            products.add(getById(product.getProductId()));
             ProductAdvertising productAdvertising = getById(product.getProductId());
+            productAdvertising.setQuantity(product.getQuantity());
+            products.add(getById(product.getProductId()));
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
-
-            // buyer.getOrderList().add(product);
-
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
@@ -110,7 +110,22 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .totalCartPrice(Double.valueOf(String.valueOf(totalPrice)))
                 .build();
 
-        shoppingCartService.save(shoppingCart);
+        ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
+
+        List<CartProduct> cartProductList = new ArrayList<>();
+
+        for (ProductAdvertising product : products) {
+            CartProduct cartProduct = CartProduct.builder()
+                    .productAdvertising(product)
+                    .shoppingCart(cartSaved)
+                    .quantity(product.getQuantity())
+                    .build();
+
+            cartProductList.add(cartProduct);
+
+        }
+
+        cartService.saveAll(cartProductList);
 
         return ShoppingCartTotalDTO.builder()
                 .totalPrice(Double.valueOf(String.valueOf(totalPrice)))
