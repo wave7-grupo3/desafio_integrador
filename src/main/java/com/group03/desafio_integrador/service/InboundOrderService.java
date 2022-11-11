@@ -75,8 +75,7 @@ public class InboundOrderService implements IInboundOrderService {
 
         InboundOrder order = inboundOrderRepository.save(inboundOrder);
 
-        BatchStockDTO dto = BatchStockDTO.builder().batchStock(order.getBatchList()).build();
-        return dto;
+        return BatchStockDTO.builder().batchStock(order.getBatchList()).build();
     }
 
     /**
@@ -99,6 +98,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Warehouse - warehouseId
      * @throws Exception
      */
+    // TODO: fazer exception específico
     private void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
@@ -119,7 +119,7 @@ public class InboundOrderService implements IInboundOrderService {
         for (Batch batch: batchList) {
             Long idProduct = batch.getProductId().getProductId();
             try {
-                ProductAdvertising productAdvertising = productService.getById(idProduct);
+                productService.getById(idProduct);
             } catch (Exception ex) {
                 errorDetails.add(
                         ValidationErrorDetail.builder()

@@ -27,6 +27,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * @param request - WebRequest
      * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
      */
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<ValidationErrorDetail> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> ValidationErrorDetail.builder()

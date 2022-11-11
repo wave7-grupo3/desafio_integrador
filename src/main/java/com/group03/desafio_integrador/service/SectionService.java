@@ -31,7 +31,6 @@ public class SectionService implements ISectionService {
      * @param category - CategoryEnum
      * @return Section - Retorna uma entidade do tipo Section.
      */
-    // TODO: 11/11/22 adicionar excecao caso categoria nao exista 
     @Override
     public Section findByCategory(CategoryEnum category) {
         Section sectionCategory = repository.findByCategory(category);

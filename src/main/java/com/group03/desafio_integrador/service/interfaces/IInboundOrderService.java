@@ -15,6 +15,8 @@ public interface IInboundOrderService {
      * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
      * @throws Exception
      */
+
+    // TODO: implementar Exception específica
     BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
 
     /**

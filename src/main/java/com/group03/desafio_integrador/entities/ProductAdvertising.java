@@ -44,10 +44,6 @@ public class ProductAdvertising {
 
     private String description;
 
-    // TODO: revisar atributos ao aplicar regra de negócio para carrinho de compras
-//     private BigDecimal productPrice;
-    // private Integer productQuantity;
-
     @ManyToOne
     @JoinColumn(name = "seller_id")
     @JsonIgnoreProperties("productAdvertisingList")

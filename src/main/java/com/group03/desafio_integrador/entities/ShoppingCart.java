@@ -24,15 +24,6 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shoppingCartId;
 
-//    @ManyToMany
-//    @JoinTable(
-//            name = "cart_product",
-//            joinColumns = @JoinColumn(name = "shopping_cart_id"),
-//            inverseJoinColumns = @JoinColumn(name = "product_id")
-//    )
-//    @Valid
-//    private Set<ProductAdvertising> productAdvertisingList;
-
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     @NotNull
     private LocalDate date;
