@@ -1,12 +1,10 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.ExceptionDetails;
 import com.group03.desafio_integrador.advice.ValidationErrorDetail;
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
-import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -99,7 +97,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param Warehouse - warehouseId
      * @throws Exception
      */
-    public void validateWarehouse(Warehouse warehouseId) throws Exception {
+    private void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
         if (warehouse.getManager() == null) {
@@ -113,7 +111,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param List<Batch> - batchList
      * @throws NotFoundException
      */
-    public void validateProducts(List<Batch> batchList) {
+    private void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (Batch batch: batchList) {
@@ -139,7 +137,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param InboundOrder - inboundOrder
      * @throws NotFoundException
      */
-    public void validateSection(InboundOrder inboundOrder) {
+    private void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
         Section sectionExists = sectionService.getById(section.getSectionId());
@@ -165,6 +163,4 @@ public class InboundOrderService implements IInboundOrderService{
         sectionExists.setCapacity(sectionExists.getCapacity() - totalVolumeBatch);
         inboundOrder.setSectionId(sectionExists);
     }
-
-
 }
