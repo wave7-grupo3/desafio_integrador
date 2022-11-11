@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
@@ -44,6 +45,7 @@ public class ShoppingCart {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     @JsonIgnoreProperties("orderList")
+    @JsonIgnore
     private Buyer buyer;
 
     private Double totalCartPrice;

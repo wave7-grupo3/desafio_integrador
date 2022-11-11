@@ -5,8 +5,10 @@ import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
+import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.service.ICartProductService;
 import com.group03.desafio_integrador.service.IProductAdvertisingService;
+import com.group03.desafio_integrador.service.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ public class ProductAdvertisingController {
 
     @Autowired
     private ICartProductService cartService;
+
+    @Autowired
+    private IShoppingCartService shoppingCartService;
 
     /**
      * Rota responsável por retornar todos os produtos cadastrados .
@@ -56,6 +61,11 @@ public class ProductAdvertisingController {
     @GetMapping("/orders/{id}")
     public ResponseEntity<List<CartProduct>> getCartProducts(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(cartService.getCartProducts(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/orders")
+    public ResponseEntity<ShoppingCart> updateCartStatus(@RequestParam Long orderId) {
+        return new ResponseEntity<>(shoppingCartService.update(orderId), HttpStatus.OK);
     }
 
 }
