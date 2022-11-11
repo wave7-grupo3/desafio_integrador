@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 
@@ -23,14 +24,14 @@ public class ShoppingCart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long shoppingCartId;
 
-    @ManyToMany
-    @JoinTable(
-            name = "cart_product",
-            joinColumns = @JoinColumn(name = "shopping_cart_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    @Valid
-    private Set<ProductAdvertising> productAdvertisingList;
+//    @ManyToMany
+//    @JoinTable(
+//            name = "cart_product",
+//            joinColumns = @JoinColumn(name = "shopping_cart_id"),
+//            inverseJoinColumns = @JoinColumn(name = "product_id")
+//    )
+//    @Valid
+//    private Set<ProductAdvertising> productAdvertisingList;
 
     @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd", timezone="GMT")
     @NotNull

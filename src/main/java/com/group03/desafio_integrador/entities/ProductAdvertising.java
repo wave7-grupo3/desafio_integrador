@@ -57,5 +57,4 @@ public class ProductAdvertising {
     private CategoryEnum category;
 
     private BigDecimal productPrice;
-
 }

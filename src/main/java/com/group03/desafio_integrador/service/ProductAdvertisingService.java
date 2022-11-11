@@ -103,7 +103,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         }
 
         ShoppingCart shoppingCart = ShoppingCart.builder()
-                .productAdvertisingList(products)
+//                .productAdvertisingList(products)
                 .buyer(buyer)
                 .date(LocalDate.now())
                 .orderStatus(OrderStatusEnum.ABERTO)
