@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.CategoryEnum;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
@@ -21,6 +22,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class ProductAdvertisingServiceTest {
@@ -57,5 +59,14 @@ class ProductAdvertisingServiceTest {
 
         assertThat(productById).isNotNull();
         assertThat(productById).isEqualTo(mockProductAdvertising);
+    }
+
+    @Test
+    void getById_returnRunTimeException_whenProductAdvertisingIdNotFound() {
+        BDDMockito.when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.getById(1L));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Product not found!");
     }
 }
