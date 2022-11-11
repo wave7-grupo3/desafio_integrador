@@ -1,10 +1,13 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.CategoryEnum;
 
 import com.group03.desafio_integrador.entities.Section;
 import com.group03.desafio_integrador.repository.SectionRepository;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,5 +85,22 @@ class SectionServiceTest {
         assertThat(newSection).isSameAs(mockSectionFrozen);
     }
 
+    @Test
+    void getById_returnRunTimeException_whenSectionIdNotFound() {
+        BDDMockito.when(sectionRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> sectionService.getById(1L));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Section not found!");
+    }
+
+    @Test
+    void findByCategory_returnRunTimeException_whenSectionCategoryNotFound() {
+        BDDMockito.when(sectionRepository.findByCategory(ArgumentMatchers.any(CategoryEnum.class))).thenReturn(null);
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> sectionService.findByCategory(CategoryEnum.FF));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Category not found!");
+    }
 
 }
