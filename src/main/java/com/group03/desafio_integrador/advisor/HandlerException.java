@@ -1,7 +1,7 @@
-package com.group03.desafio_integrador.advice;
+package com.group03.desafio_integrador.advisor;
 
-import com.group03.desafio_integrador.advice.exeptions.NotAcceptableException;
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +27,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * @param request - WebRequest
      * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
      */
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<ValidationErrorDetail> errors = ex.getBindingResult().getFieldErrors().stream()
                 .map(fieldError -> ValidationErrorDetail.builder()

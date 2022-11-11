@@ -1,9 +1,10 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
-import com.group03.desafio_integrador.entities.CategoryEnum;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.Section;
 import com.group03.desafio_integrador.repository.SectionRepository;
+import com.group03.desafio_integrador.service.interfaces.ISectionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,6 @@ public class SectionService implements ISectionService {
      * @param category - CategoryEnum
      * @return Section - Retorna uma entidade do tipo Section.
      */
-    // TODO: 11/11/22 adicionar excecao caso categoria nao exista 
     @Override
     public Section findByCategory(CategoryEnum category) {
         Section sectionCategory = repository.findByCategory(category);

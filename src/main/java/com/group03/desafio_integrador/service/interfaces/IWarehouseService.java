@@ -1,6 +1,6 @@
-package com.group03.desafio_integrador.service;
+package com.group03.desafio_integrador.service.interfaces;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Warehouse;
 
 public interface IWarehouseService {

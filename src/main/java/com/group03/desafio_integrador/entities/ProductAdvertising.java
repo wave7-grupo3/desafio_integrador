@@ -3,6 +3,7 @@ package com.group03.desafio_integrador.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -42,10 +43,6 @@ public class ProductAdvertising {
     private String productName;
 
     private String description;
-
-    // TODO: revisar atributos ao aplicar regra de negócio para carrinho de compras
-//     private BigDecimal productPrice;
-    // private Integer productQuantity;
 
     @ManyToOne
     @JoinColumn(name = "seller_id")

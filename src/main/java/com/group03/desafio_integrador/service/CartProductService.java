@@ -1,9 +1,10 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.entities.CartProduct;
 import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.repository.CartProductRepository;
+import com.group03.desafio_integrador.service.interfaces.ICartProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

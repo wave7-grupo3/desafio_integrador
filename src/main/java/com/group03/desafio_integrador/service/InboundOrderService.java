@@ -1,11 +1,12 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.ValidationErrorDetail;
-import com.group03.desafio_integrador.advice.exeptions.NotAcceptableException;
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
+import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
+import com.group03.desafio_integrador.service.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class InboundOrderService implements IInboundOrderService{
+public class InboundOrderService implements IInboundOrderService {
 
     private final InboundOrderRepository inboundOrderRepository;
 
@@ -74,8 +75,7 @@ public class InboundOrderService implements IInboundOrderService{
 
         InboundOrder order = inboundOrderRepository.save(inboundOrder);
 
-        BatchStockDTO dto = BatchStockDTO.builder().batchStock(order.getBatchList()).build();
-        return dto;
+        return BatchStockDTO.builder().batchStock(order.getBatchList()).build();
     }
 
     /**
@@ -98,6 +98,7 @@ public class InboundOrderService implements IInboundOrderService{
      * @param Warehouse - warehouseId
      * @throws Exception
      */
+    // TODO: fazer exception específico
     private void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
@@ -118,7 +119,7 @@ public class InboundOrderService implements IInboundOrderService{
         for (Batch batch: batchList) {
             Long idProduct = batch.getProductId().getProductId();
             try {
-                ProductAdvertising productAdvertising = productService.getById(idProduct);
+                productService.getById(idProduct);
             } catch (Exception ex) {
                 errorDetails.add(
                         ValidationErrorDetail.builder()

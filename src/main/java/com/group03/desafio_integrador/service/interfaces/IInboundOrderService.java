@@ -1,6 +1,5 @@
-package com.group03.desafio_integrador.service;
+package com.group03.desafio_integrador.service.interfaces;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.InboundOrder;
@@ -16,6 +15,8 @@ public interface IInboundOrderService {
      * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
      * @throws Exception
      */
+
+    // TODO: implementar Exception específica
     BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
 
     /**

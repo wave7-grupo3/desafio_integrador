@@ -1,8 +1,9 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Warehouse;
 import com.group03.desafio_integrador.repository.WarehouseRepository;
+import com.group03.desafio_integrador.service.interfaces.IWarehouseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
