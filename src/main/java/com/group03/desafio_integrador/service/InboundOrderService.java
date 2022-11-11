@@ -102,9 +102,9 @@ public class InboundOrderService implements IInboundOrderService{
     public void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
-//        if (warehouse.getManager() == null) {
-//            throw new NotFoundException("Manager not found for this Warehouse!");
-//        }
+        if (warehouse.getManager() == null) {
+            throw new NotFoundException("Manager not found for this Warehouse!");
+        }
     }
 
     /**

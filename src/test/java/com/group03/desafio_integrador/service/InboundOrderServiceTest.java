@@ -3,15 +3,11 @@ package com.group03.desafio_integrador.service;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
-import com.sun.xml.bind.v2.TODO;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -25,6 +21,7 @@ import static org.assertj.core.api.Assertions.*;
 class InboundOrderServiceTest {
 
     @InjectMocks
+    @Spy
     private InboundOrderService inboundOrderService;
 
     @Mock
@@ -99,8 +96,28 @@ class InboundOrderServiceTest {
     }
 
     @Test
-    void validateWarehouse() throws Exception {
+    void validateOrder() throws Exception {
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateProducts(ArgumentMatchers.eq(batchList));
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
 
+        inboundOrderService.validateOrder(mockCreateInboundOrder);
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateProducts(ArgumentMatchers.eq(batchList));
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
+    }
+
+    @Test
+    void validateWarehouse() {
 }
 
     @Test
@@ -111,16 +128,27 @@ class InboundOrderServiceTest {
     void validateSection() {
     }
 
-    @Test
-    void validateOrder() {
-    }
 
     @Test
     void save_returnSuccess_whenValidData() throws Exception {
+//        BatchStockDTO inbounderDTO = BatchStockDTO.builder().batchStock(mockInboundOrder.getBatchList()).build();
 
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
+
+        BDDMockito.when(inboundOrderRepository.save(ArgumentMatchers.any(InboundOrder.class)))
+                .thenReturn(mockInboundOrder);
+
+        BatchStockDTO newInboundOrder = inboundOrderService.save(mockCreateInboundOrder);
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
+
+        assertThat(newInboundOrder).isNotNull();
+//        assertThat(newInboundOrder).isEqualTo(inbounderDTO);
     }
 
-    // TODO: 10/11/22 completar testes update - save 
+    // TODO: 10/11/22 completar testes update
     @Test
     void update() {
         BDDMockito.when(batchRepository.save(ArgumentMatchers.any(Batch.class)))
