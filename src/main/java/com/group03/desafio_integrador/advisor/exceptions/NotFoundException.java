@@ -1,7 +1,6 @@
-package com.group03.desafio_integrador.advice.exeptions;
+package com.group03.desafio_integrador.advisor.exceptions;
 
-import com.group03.desafio_integrador.advice.ExceptionDetails;
-import com.group03.desafio_integrador.advice.ValidationErrorDetail;
+import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
 import lombok.Getter;
 
 import java.util.List;

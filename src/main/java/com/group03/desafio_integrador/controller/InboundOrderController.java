@@ -3,7 +3,7 @@ package com.group03.desafio_integrador.controller;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.InboundOrder;
-import com.group03.desafio_integrador.service.IInboundOrderService;
+import com.group03.desafio_integrador.service.interfaces.IInboundOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1/fresh-products/inboundorder")

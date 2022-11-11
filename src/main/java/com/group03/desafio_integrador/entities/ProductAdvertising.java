@@ -3,6 +3,7 @@ package com.group03.desafio_integrador.entities;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import lombok.*;
 
 import javax.persistence.*;

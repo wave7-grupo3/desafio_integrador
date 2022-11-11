@@ -1,4 +1,4 @@
-package com.group03.desafio_integrador.advice;
+package com.group03.desafio_integrador.advisor;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

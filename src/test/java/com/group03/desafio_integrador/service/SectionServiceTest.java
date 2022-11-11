@@ -1,7 +1,7 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
-import com.group03.desafio_integrador.entities.CategoryEnum;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 
 import com.group03.desafio_integrador.entities.Section;
 import com.group03.desafio_integrador.repository.SectionRepository;

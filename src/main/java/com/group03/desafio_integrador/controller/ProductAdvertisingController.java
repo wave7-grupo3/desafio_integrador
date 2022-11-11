@@ -1,20 +1,19 @@
 package com.group03.desafio_integrador.controller;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.ShoppingCart;
-import com.group03.desafio_integrador.service.ICartProductService;
-import com.group03.desafio_integrador.service.IProductAdvertisingService;
-import com.group03.desafio_integrador.service.IShoppingCartService;
+import com.group03.desafio_integrador.service.interfaces.ICartProductService;
+import com.group03.desafio_integrador.service.interfaces.IProductAdvertisingService;
+import com.group03.desafio_integrador.service.interfaces.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController

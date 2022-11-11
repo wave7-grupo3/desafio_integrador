@@ -1,6 +1,6 @@
-package com.group03.desafio_integrador.entities;
+package com.group03.desafio_integrador.entities.entities_enum;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 
 public enum CategoryEnum {
     FS, // 0

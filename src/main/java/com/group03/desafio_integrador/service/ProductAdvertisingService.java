@@ -1,12 +1,15 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.advice.ValidationErrorDetail;
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.*;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
+import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
+import com.group03.desafio_integrador.service.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +20,10 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class ProductAdvertisingService implements IProductAdvertisingService {
-
     private final ProductAdvertisingRepository repository;
-
     private final IShoppingCartService shoppingCartService;
-
     private final IBuyerService buyerService;
-
     private final IBatchService batchService;
-
     private final ICartProductService cartService;
 
     /**

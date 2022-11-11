@@ -1,6 +1,5 @@
-package com.group03.desafio_integrador.service;
+package com.group03.desafio_integrador.service.interfaces;
 
-import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.InboundOrder;

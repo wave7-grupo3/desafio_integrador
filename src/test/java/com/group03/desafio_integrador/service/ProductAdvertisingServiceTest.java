@@ -1,10 +1,8 @@
 package com.group03.desafio_integrador.service;
 
-import com.group03.desafio_integrador.entities.Batch;
-import com.group03.desafio_integrador.entities.CategoryEnum;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
-import com.group03.desafio_integrador.repository.BatchRepository;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
