@@ -38,6 +38,4 @@ public class BatchService implements IBatchService {
     public Batch save(Batch batch) {
         return repository.save(batch);
     }
-
-
 }

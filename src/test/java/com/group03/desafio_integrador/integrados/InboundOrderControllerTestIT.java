@@ -95,8 +95,9 @@ class InboundOrderControllerTestIT {
     }
 
     @Test
-    void save() throws Exception {
+    void save_returnSuccess_whenBatchStocksExists() throws Exception {
         Double currentTemperature = Double.valueOf(mockCreateInboundOrder.getBatchList().get(0).getCurrentTemperature());
+        //LocalDateTime fabricationDateTime = LocalDateTime.of(mockCreateInboundOrder.getBatchList().get(0).getFabricationTime());
         ResultActions response = mockMvc.perform(post("/api/v1/fresh-products/inboundorder")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mockCreateInboundOrder)));
@@ -105,14 +106,14 @@ class InboundOrderControllerTestIT {
                 .andExpect(jsonPath("$.batchStock[0].currentTemperature", CoreMatchers.is(currentTemperature)))
                 .andExpect(jsonPath("$.batchStock[0].productQuantity", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getProductQuantity())))
                 .andExpect(jsonPath("$.batchStock[0].fabricationDate", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getFabricationDate())))
-                .andExpect(jsonPath("$.batchStock[0].fabricationTime", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getFabricationTime())))
+                .andExpect(jsonPath("$.batchStock[0].fabricationTime", CoreMatchers.is(LocalDateTime.of(2022,11, 9, 11,43,0))))
                 .andExpect(jsonPath("$.batchStock[0].volume", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getVolume())))
                 .andExpect(jsonPath("$.batchStock[0].expirationDate", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getExpirationDate())))
                 .andExpect(jsonPath("$.batchStock[0].price", CoreMatchers.is(mockCreateInboundOrder.getBatchList().get(0).getPrice())));
     }
 
     @Test
-    void getAll_returnSuccess_whenReturningListInboundOrder() throws Exception {
+    void getAll_returnListInboundOrder_whenNotEmpty() throws Exception {
         List<InboundOrder> inboudOrders = inboundOrderRepository.findAll();
 
         ResultActions response = mockMvc.perform(
@@ -124,7 +125,7 @@ class InboundOrderControllerTestIT {
     }
 
     @Test
-    void update() throws Exception {
+    void update_returnBatch_whenValidData() throws Exception {
         Integer batchId = Math.toIntExact(mockBatch.getBatchId());
         ResultActions response = mockMvc.perform(put("/api/v1/fresh-products/inboundorder")
                 .contentType(MediaType.APPLICATION_JSON)
