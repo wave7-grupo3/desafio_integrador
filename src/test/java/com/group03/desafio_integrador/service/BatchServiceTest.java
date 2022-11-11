@@ -1,9 +1,13 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.repository.BatchRepository;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,5 +84,14 @@ class BatchServiceTest {
         assertThat(newBatch.getVolume()).isPositive();
         assertThat(newBatch.getPrice()).isPositive();
         assertThat(newBatch).isEqualTo(mockBatch);
+    }
+
+    @Test
+    void getById_returnRunTimeException_whenBatchIdNotFound() {
+        BDDMockito.when(batchRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> batchService.getById(1L));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Batch not found!");
     }
 }
