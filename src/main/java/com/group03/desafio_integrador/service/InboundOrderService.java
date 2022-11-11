@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advice.ValidationErrorDetail;
+import com.group03.desafio_integrador.advice.exeptions.NotAcceptableException;
 import com.group03.desafio_integrador.advice.exeptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
@@ -149,8 +150,7 @@ public class InboundOrderService implements IInboundOrderService{
             ProductAdvertising productAdvertising = productService.getById(idProduct);
 
             if (!productAdvertising.getCategory().equals(sectionExists.getCategory())) {
-                // TODO: 09/11/22 create new exception
-                throw new NotFoundException("Product not belongs to this section");
+                throw new NotAcceptableException("Product " + productAdvertising.getProductName() + " not belongs to this section");
             }
 
             totalVolumeBatch += batch.getVolume();

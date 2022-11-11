@@ -22,4 +22,7 @@ public interface IBatchService {
      * @return Batch - Retorna uma entidade do tipo Batch.
      */
     Batch save(Batch batch);
+
+    Batch findBatchByProductId(ProductAdvertising id);
+
 }
