@@ -3,6 +3,7 @@ package com.group03.desafio_integrador.service;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,13 +30,11 @@ class InboundOrderServiceTest {
 
     @Mock
     private BatchService batchService;
+    
+    private final List<Batch> batchList = new ArrayList<>();
+    private Batch mockBatch;
+    private Batch mockUpdateBatch;
 
-    @Mock
-    private BatchRepository batchRepository;
-
-    List<Batch> batchList = new ArrayList<>();
-    BatchStockDTO batchDTO;
-    Batch mockBatch;
     private InboundOrder mockInboundOrder;
     private InboundOrder mockCreateInboundOrder;
 
@@ -64,7 +63,17 @@ class InboundOrderServiceTest {
                 BigDecimal.valueOf(150.00));
 
         batchList.add(mockBatchList);
-        batchDTO = new BatchStockDTO(batchList);
+//        BatchStockDTO batchDTO = new BatchStockDTO(batchList);
+
+        mockUpdateBatch = new Batch(1L,
+                productId,
+                10.0F,
+                20,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022,11, 9, 11,43,0),
+                40.0F,
+                LocalDate.parse("2022-11-30"),
+                BigDecimal.valueOf(200.00));
 
         mockInboundOrder = new InboundOrder(1L,
                 LocalDate.parse("2022-11-09"),
@@ -96,43 +105,7 @@ class InboundOrderServiceTest {
     }
 
     @Test
-    void validateOrder() throws Exception {
-        BDDMockito.doNothing().when(inboundOrderService)
-                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
-        BDDMockito.doNothing().when(inboundOrderService)
-                .validateProducts(ArgumentMatchers.eq(batchList));
-        BDDMockito.doNothing().when(inboundOrderService)
-                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
-
-        inboundOrderService.validateOrder(mockCreateInboundOrder);
-
-        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
-                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
-
-        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
-                .validateProducts(ArgumentMatchers.eq(batchList));
-
-        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
-                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
-    }
-
-    @Test
-    void validateWarehouse() {
-}
-
-    @Test
-    void validateProducts() {
-    }
-
-    @Test
-    void validateSection() {
-    }
-
-
-    @Test
     void save_returnSuccess_whenValidData() throws Exception {
-//        BatchStockDTO inbounderDTO = BatchStockDTO.builder().batchStock(mockInboundOrder.getBatchList()).build();
-
         BDDMockito.doNothing().when(inboundOrderService)
                 .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
 
@@ -145,19 +118,23 @@ class InboundOrderServiceTest {
                 .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
 
         assertThat(newInboundOrder).isNotNull();
-//        assertThat(newInboundOrder).isEqualTo(inbounderDTO);
     }
 
-    // TODO: 10/11/22 completar testes update
     @Test
-    void update() {
-        BDDMockito.when(batchRepository.save(ArgumentMatchers.any(Batch.class)))
+    void update_returnSuccess_whenValidData() {
+        BDDMockito.when(batchService.getById(ArgumentMatchers.any(Long.class)))
                 .thenReturn(mockBatch);
 
-        Batch updateBatch = inboundOrderService.update(mockBatch);
+        batchService.getById(1L);
 
-        batchService.save(mockBatch);
+        BDDMockito.when(batchService.save(ArgumentMatchers.any(Batch.class)))
+                .thenReturn(mockUpdateBatch);
 
-        assertThat(updateBatch).isNotNull();
+        Batch updatedBatch = batchService.save(mockUpdateBatch);
+
+        assertThat(updatedBatch).isNotNull();
+        assertThat(updatedBatch.getVolume()).isEqualTo(mockUpdateBatch.getVolume());
+        assertThat(updatedBatch.getProductQuantity()).isEqualTo(mockUpdateBatch.getProductQuantity());
+        assertThat(updatedBatch.getPrice()).isEqualTo(mockUpdateBatch.getPrice());
     }
 }
