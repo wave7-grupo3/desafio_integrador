@@ -80,11 +80,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     @Override
     public ShoppingCartTotalDTO registerOrder(PurchaseOrderDTO purchase) {
         verifyStock(purchase);
-        
         Buyer buyer = buyerService.getById(purchase.getBuyerId());
-        
         Set<ProductAdvertising> products = new HashSet<>();
-        
         BigDecimal totalPrice = BigDecimal.ZERO;
 
         for (ProductDTO product : purchase.getProducts()) {
@@ -95,17 +92,20 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
             totalPrice = totalPrice.add(productPrice);
         }
 
-        ShoppingCart shoppingCart = ShoppingCart.builder()
-                .buyer(buyer)
-                .date(LocalDate.now())
-                .orderStatus(OrderStatusEnum.ABERTO)
-                .totalCartPrice(Double.valueOf(String.valueOf(totalPrice)))
-                .build();
-
+        ShoppingCart shoppingCart = shoppingCartBuilder(buyer, totalPrice);
         saveShoppingCart(products, shoppingCart);
 
         return ShoppingCartTotalDTO.builder()
                 .totalPrice(Double.valueOf(String.valueOf(totalPrice)))
+                .build();
+    }
+
+    private static ShoppingCart shoppingCartBuilder(Buyer buyer, BigDecimal totalPrice) {
+        return ShoppingCart.builder()
+                .buyer(buyer)
+                .date(LocalDate.now())
+                .orderStatus(OrderStatusEnum.ABERTO)
+                .totalCartPrice(Double.valueOf(String.valueOf(totalPrice)))
                 .build();
     }
 
