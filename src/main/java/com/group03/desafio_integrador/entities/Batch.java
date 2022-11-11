@@ -33,7 +33,6 @@ public class Batch {
     private Float currentTemperature;
 
     @NotNull
-    @DecimalMin(value = "1", message = "The minimum product quantity is 1")
     private Integer productQuantity;
 
     @NotNull

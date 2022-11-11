@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -43,7 +44,7 @@ public class ProductAdvertising {
     private String description;
 
     // TODO: revisar atributos ao aplicar regra de negócio para carrinho de compras
-    // private BigDecimal productPrice;
+//     private BigDecimal productPrice;
     // private Integer productQuantity;
 
     @ManyToOne
@@ -55,5 +56,8 @@ public class ProductAdvertising {
     @Valid
     private CategoryEnum category;
 
+    private BigDecimal productPrice;
 
+    @Transient
+    private Integer quantity;
 }
