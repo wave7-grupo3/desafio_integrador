@@ -185,6 +185,25 @@ public class TestsMocks {
                 );
     }
 
+    public static ShoppingCart mockShoppingCartCreate() {
+        return new ShoppingCart(
+                null,
+                LocalDate.parse("2022-11-30"),
+                OrderStatusEnum.ABERTO,
+                mockBuyer(),
+                10.0
+        );
+    }
+
+    public static CartProduct mockCartProductCreate() {
+        return new CartProduct(
+                null,
+                mockProductAdvertising(),
+                mockShoppingCartOpen(),
+                5
+        );
+    }
+
     public static List<CartProduct> mockCartProductOrderList() {
 
         List<CartProduct> cartProductList = new ArrayList<>();
