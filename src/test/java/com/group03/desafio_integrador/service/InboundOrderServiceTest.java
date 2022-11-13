@@ -3,6 +3,7 @@ package com.group03.desafio_integrador.service;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
+import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,61 +31,27 @@ class InboundOrderServiceTest {
     @Mock
     private BatchService batchService;
     
-    private final List<Batch> batchList = new ArrayList<>();
+    public final List<Batch> batchList = new ArrayList<>();
     private Batch mockBatch;
     private Batch mockUpdateBatch;
-
     private InboundOrder mockInboundOrder;
     private InboundOrder mockCreateInboundOrder;
 
     @BeforeEach
     void setUp() {
-        ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
-        Batch mockBatchList = new Batch(null,
-                productId,
-                10.0F,
-                15,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                30.0F,
-                LocalDate.parse("2022-11-30"),
-                BigDecimal.valueOf(150.00));
+        mockBatch = TestsMocks.mockBatch();
 
-        mockBatch = new Batch(1L,
-                productId,
-                10.0F,
-                15,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                30.0F,
-                LocalDate.parse("2022-11-30"),
-                BigDecimal.valueOf(150.00));
+        Batch mockBatchList = TestsMocks.createBatch();
 
         batchList.add(mockBatchList);
-//        BatchStockDTO batchDTO = new BatchStockDTO(batchList);
 
-        mockUpdateBatch = new Batch(1L,
-                productId,
-                10.0F,
-                20,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                40.0F,
-                LocalDate.parse("2022-11-30"),
-                BigDecimal.valueOf(200.00));
+        mockUpdateBatch = TestsMocks.mockUpdateBatch();
 
-        mockInboundOrder = new InboundOrder(1L,
-                LocalDate.parse("2022-11-09"),
-                Section.builder().sectionId(1L).build(),
-                Warehouse.builder().warehouseId(1L).build(),
-                batchList);
+        mockInboundOrder = TestsMocks.mockInboundOrder();
 
-        mockCreateInboundOrder = new InboundOrder(null,
-                LocalDate.parse("2022-11-09"),
-                Section.builder().sectionId(1L).build(),
-                Warehouse.builder().warehouseId(1L).build(),
-                batchList);
+        mockCreateInboundOrder = TestsMocks.mockCreateInboundOrder();
+
     }
 
     @AfterEach
