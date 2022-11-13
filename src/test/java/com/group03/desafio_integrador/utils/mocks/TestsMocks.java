@@ -16,7 +16,6 @@ import java.util.List;
 public class TestsMocks {
     static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
-    static ShoppingCart shoppingCartId = ShoppingCart.builder().shoppingCartId(1L).build();
     private static final List<Batch> batchList = new ArrayList<>();
 
     private static final List<ProductAdvertising> productList = new ArrayList<>();
@@ -101,6 +100,7 @@ public class TestsMocks {
     }
 
     public static List<ProductAdvertising> mockProductList() {
+        List<ProductAdvertising> productAdvertisingsFreshList = new ArrayList<>();
 
         ProductAdvertising productFresh = new ProductAdvertising(1L,
                 LocalDate.parse("2022-11-30"),
@@ -112,6 +112,7 @@ public class TestsMocks {
                 BigDecimal.valueOf(2),
                 5
         );
+        productAdvertisingsFreshList.add(productFresh);
 
         ProductAdvertising productRefrigerated = new ProductAdvertising(2L,
                 LocalDate.parse("2022-11-30"),
