@@ -14,10 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -34,10 +32,13 @@ class CartProductServiceTest {
 
     private CartProduct mockCartProductCreate;
 
+    private Long shoppingCartId;
+
     @BeforeEach
     void setUp() {
         mockCartProductList = TestsMocks.mockCartProductOrderList();
         mockCartProductCreate = TestsMocks.mockCartProductCreate();
+        shoppingCartId = TestsMocks.mockShoppingCartOpen().getShoppingCartId();
 
     }
 
@@ -69,10 +70,29 @@ class CartProductServiceTest {
     }
 
     @Test
-    void saveAll() {
+    void saveAll_returnSucess_whenValidData() {
+        List<CartProduct> cartProductList = new ArrayList<>();
+
+        cartProductList.add(mockCartProductCreate);
+
+        BDDMockito.when(cartProductRepository.saveAll(ArgumentMatchers.anyList()))
+                .thenReturn(mockCartProductList);
+
+        List<CartProduct> newCartProductList = cartProductService.saveAll(cartProductList);
+
+        assertThat(newCartProductList).isNotNull();
     }
 
     @Test
-    void getCartProducts() {
+    void getCartProducts_returnSucess_whenListCartProductsIsValidData() {
+        BDDMockito.when(cartProductRepository.findAllByShoppingCart(ArgumentMatchers.any(ShoppingCart.class)))
+                .thenReturn(TestsMocks.mockCartProductOrderList());
+
+
+        List<CartProduct> cartProductList = cartProductService.getCartProducts(shoppingCartId);
+
+        assertThat(cartProductList).isNotNull();
+//        assertThat(cartProductList).isEqualTo(TestsMocks.mockCartProductOrderList());
+
     }
 }
