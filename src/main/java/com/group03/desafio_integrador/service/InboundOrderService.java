@@ -18,15 +18,10 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class InboundOrderService implements IInboundOrderService {
-
     private final InboundOrderRepository inboundOrderRepository;
-
     private final IProductAdvertisingService productService;
-
     private final IWarehouseService warehouseService;
-
     private final ISectionService sectionService;
-
     private final IBatchService batchService;
 
     /**
@@ -174,18 +169,17 @@ public class InboundOrderService implements IInboundOrderService {
         inboundOrder.setSectionId(sectionExists);
     }
 
+    private static List<ProductWarehouseStockDTO> getFilterWarehouseById(SectionDTO sectionDto, List<ProductWarehouseStockDTO> productWarehouse) {
+        return productWarehouse.stream()
+                .filter(productDTO -> productDTO.getSectionDTO().getSectionId().equals(sectionDto.getSectionId()) && productDTO.getSectionDTO().getWarehouseId().equals(sectionDto.getWarehouseId()))
+                .collect(Collectors.toList());
+    }
 
     public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
 
         List<InboundOrder> inboundOrderList = getAll();
-
-        List<Batch> batchStream = new ArrayList<>();
-
-//        List<Batch> filteredInboundOrderList = inboundOrderList.stream()
-//                .filter(inbound -> inbound.getBatchList().stream()
-//                    .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
-//                    .collect(Collectors.toList());
-//        ).collect(Collectors.toList());
+        List<Batch> batchStream;
+        List<ProductWarehouseStockDTO> productWarehouseStep = new ArrayList<>();
 
         for (InboundOrder inbound : inboundOrderList) {
             validateOrder(inbound);
@@ -193,50 +187,45 @@ public class InboundOrderService implements IInboundOrderService {
                     .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
                     .collect(Collectors.toList());
 
-//            if(!batchStream.isEmpty()){
-                inbound.setBatchList(batchStream);
-//            }
-        };
+            SectionDTO sectionDto = SectionDTO.builder()
+                    .sectionId(inbound.getSectionId().getSectionId())
+                    .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                    .build();
 
-         inboundOrderList = inboundOrderList.stream()
-                 .filter(inboundOrder -> !inboundOrder.getBatchList().isEmpty())
-                 .collect(Collectors.toList());
+            List<ProductWarehouseStockDTO> productWarehouseStockDTOList = getFilterWarehouseById(sectionDto, productWarehouseStep);
 
-        List<BatchDTO> batchStockDTOS = batchStream.stream().map(batch -> BatchDTO.builder()
-                        .batchId(batch.getBatchId())
-                        .quantity(batch.getProductQuantity())
-                        .expirationDate(batch.getExpirationDate())
-                        .build())
-                .collect(Collectors.toList());
-
-        List<SectionDTO> section = inboundOrderList.stream().map(inbound -> SectionDTO.builder()
-                .sectionId(inbound.getSectionId().getSectionId())
-                .warehouseId(inbound.getWarehouseId().getWarehouseId())
-                .build())
-                .collect(Collectors.toList());
-
-        List<ProductWarehouseStockDTO> productWarehouse = inboundOrderList.stream().map(inbound -> {
-
-            List<BatchDTO> inboundBatchList = inbound.getBatchList().stream().map(batch -> BatchDTO.builder()
+            List<BatchDTO> batchStockDTOS = batchStream.stream().map(batch -> BatchDTO.builder()
                             .batchId(batch.getBatchId())
                             .quantity(batch.getProductQuantity())
                             .expirationDate(batch.getExpirationDate())
                             .build())
                     .collect(Collectors.toList());
 
-            SectionDTO inboundSection = SectionDTO.builder()
-                            .sectionId(inbound.getSectionId().getSectionId())
-                            .warehouseId(inbound.getWarehouseId().getWarehouseId())
-                            .build();
+            if (!batchStream.isEmpty()) {
+                if (productWarehouseStockDTOList.isEmpty()) {
+                    productWarehouseStep.add(
+                            ProductWarehouseStockDTO.builder()
+                                    .productId(productId)
+                                    .sectionDTO(sectionDto)
+                                    .batchDTO(batchStockDTOS)
+                                    .build()
+                    );
+                } else {
+                    for (ProductWarehouseStockDTO productWarehouseStockDTO : productWarehouseStep) {
+                        if (productWarehouseStockDTO.getSectionDTO().getSectionId().equals(sectionDto.getSectionId()) && productWarehouseStockDTO.getSectionDTO().getWarehouseId().equals(sectionDto.getWarehouseId())) {
+                            productWarehouseStockDTO.getBatchDTO().addAll(batchStockDTOS);
+                        }
+                    }
+                }
+            }
+        }
 
-            return ProductWarehouseStockDTO.builder()
-                    .sectionDTO(inboundSection)
-                    .productId(productId)
-                    .batchDTO(inboundBatchList)
-                    .build();
+        return productWarehouseStep;
 
-        }).collect(Collectors.toList());
-
-        return productWarehouse;
     }
 }
+
+// TODO: ROTA GET 2
+// TODO : VALIDAR VALIDADE
+// TODO: REFATORAÇÃO DA  getAllProductWarehouseStock
+
