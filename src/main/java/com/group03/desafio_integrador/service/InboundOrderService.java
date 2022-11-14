@@ -3,8 +3,7 @@ package com.group03.desafio_integrador.service;
 import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
-import com.group03.desafio_integrador.dto.BatchStockDTO;
-import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
+import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
@@ -13,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -30,8 +31,9 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por listar todos os pedidos de ordem do armazem.
-     * @author Gabriel Morais
+     *
      * @return List<InboundOrder> - Retorna uma entidade do tipo InboundOrder.
+     * @author Gabriel Morais
      */
     @Override
     public List<InboundOrder> getAll() {
@@ -40,9 +42,10 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por atualizar as informações do lote contido no armazem e validar se a capacidade do armazem suporta o recebimento da carga.
-     * @author Gabriel Morais
+     *
      * @param Batch - batch
      * @return Batch - Retorna uma entidade do tipo Batch.
+     * @author Gabriel Morais
      */
     @Override
     public Batch update(Batch batch) {
@@ -65,10 +68,11 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por salvar um novo lote no pedido de ordem do armazem.
-     * @author Gabriel Morais
+     *
      * @param InboundOrder - inboundOrder
      * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
      * @throws Exception
+     * @author Gabriel Morais
      */
     @Override
     public BatchStockDTO save(InboundOrder inboundOrder) throws Exception {
@@ -81,9 +85,10 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por realizar a validação do pedido de ordem.
-     * @author Gabriel Morais
+     *
      * @param InboundOrder - inboundOrder
      * @throws Exception
+     * @author Gabriel Morais
      */
     public void validateOrder(InboundOrder inboundOrder) throws Exception {
         List<Batch> batchList = inboundOrder.getBatchList();
@@ -95,9 +100,10 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por realizar a verificação se o armazem existe.
-     * @author Gabriel Morais
+     *
      * @param Warehouse - warehouseId
      * @throws Exception
+     * @author Gabriel Morais
      */
     // TODO: fazer exception específico
     private void validateWarehouse(Warehouse warehouseId) throws Exception {
@@ -110,14 +116,15 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por realizar a verificação das informações dos produtos no lote.
-     * @author Gabriel Morais
+     *
      * @param List<Batch> - batchList
      * @throws NotFoundException
+     * @author Gabriel Morais
      */
     private void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
-        for (Batch batch: batchList) {
+        for (Batch batch : batchList) {
             Long idProduct = batch.getProductId().getProductId();
             try {
                 productService.getById(idProduct);
@@ -136,9 +143,10 @@ public class InboundOrderService implements IInboundOrderService {
 
     /**
      * Método responsável por realizar a verificação da sessão.
-     * @author Gabriel Morais
+     *
      * @param InboundOrder - inboundOrder
      * @throws NotFoundException
+     * @author Gabriel Morais
      */
     private void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
@@ -167,8 +175,50 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
 
-    private ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId) {
+    public ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId) {
+        List<InboundOrder> inboundOrderList = getAll();
 
+        List<Batch> filteredInboundOrderList = inboundOrderList.stream().map(inbound -> {
+
+            Batch batchStream = (Batch) inbound.getBatchList().stream().map(batchProduct -> {
+                if (!batchProduct.getProductId().getProductId().equals(productId)) {
+                    throw new NotFoundException("");
+                }
+                return batchProduct;
+            }).collect(Collectors.toList());
+
+            return batchStream;
+        }).collect(Collectors.toList());
+
+        List<BatchDTO> batchStockDTOS = (List<BatchDTO>) filteredInboundOrderList.stream().map(batch -> BatchDTO.builder()
+                .batchId(batch.getBatchId())
+                .quantity(batch.getProductQuantity())
+                .expirationDate(batch.getExpirationDate())
+                .build());
+
+        List<ProductWarehouseStockDTO> productWarehouse = (List<ProductWarehouseStockDTO>) inboundOrderList.stream().map(inbound -> {
+            try {
+                validateOrder(inbound);
+
+                SectionDTO section = SectionDTO.builder()
+                        .sectionId(inbound.getSectionId().getSectionId())
+                        .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                        .build();
+
+
+                return ProductWarehouseStockDTO.builder()
+                        .sectionDTO(section)
+                        .producId(productId)
+                        .batchDTO(batchStockDTOS)
+                        .build();
+
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+
+        return null;
 
 
     }
