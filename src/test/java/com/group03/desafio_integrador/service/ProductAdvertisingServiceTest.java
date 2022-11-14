@@ -4,6 +4,7 @@ import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
+import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -33,14 +35,7 @@ class ProductAdvertisingServiceTest {
 
     @BeforeEach
     void setUp() {
-        mockProductAdvertising = new ProductAdvertising(1L,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                "Maçã",
-                "teste",
-                Seller.builder().sellerId(1L).build(),
-                CategoryEnum.FS
-                );
+        mockProductAdvertising = TestsMocks.mockProductAdvertising();
     }
 
     @AfterEach

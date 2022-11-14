@@ -7,6 +7,7 @@ import com.group03.desafio_integrador.repository.BatchRepository;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,29 +34,14 @@ class BatchServiceTest {
 
     private Batch mockBatch;
     private Batch mockCreateBatch;
-    ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
     @BeforeEach
     void setUp() {
-        mockBatch = new Batch(1L,
-                productId,
-                10.0F,
-                15,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                30.0F,
-                LocalDate.parse("2022-11-30"),
-                BigDecimal.valueOf(150.00));
 
-        mockCreateBatch = new Batch(null,
-                productId,
-                10.0F,
-                15,
-                LocalDate.parse("2022-11-30"),
-                LocalDateTime.of(2022,11, 9, 11,43,0),
-                30.0F,
-                LocalDate.parse("2022-11-30"),
-                BigDecimal.valueOf(150.00));
+        mockBatch = TestsMocks.mockBatch();
+
+        mockCreateBatch = TestsMocks.createBatch();
+        
     }
 
     @AfterEach
