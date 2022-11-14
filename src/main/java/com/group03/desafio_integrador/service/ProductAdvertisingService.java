@@ -126,24 +126,33 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         cartService.saveAll(cartProductList);
     }
 
+    // TODO: 14/11/22 Analisar Refatoração
     public void verifyStock(PurchaseOrderDTO purchase) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productId = ProductAdvertising.builder().productId(product.getProductId()).build();
-            Batch batch = batchService.findBatchByProductId(productId);
 
-            if (batch == null) throw new NotFoundException("No batch found with this product!");
+            List<Batch> batchList = batchService.findBatchByProductId(productId);
 
-            Long idProduct = batch.getProductId().getProductId();
-            verifyProductExists(errorDetails, idProduct);
-            verifyProductStockQuantity(errorDetails, product, batch, idProduct);
-            verifyProductExpirationDate(errorDetails, batch, idProduct);
+            if (batchList.isEmpty()) throw new NotFoundException("No batch found with this product!");
 
-            if (!errorDetails.isEmpty()) throw new NotFoundException("Products not found", errorDetails);
-            
-            batchService.save(batch);
+            for (Batch batchOrder : batchList) {
+                List<ValidationErrorDetail> errorDetailsBatch = new ArrayList<>();
+
+                verifyProductExists(errorDetailsBatch, productId.getProductId());
+                verifyProductExpirationDate(errorDetailsBatch, batchOrder, productId.getProductId());
+                verifyProductStockQuantity(errorDetailsBatch, product, batchOrder, productId.getProductId());
+
+                if (errorDetailsBatch.isEmpty()) {
+                    return;
+                } else if (batchList.indexOf(batchOrder) == batchList.size() - 1 && !errorDetailsBatch.isEmpty()) {
+                    errorDetails.addAll(errorDetailsBatch);
+                }
+            }
         }
+
+        if (!errorDetails.isEmpty()) throw new NotFoundException("Products not found", errorDetails);
     }
 
     private static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
@@ -157,8 +166,10 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
         if (batch.getProductQuantity() >= product.getQuantity()) {
-            Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
-            batch.setProductQuantity(updatedQuantity);
+            if (errorDetails.isEmpty()) {
+                Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
+                batch.setProductQuantity(updatedQuantity);
+            }
         } else {
             errorDetails.add(
                     ValidationErrorDetail.builder()
