@@ -45,49 +45,65 @@ public class WarehouseService implements IWarehouseService {
     }
 
     @Override
-    public ProductWarehouseDTO getAllWarehouseQuantityStockContainingProductId(Long id) {
+    public ProductWarehouseDTO getAllStockProductWarehouse(Long id) {
         productService.getById(id);
 
         List<InboundOrder> inboundOrderList = inboundOrderRepository.findAll();
-
-        ProductWarehouseDTO productWarehouseDTO = ProductWarehouseDTO.builder()
-                .productId(id)
-                .warehouses(new ArrayList<>())
-                .build();
+        ProductWarehouseDTO productWarehouseDTO = buildProductWarehouseDTO(id);
 
         for(InboundOrder inboundOrder: inboundOrderList) {
-            Integer quantitySum = inboundOrder.getBatchList().stream()
-                    .filter(batch -> batch.getProductId().getProductId().equals(id))
-                    .map(Batch::getProductQuantity)
-                    .reduce(0, Integer::sum);
-
-            WarehouseStockDTO warehouseStockDTO = WarehouseStockDTO.builder()
-                    .warehouseCode(inboundOrder.getWarehouseId().getWarehouseId())
-                    .totalQuantity(quantitySum.toString())
-                    .build();
+            Integer quantitySum = calculateQuantityStockInBatch(id, inboundOrder);
+            WarehouseStockDTO warehouseStockDTO = buildWarehouseStockDTO(inboundOrder, quantitySum);
 
             if (quantitySum > 0) {
-                List<WarehouseStockDTO> warehouseStockDTOList = productWarehouseDTO.getWarehouses().stream()
-                        .filter(warehouse -> warehouseStockDTO.getWarehouseCode().equals(warehouse.getWarehouseCode()))
-                        .collect(Collectors.toList());
+                List<WarehouseStockDTO> warehouseStockDTOList = getFilterWarehouseById(productWarehouseDTO, warehouseStockDTO);
 
                 if (warehouseStockDTOList.isEmpty()) {
                     productWarehouseDTO.getWarehouses().add(warehouseStockDTO);
                 } else {
-                    productWarehouseDTO.getWarehouses().forEach(warehouse -> {
-                        if(warehouse.getWarehouseCode().equals(warehouseStockDTO.getWarehouseCode())) {
-                            Integer sum = Integer.valueOf(warehouse.getTotalQuantity()) + quantitySum;
-                            warehouse.setTotalQuantity(String.valueOf(sum));
-                        }
-                    });
+                    incrementQuantityStockInWarehouse(productWarehouseDTO, quantitySum, warehouseStockDTO);
                 }
             }
         }
 
-        if (productWarehouseDTO.getWarehouses().isEmpty()) {
-            throw new NotFoundException("Product not registered in any warehouse");
-        }
+        if (productWarehouseDTO.getWarehouses().isEmpty()) throw new NotFoundException("Product not registered in any warehouse");
 
         return productWarehouseDTO;
+    }
+
+    private static WarehouseStockDTO buildWarehouseStockDTO(InboundOrder inboundOrder, Integer quantitySum) {
+        return WarehouseStockDTO.builder()
+                .warehouseCode(inboundOrder.getWarehouseId().getWarehouseId())
+                .totalQuantity(quantitySum.toString())
+                .build();
+    }
+
+    private static ProductWarehouseDTO buildProductWarehouseDTO(Long id) {
+        return ProductWarehouseDTO.builder()
+                .productId(id)
+                .warehouses(new ArrayList<>())
+                .build();
+    }
+
+    private static void incrementQuantityStockInWarehouse(ProductWarehouseDTO productWarehouseDTO, Integer quantitySum, WarehouseStockDTO warehouseStockDTO) {
+        productWarehouseDTO.getWarehouses().forEach(warehouse -> {
+            if(warehouse.getWarehouseCode().equals(warehouseStockDTO.getWarehouseCode())) {
+                Integer sum = Integer.valueOf(warehouse.getTotalQuantity()) + quantitySum;
+                warehouse.setTotalQuantity(String.valueOf(sum));
+            }
+        });
+    }
+
+    private static List<WarehouseStockDTO> getFilterWarehouseById(ProductWarehouseDTO productWarehouseDTO, WarehouseStockDTO warehouseStockDTO) {
+        return productWarehouseDTO.getWarehouses().stream()
+                .filter(warehouse -> warehouseStockDTO.getWarehouseCode().equals(warehouse.getWarehouseCode()))
+                .collect(Collectors.toList());
+    }
+
+    private static Integer calculateQuantityStockInBatch(Long id, InboundOrder inboundOrder) {
+        return inboundOrder.getBatchList().stream()
+                .filter(batch -> batch.getProductId().getProductId().equals(id))
+                .map(Batch::getProductQuantity)
+                .reduce(0, Integer::sum);
     }
 }

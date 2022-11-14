@@ -21,7 +21,7 @@ public class WarehouseController {
     private IWarehouseService warehouseService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductWarehouseDTO> getAllWarehouseQuantityStockContainingProductId(@PathVariable(value = "id") Long id) {
-        return new ResponseEntity<>(warehouseService.getAllWarehouseQuantityStockContainingProductId(id), HttpStatus.OK);
+    public ResponseEntity<ProductWarehouseDTO> getAllStockProductWarehouse(@PathVariable(value = "id") Long id) {
+        return new ResponseEntity<>(warehouseService.getAllStockProductWarehouse(id), HttpStatus.OK);
     }
 }

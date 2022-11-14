@@ -20,5 +20,5 @@ public interface IWarehouseService {
 
     List<Warehouse> getAll();
 
-    ProductWarehouseDTO getAllWarehouseQuantityStockContainingProductId(Long id);
+    ProductWarehouseDTO getAllStockProductWarehouse(Long id);
 }
