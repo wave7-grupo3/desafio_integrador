@@ -1,12 +1,14 @@
 package com.group03.desafio_integrador.controller;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.service.interfaces.ICartProductService;
+import com.group03.desafio_integrador.service.interfaces.IInboundOrderService;
 import com.group03.desafio_integrador.service.interfaces.IProductAdvertisingService;
 import com.group03.desafio_integrador.service.interfaces.IShoppingCartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +31,15 @@ public class ProductAdvertisingController {
     @Autowired
     private IShoppingCartService shoppingCartService;
 
+    @Autowired
+    private IInboundOrderService inboundOrderService;
+
     /**
      * Rota responsável por retornar todos os produtos cadastrados .
-     * @author Mariana Saraiva
+     *
      * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
+     * @author Mariana Saraiva
      */
     @GetMapping
     public ResponseEntity<List<ProductAdvertising>> getAll() {
@@ -42,10 +48,11 @@ public class ProductAdvertisingController {
 
     /**
      * Rota responsável por retornar todos os produtos cadastrados por categoria.
-     * @author Mariana Saraiva
+     *
      * @param category - String
      * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
+     * @author Mariana Saraiva
      */
     @GetMapping("/list")
     public ResponseEntity<List<ProductAdvertising>> getAllByCategory(@RequestParam String category) {
@@ -66,5 +73,11 @@ public class ProductAdvertisingController {
     public ResponseEntity<ShoppingCart> updateCartStatus(@RequestParam Long orderId) {
         return new ResponseEntity<>(shoppingCartService.update(orderId), HttpStatus.OK);
     }
+
+    @GetMapping("/orders/{productId}")
+    public ResponseEntity<ProductWarehouseStockDTO> getAllProductWarehouseStock(@RequestParam Long productId) {
+        return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId), HttpStatus.OK);
+    }
+
 
 }

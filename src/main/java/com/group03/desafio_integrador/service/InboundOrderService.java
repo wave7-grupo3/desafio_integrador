@@ -4,6 +4,7 @@ import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
+import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
@@ -164,4 +165,13 @@ public class InboundOrderService implements IInboundOrderService {
         sectionExists.setCapacity(sectionExists.getCapacity() - totalVolumeBatch);
         inboundOrder.setSectionId(sectionExists);
     }
+
+
+    private ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId) {
+
+
+
+    }
+
+
 }

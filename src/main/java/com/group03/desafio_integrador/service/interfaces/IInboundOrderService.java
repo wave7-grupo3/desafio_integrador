@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.service.interfaces;
 
 import com.group03.desafio_integrador.dto.BatchStockDTO;
+import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.InboundOrder;
 
@@ -33,4 +34,6 @@ public interface IInboundOrderService {
      * @return Batch - Retorna uma entidade do tipo Batch.
      */
     Batch update(Batch batch);
+
+    ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId);
 }
