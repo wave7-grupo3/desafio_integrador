@@ -74,8 +74,8 @@ public class ProductAdvertisingController {
         return new ResponseEntity<>(shoppingCartService.update(orderId), HttpStatus.OK);
     }
 
-    @GetMapping("/orders/{productId}")
-    public ResponseEntity<ProductWarehouseStockDTO> getAllProductWarehouseStock(@RequestParam Long productId) {
+    @GetMapping(value="/list", params={"productId"})
+    public ResponseEntity<List<ProductWarehouseStockDTO>> getAllProductWarehouseStock(@RequestParam("productId") Long productId) throws Exception {
         return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId), HttpStatus.OK);
     }
 

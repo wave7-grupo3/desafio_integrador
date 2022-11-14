@@ -35,5 +35,5 @@ public interface IInboundOrderService {
      */
     Batch update(Batch batch);
 
-    ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId);
+    List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception;
 }

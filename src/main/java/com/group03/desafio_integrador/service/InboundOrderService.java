@@ -175,53 +175,68 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
 
-    public ProductWarehouseStockDTO getAllProductWarehouseStock(Long productId) {
+    public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
+
         List<InboundOrder> inboundOrderList = getAll();
 
-        List<Batch> filteredInboundOrderList = inboundOrderList.stream().map(inbound -> {
+        List<Batch> batchStream = new ArrayList<>();
 
-            Batch batchStream = (Batch) inbound.getBatchList().stream().map(batchProduct -> {
-                if (!batchProduct.getProductId().getProductId().equals(productId)) {
-                    throw new NotFoundException("");
-                }
-                return batchProduct;
-            }).collect(Collectors.toList());
+//        List<Batch> filteredInboundOrderList = inboundOrderList.stream()
+//                .filter(inbound -> inbound.getBatchList().stream()
+//                    .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
+//                    .collect(Collectors.toList());
+//        ).collect(Collectors.toList());
 
-            return batchStream;
+        for (InboundOrder inbound : inboundOrderList) {
+            validateOrder(inbound);
+            batchStream = inbound.getBatchList().stream()
+                    .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
+                    .collect(Collectors.toList());
+
+//            if(!batchStream.isEmpty()){
+                inbound.setBatchList(batchStream);
+//            }
+        };
+
+         inboundOrderList = inboundOrderList.stream()
+                 .filter(inboundOrder -> !inboundOrder.getBatchList().isEmpty())
+                 .collect(Collectors.toList());
+
+        List<BatchDTO> batchStockDTOS = batchStream.stream().map(batch -> BatchDTO.builder()
+                        .batchId(batch.getBatchId())
+                        .quantity(batch.getProductQuantity())
+                        .expirationDate(batch.getExpirationDate())
+                        .build())
+                .collect(Collectors.toList());
+
+        List<SectionDTO> section = inboundOrderList.stream().map(inbound -> SectionDTO.builder()
+                .sectionId(inbound.getSectionId().getSectionId())
+                .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                .build())
+                .collect(Collectors.toList());
+
+        List<ProductWarehouseStockDTO> productWarehouse = inboundOrderList.stream().map(inbound -> {
+
+            List<BatchDTO> inboundBatchList = inbound.getBatchList().stream().map(batch -> BatchDTO.builder()
+                            .batchId(batch.getBatchId())
+                            .quantity(batch.getProductQuantity())
+                            .expirationDate(batch.getExpirationDate())
+                            .build())
+                    .collect(Collectors.toList());
+
+            SectionDTO inboundSection = SectionDTO.builder()
+                            .sectionId(inbound.getSectionId().getSectionId())
+                            .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                            .build();
+
+            return ProductWarehouseStockDTO.builder()
+                    .sectionDTO(inboundSection)
+                    .productId(productId)
+                    .batchDTO(inboundBatchList)
+                    .build();
+
         }).collect(Collectors.toList());
 
-        List<BatchDTO> batchStockDTOS = (List<BatchDTO>) filteredInboundOrderList.stream().map(batch -> BatchDTO.builder()
-                .batchId(batch.getBatchId())
-                .quantity(batch.getProductQuantity())
-                .expirationDate(batch.getExpirationDate())
-                .build());
-
-        List<ProductWarehouseStockDTO> productWarehouse = (List<ProductWarehouseStockDTO>) inboundOrderList.stream().map(inbound -> {
-            try {
-                validateOrder(inbound);
-
-                SectionDTO section = SectionDTO.builder()
-                        .sectionId(inbound.getSectionId().getSectionId())
-                        .warehouseId(inbound.getWarehouseId().getWarehouseId())
-                        .build();
-
-
-                return ProductWarehouseStockDTO.builder()
-                        .sectionDTO(section)
-                        .producId(productId)
-                        .batchDTO(batchStockDTOS)
-                        .build();
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-
-        return null;
-
-
+        return productWarehouse;
     }
-
-
 }
