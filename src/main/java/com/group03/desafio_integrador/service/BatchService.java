@@ -8,6 +8,7 @@ import com.group03.desafio_integrador.service.interfaces.IBatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -41,7 +42,7 @@ public class BatchService implements IBatchService {
     }
 
     @Override
-    public Batch findBatchByProductId(ProductAdvertising id) {
-        return repository.findByProductId(id);
+    public List<Batch> findBatchByProductId(ProductAdvertising id) {
+        return repository.findAllByProductId(id);
     }
 }

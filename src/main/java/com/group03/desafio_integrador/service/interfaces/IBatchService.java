@@ -4,6 +4,8 @@ import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 
+import java.util.List;
+
 public interface IBatchService {
 
     /**
@@ -23,6 +25,6 @@ public interface IBatchService {
      */
     Batch save(Batch batch);
 
-    Batch findBatchByProductId(ProductAdvertising id);
+    List<Batch> findBatchByProductId(ProductAdvertising id);
 
 }
