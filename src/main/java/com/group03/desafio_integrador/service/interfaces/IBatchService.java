@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.service.interfaces;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.BatchDueDateStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 
@@ -27,10 +28,12 @@ public interface IBatchService {
 
     /**
      * Método responsável por listar os lotes de produto de acordo com o Id do Produto
-     * @author Amanda Zotelli
+     * @author Gabriel Morais
      * @param id - ProductAdvertising
      * @return List<Batch>  - Retorna uma Lista da entidade do tipo Batch.
      */
     List<Batch> findBatchByProductId(ProductAdvertising id);
+
+    BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section);
 
 }

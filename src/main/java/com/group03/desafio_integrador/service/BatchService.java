@@ -1,21 +1,31 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.BatchDueDateDTO;
+import com.group03.desafio_integrador.dto.BatchDueDateStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
+import com.group03.desafio_integrador.entities.InboundOrder;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
+import com.group03.desafio_integrador.entities.Section;
 import com.group03.desafio_integrador.repository.BatchRepository;
+import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.IBatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BatchService implements IBatchService {
 
     private final BatchRepository repository;
+
+    private final InboundOrderRepository inboundOrderRepository;
 
     /**
      * Método responsável por retornar o lote de acordo com o Id informado.
@@ -50,5 +60,64 @@ public class BatchService implements IBatchService {
     @Override
     public List<Batch> findBatchByProductId(ProductAdvertising id) {
         return repository.findAllByProductId(id);
+    }
+
+    @Override
+    public BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section) {
+
+        LocalDate currentDate = LocalDate.now().plusDays(numberOfDays);
+
+        List<Batch> batchList = repository.findAllByExpirationDateGreaterThan(currentDate);
+
+        List<BatchDueDateDTO> listBatchDTO = new ArrayList<>();
+
+        List<InboundOrder> inboundOrderList = inboundOrderRepository.findAll();
+
+        List<InboundOrder> filterOrderSectionList = inboundOrderList.stream()
+                .filter(orderBatch -> section.equals(String.valueOf(orderBatch.getSectionId().getSectionId())))
+                .collect(Collectors.toList());
+
+        for (InboundOrder inboundOrder : filterOrderSectionList) {
+
+            // TODO: 15/11/22 verificar retorno da lista filtrada com os lotes de cada ordem
+            List<Batch> batchFilterList = inboundOrder.getBatchList();
+
+                for (Batch batch : batchList) {
+
+                    List<Batch> teste = batchFilterList.stream().filter(id -> id.equals(batch.getBatchId())).collect(Collectors.toList());
+                    // List<Long> teste = batchFilterList.stream().filter(item -> item.equals(batch.getBatchId())).collect(Collectors.toList());
+
+                    if(!teste.isEmpty()) {
+                        BatchDueDateDTO batchDueDateDTO = BatchDueDateDTO.builder()
+                                .batchNumber(batch.getBatchId())
+                                .productId(batch.getProductId().getProductId())
+                                .category(Long.valueOf(section))
+                                .dueDate(batch.getExpirationDate())
+                                .quantity(batch.getProductQuantity())
+                                .build();
+
+                        listBatchDTO.add(batchDueDateDTO);
+                   }
+                }
+        }
+
+//        for (Batch batch : batchList) {
+//
+//            BatchDueDateDTO batchDueDateDTO = BatchDueDateDTO.builder()
+//                    .batchNumber(batch.getBatchId())
+//                    .productId(batch.getProductId().getProductId())
+//                    .category(Long.valueOf(section))
+//                    .dueDate(batch.getExpirationDate())
+//                    .quantity(batch.getProductQuantity())
+//                    .build();
+//
+//            listBatchDTO.add(batchDueDateDTO);
+//        }
+
+        BatchDueDateStockDTO batchDueDateStockDTO = BatchDueDateStockDTO.builder()
+                .batchDueDateStock(listBatchDTO)
+                .build();
+
+        return batchDueDateStockDTO;
     }
 }
