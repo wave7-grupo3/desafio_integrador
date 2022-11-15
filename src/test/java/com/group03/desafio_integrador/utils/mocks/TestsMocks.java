@@ -99,6 +99,34 @@ public class TestsMocks {
 
     }
 
+    public static List<ProductAdvertising> mockProductListEmpty() {
+        List<ProductAdvertising> productAdvertisingsFreshList = new ArrayList<>();
+        return productAdvertisingsFreshList;
+    }
+
+    public static List<ProductAdvertising> mockProductListFreshEmpty() {
+        List<ProductAdvertising> productAdvertisingsFreshList = new ArrayList<>();
+        return productAdvertisingsFreshList;
+    }
+
+    public static List<ProductAdvertising> mockProductListFresh() {
+        List<ProductAdvertising> productAdvertisingsFreshList = new ArrayList<>();
+
+        ProductAdvertising productFresh = new ProductAdvertising(1L,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                "Maçã",
+                "teste",
+                Seller.builder().sellerId(1L).build(),
+                CategoryEnum.FS,
+                BigDecimal.valueOf(2),
+                5
+        );
+
+        productAdvertisingsFreshList.add(productFresh);
+        return productAdvertisingsFreshList;
+    }
+
     public static List<ProductAdvertising> mockProductList() {
         List<ProductAdvertising> productAdvertisingsFreshList = new ArrayList<>();
 
@@ -230,6 +258,14 @@ public class TestsMocks {
                 OrderStatusEnum.FINALIZADO,
                 mockBuyer(),
                 10.0
+        );
+    }
+
+    public static Buyer buyer() {
+        return new Buyer(
+                1L,
+                "Lucas",
+                "lucas@email.com"
         );
     }
 
