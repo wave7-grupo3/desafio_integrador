@@ -1,29 +1,33 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.ProductDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.Buyer;
+import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
+import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
+import com.group03.desafio_integrador.repository.BuyerRepository;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
+import com.group03.desafio_integrador.repository.ShoppingCartRepository;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
-import org.mockito.BDDMockito;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,13 +36,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class ProductAdvertisingServiceTest {
 
     @InjectMocks
+    @Spy
     private ProductAdvertisingService productAdvertisingService;
 
-    @InjectMocks
+    @Mock
     private BuyerService buyerService;
 
     @Mock
     private ProductAdvertisingRepository productAdvertisingRepository;
+
+    @Mock
+    private ShoppingCartService shoppingCartService;
+
+    @Mock
+    private BuyerRepository buyerRepository;
 
     private ProductAdvertising mockProductAdvertising;
 
@@ -63,7 +74,7 @@ class ProductAdvertisingServiceTest {
         mockProductListEmpty = TestsMocks.mockProductListEmpty();
         mockProductListFresh = TestsMocks.mockProductListFresh();
         mockProductListFreshEmpty = TestsMocks.mockProductListFreshEmpty();
-        buyer = TestsMocks.buyer();
+        buyer = TestsMocks.mockBuyer();
         mockCreateCartRequest = TestsMocks.mockCreateCartRequest();
     }
 
@@ -125,8 +136,41 @@ class ProductAdvertisingServiceTest {
         assertThat(notFoundException.getMessage()).isEqualTo("Category not found");
     }
 
+
+
     @Test
-    void registerOrder() {
+    void registerOrder_returnSuccess_whenIsRegisterOneOrder() throws Exception {
+        Set<ProductAdvertising> products = new HashSet<>();
+
+        ShoppingCart shoppingCart = ShoppingCart.builder()
+                .buyer(buyer)
+                .date(LocalDate.now())
+                .orderStatus(OrderStatusEnum.ABERTO)
+                .totalCartPrice(Double.valueOf(String.valueOf(150.0)))
+                .build();
+
+        BDDMockito.doNothing().when(productAdvertisingService)
+                .verifyStock(ArgumentMatchers.eq(mockCreateCartRequest));
+
+        BDDMockito.doNothing().when(productAdvertisingService)
+                .saveShoppingCart(ArgumentMatchers.anySet(), ArgumentMatchers.any(ShoppingCart.class));
+
+
+        BDDMockito.when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class)))
+        .thenReturn(Optional.ofNullable(mockProductAdvertising));
+
+        ShoppingCartTotalDTO shoppingCartTotalDTO = ShoppingCartTotalDTO.builder()
+                .totalPrice(Double.valueOf(String.valueOf(150.0)))
+                .build();
+
+        ShoppingCartTotalDTO shoppingCartTotal =  productAdvertisingService.registerOrder(mockCreateCartRequest);
+
+        buyerService.getById(buyer.getBuyerId());
+
+        BDDMockito.verify(productAdvertisingService, BDDMockito.times(1))
+              .verifyStock(ArgumentMatchers.any(PurchaseOrderDTO.class));
+
+        assertThat(shoppingCartTotal).isNotNull();
     }
 
     @Test

@@ -127,7 +127,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param shoppingCart - ShoppingCart
      * @author Amanda Zotelli
      */
-    private void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
+    public void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
         ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
         List<CartProduct> cartProductList = new ArrayList<>();
 
