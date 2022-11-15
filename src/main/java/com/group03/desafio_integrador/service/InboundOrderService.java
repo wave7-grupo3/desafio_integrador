@@ -179,53 +179,94 @@ public class InboundOrderService implements IInboundOrderService {
 
         List<InboundOrder> inboundOrderList = getAll();
         List<Batch> batchStream;
-        List<ProductWarehouseStockDTO> productWarehouseStep = new ArrayList<>();
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = new ArrayList<>();
+        List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (InboundOrder inbound : inboundOrderList) {
             validateOrder(inbound);
-            batchStream = inbound.getBatchList().stream()
-                    .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
-                    .collect(Collectors.toList());
+            batchStream = getBatchStreamFilteredByProductId(productId, inbound);
+            SectionDTO sectionDto = buildSectionDTO(inbound);
+            verifyBatchDueDate(productId, batchStream, errorDetails);
 
-            SectionDTO sectionDto = SectionDTO.builder()
-                    .sectionId(inbound.getSectionId().getSectionId())
-                    .warehouseId(inbound.getWarehouseId().getWarehouseId())
-                    .build();
+            List<ProductWarehouseStockDTO> warehouseByIdList = getFilterWarehouseById(sectionDto, productWarehouseStockDTOList);
 
-            List<ProductWarehouseStockDTO> productWarehouseStockDTOList = getFilterWarehouseById(sectionDto, productWarehouseStep);
-
-            List<BatchDTO> batchStockDTOS = batchStream.stream().map(batch -> BatchDTO.builder()
-                            .batchId(batch.getBatchId())
-                            .quantity(batch.getProductQuantity())
-                            .expirationDate(batch.getExpirationDate())
-                            .build())
-                    .collect(Collectors.toList());
+            List<BatchDTO> batchStockDTOS = getBatchStockDTOS(batchStream);
 
             if (!batchStream.isEmpty()) {
-                if (productWarehouseStockDTOList.isEmpty()) {
-                    productWarehouseStep.add(
-                            ProductWarehouseStockDTO.builder()
-                                    .productId(productId)
-                                    .sectionDTO(sectionDto)
-                                    .batchDTO(batchStockDTOS)
-                                    .build()
-                    );
-                } else {
-                    for (ProductWarehouseStockDTO productWarehouseStockDTO : productWarehouseStep) {
-                        if (productWarehouseStockDTO.getSectionDTO().getSectionId().equals(sectionDto.getSectionId()) && productWarehouseStockDTO.getSectionDTO().getWarehouseId().equals(sectionDto.getWarehouseId())) {
-                            productWarehouseStockDTO.getBatchDTO().addAll(batchStockDTOS);
-                        }
-                    }
-                }
+                fillProductWarehouseStockList(productId, productWarehouseStockDTOList, sectionDto, warehouseByIdList, batchStockDTOS);
             }
         }
 
-        return productWarehouseStep;
+        return productWarehouseStockDTOList;
 
+    }
+
+    private static void verifyBatchDueDate(
+            Long productId,
+            List<Batch> batchStream,
+            List<ValidationErrorDetail> errorDetails
+    ) {
+        for (Batch batch : batchStream) {
+            ProductAdvertisingService.verifyProductExpirationDate(errorDetails, batch, productId);
+        }
+    }
+
+    private static void fillProductWarehouseStockList(
+            Long productId,
+            List<ProductWarehouseStockDTO> productWarehouseStockDTOList,
+            SectionDTO sectionDto,
+            List<ProductWarehouseStockDTO> warehouseByIdList,
+            List<BatchDTO> batchStockDTOS
+    ) {
+        if (warehouseByIdList.isEmpty()) {
+            productWarehouseStockDTOList.add(
+                    buildProductWarehouseStockDTO(productId, sectionDto, batchStockDTOS)
+            );
+        } else {
+            for (ProductWarehouseStockDTO productWarehouseStockDTO : productWarehouseStockDTOList) {
+                Boolean compareSectionId = productWarehouseStockDTO.getSectionDTO().getSectionId().equals(sectionDto.getSectionId());
+                Boolean compareSectionWarehouseId = productWarehouseStockDTO.getSectionDTO().getWarehouseId().equals(sectionDto.getWarehouseId());
+                if (compareSectionId && compareSectionWarehouseId) {
+                    productWarehouseStockDTO.getBatchDTO().addAll(batchStockDTOS);
+                }
+            }
+        }
+    }
+
+    private static ProductWarehouseStockDTO buildProductWarehouseStockDTO(
+            Long productId,
+            SectionDTO sectionDto,
+            List<BatchDTO> batchStockDTOS
+    ) {
+        return ProductWarehouseStockDTO.builder()
+                .productId(productId)
+                .sectionDTO(sectionDto)
+                .batchDTO(batchStockDTOS)
+                .build();
+    }
+
+    private static List<BatchDTO> getBatchStockDTOS(List<Batch> batchStream) {
+        return batchStream.stream().map(batch -> BatchDTO.builder()
+                        .batchId(batch.getBatchId())
+                        .quantity(batch.getProductQuantity())
+                        .expirationDate(batch.getExpirationDate())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    private static SectionDTO buildSectionDTO(InboundOrder inbound) {
+        return SectionDTO.builder()
+                .sectionId(inbound.getSectionId().getSectionId())
+                .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                .build();
+    }
+
+    private static List<Batch> getBatchStreamFilteredByProductId(Long productId, InboundOrder inbound) {
+        return inbound.getBatchList().stream()
+                .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
+                .collect(Collectors.toList());
     }
 }
 
 // TODO: ROTA GET 2
-// TODO : VALIDAR VALIDADE
-// TODO: REFATORAÇÃO DA  getAllProductWarehouseStock
 
