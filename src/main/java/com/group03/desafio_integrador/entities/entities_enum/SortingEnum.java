@@ -7,6 +7,12 @@ public enum SortingEnum {
     Q,
     V;
 
+    /**
+     * Método responsável por converter uma String em Enum.
+     * @author Amanda Zotelli, Rosalia Padoin
+     * @return SortingEnum - Retorna um enum do tipo SortingEnum.
+     * @throws NotFoundException
+     */
     public static SortingEnum toEnum(String string) {
         SortingEnum enumSorting;
 
