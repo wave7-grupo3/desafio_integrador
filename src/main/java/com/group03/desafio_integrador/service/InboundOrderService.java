@@ -179,7 +179,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Long - productId
      * @return List<ProductWarehouseStockDTO> - Retorna uma lista de dto do tipo ProductWarehouseStockDTO.
      * @throws Exception
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
 
@@ -212,8 +212,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Long - productId
      * @param List<Batch> - batchStream
      * @param List<ValidationErrorDetail> - errorDetails
-     * @return void - Método somente de verificação
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @return void - Método somente de verificação.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static void verifyBatchDueDate(
             Long productId,
@@ -233,8 +233,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @param SectionDTO - sectionDto
      * @param List<ProductWarehouseStockDTO> - warehouseByIdList
      * @param List<BatchDTO> - batchStockDTOS
-     * @return void - Método somente de verificação
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @return void - Método somente de verificação.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static void fillProductWarehouseStockList(
             Long productId,
@@ -264,8 +264,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Long - productId
      * @param SectionDTO - sectionDto
      * @param List<BatchDTO> - batchStockDTOS
-     * @return ProductWarehouseStockDTO - Retorna o build de um ProductWarehouseDTO
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @return ProductWarehouseStockDTO - Retorna o build de um ProductWarehouseDTO.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static ProductWarehouseStockDTO buildProductWarehouseStockDTO(
             Long productId,
@@ -283,8 +283,8 @@ public class InboundOrderService implements IInboundOrderService {
      * Método responsável por criar uma Lista de Lotes, com o build de BatchDTO.
      *
      * @param List<Batch> - batchStream
-     * @return List<BatchDTO> - Retorna uma Lista de Lotes
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @return List<BatchDTO> - Retorna uma Lista de Lotes.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static List<BatchDTO> getBatchStockDTOS(List<Batch> batchStream) {
         return batchStream.stream().map(batch -> BatchDTO.builder()
@@ -299,8 +299,8 @@ public class InboundOrderService implements IInboundOrderService {
      * Método responsável por fazer o build de uma Seção.
      *
      * @param InboundOrder - inboundOrder
-     * @return SectionDTO - Retorna uma seção
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @return SectionDTO - Retorna uma seção.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static SectionDTO buildSectionDTO(InboundOrder inboundOrder) {
         return SectionDTO.builder()
@@ -315,7 +315,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Long - productId
      * @param InboundOrder - inboundOrder
      * @return List<Batch> - Retorna uma lista de lotes filtrados por produto.
-     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static List<Batch> getBatchStreamFilteredByProductId(Long productId, InboundOrder inboundOrder) {
         return inboundOrder.getBatchList().stream()
@@ -328,7 +328,7 @@ public class InboundOrderService implements IInboundOrderService {
      *
      * @param List<ProductWarehouseStockDTO> - productWarehouseStockDTOList
      * @param String - sorting
-     * @return List<ProductWarehouseStockDTO> - Retorna a lista de ProductWarehouseStockDTO de acordo com o parâmetro de ordenação passado
+     * @return List<ProductWarehouseStockDTO> - Retorna a lista de ProductWarehouseStockDTO de acordo com o parâmetro de ordenação passado.
      * @author Amanda Zotelli e Rosalia Padoin
      */
     @Override

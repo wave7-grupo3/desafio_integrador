@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service.interfaces;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
@@ -21,21 +22,35 @@ public interface IInboundOrderService {
     BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
 
     /**
-     * Método responsável por listar todos os pedidos de ordem do armazem.
+     * Método responsável por listar todos os pedidos de ordem do armazém.
      * @author Gabriel Morais
      * @return List<InboundOrder> - Retorna uma entidade do tipo InboundOrder.
      */
     List<InboundOrder> getAll();
 
     /**
-     * Método responsável por atualizar as informações do lote contido no armazem.
+     * Método responsável por atualizar as informações do lote contido no armazém.
      * @author Gabriel Morais
      * @param Batch - batch
      * @return Batch - Retorna uma entidade do tipo Batch.
      */
     Batch update(Batch batch);
 
+    /**
+     * Método responsável por retornar uma lista de ProductWarehouseStockDTO com os lotes de determinado produto .
+     * @author Carolina Hakamada
+     * @param Long - productId
+     * @return List<ProductWarehouseStockDTO> - Retorna uma lista de ProductWarehouseDTO com todos os lotes de um produto em seu armazém e seção.
+     * @throws Exception
+     */
     List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception;
 
-    List<ProductWarehouseStockDTO> getAllOrdinancesForBatches(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter);
+    /**
+     * Método responsável por retornar uma lista de ProductWarehouseStockDTO com lotes ordenados.
+     * @author Amanda Zotelli, Rosalia Padoin
+     * @param List<ProductWarehouseStockDTO> - productWarehouseStockDTOList
+     * @param String - sorting
+     * @return List<ProductWarehouseStockDTO> - Retorna uma lista de ProductWarehouseDTO ordenada pelo parâmetro definido.
+     */
+    List<ProductWarehouseStockDTO> getAllOrdinancesForBatches(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String sorting);
 }
