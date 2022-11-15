@@ -3,15 +3,14 @@ package com.group03.desafio_integrador.service;
 import com.group03.desafio_integrador.dto.DispatchDTO;
 import com.group03.desafio_integrador.dto.PackingOrderDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
+import com.group03.desafio_integrador.entities.entities_enum.DispatchStatusEnum;
 import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
 import com.group03.desafio_integrador.repository.CartProductRepository;
 import com.group03.desafio_integrador.service.interfaces.IPackingAndDispatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -20,6 +19,8 @@ public class PackingAndDispatchService implements IPackingAndDispatchService {
     private CartProductRepository repository;
 
     private List<CartProduct> cartBuyerOfProducts;
+    private Integer id = 0;
+
 
     /**
      * @return
@@ -45,11 +46,29 @@ public class PackingAndDispatchService implements IPackingAndDispatchService {
         }).collect(Collectors.toList()).get(0);
     }
 
+    private Integer createId() {return id += 1;}
+
     /**
      * @return
      */
     @Override
     public Set<DispatchDTO> getAllPackingForDispatch() {
-        return null;
+        List<PackingOrderDTO> cartProductOrderFinished = getAllCartProductFinished();
+        HashSet<DispatchDTO> data = new LinkedHashSet<>();
+
+        cartProductOrderFinished.stream().map(f -> {
+            DispatchDTO dispatchDTO = DispatchDTO.builder()
+                    //.id_Packing(Long.valueOf(createId()))
+                    .buyer_id(f.getBuyer_id())
+                    .category(f.getType())
+                    .status(DispatchStatusEnum.ABERTO)
+                    .build();
+
+            data.add(dispatchDTO );
+
+            return dispatchDTO ;
+        }).collect(Collectors.toList());
+
+        return data;
     }
 }
