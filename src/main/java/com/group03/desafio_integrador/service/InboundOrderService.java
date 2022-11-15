@@ -5,7 +5,6 @@ import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
-import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.entities_enum.SortingEnum;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
@@ -56,9 +55,7 @@ public class InboundOrderService implements IInboundOrderService {
         }
 
         section.setCapacity(updateVolume + section.getCapacity());
-
         sectionService.save(section);
-
         return batchService.save(batch);
     }
 
@@ -176,6 +173,14 @@ public class InboundOrderService implements IInboundOrderService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Método responsável fornecer uma lista de produtos com todos os lotes onde aparece.
+     *
+     * @param Long - productId
+     * @return List<ProductWarehouseStockDTO> - Retorna uma lista de dto do tipo ProductWarehouseStockDTO.
+     * @throws Exception
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
     public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
 
         List<InboundOrder> inboundOrderList = getAll();
@@ -197,12 +202,19 @@ public class InboundOrderService implements IInboundOrderService {
                 fillProductWarehouseStockList(productId, productWarehouseStockDTOList, sectionDto, warehouseByIdList, batchStockDTOS);
             }
         }
-
         return productWarehouseStockDTOList;
-
     }
 
 
+    /**
+     * Método responsável verificar a data de validade dos produtos de um lote.
+     *
+     * @param Long - productId
+     * @param List<Batch> - batchStream
+     * @param List<ValidationErrorDetail> - errorDetails
+     * @return void - Método somente de verificação
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
     private static void verifyBatchDueDate(
             Long productId,
             List<Batch> batchStream,
@@ -213,6 +225,17 @@ public class InboundOrderService implements IInboundOrderService {
         }
     }
 
+    /**
+     * Método responsável por adicionar os lotes onde os produtos aparecem em seu armazém e seção.
+     *
+     * @param Long - productId
+     * @param List<ProductWarehouseStockDTO> - productWarehouseStockDTOList
+     * @param SectionDTO - sectionDto
+     * @param List<ProductWarehouseStockDTO> - warehouseByIdList
+     * @param List<BatchDTO> - batchStockDTOS
+     * @return void - Método somente de verificação
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
     private static void fillProductWarehouseStockList(
             Long productId,
             List<ProductWarehouseStockDTO> productWarehouseStockDTOList,
@@ -235,6 +258,15 @@ public class InboundOrderService implements IInboundOrderService {
         }
     }
 
+    /**
+     * Método responsável por construir um DTO de ProductWarehouseStock.
+     *
+     * @param Long - productId
+     * @param SectionDTO - sectionDto
+     * @param List<BatchDTO> - batchStockDTOS
+     * @return ProductWarehouseStockDTO - retorna o build de um ProductWarehouseDTO
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
     private static ProductWarehouseStockDTO buildProductWarehouseStockDTO(
             Long productId,
             SectionDTO sectionDto,
@@ -247,6 +279,13 @@ public class InboundOrderService implements IInboundOrderService {
                 .build();
     }
 
+    /**
+     * Método responsável por criar uma Lista de Lotes, com o build de BatchDTO.
+     *
+     * @param List<Batch> - batchStream
+     * @return List<BatchDTO> - retorna uma Lista de Lotes
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
     private static List<BatchDTO> getBatchStockDTOS(List<Batch> batchStream) {
         return batchStream.stream().map(batch -> BatchDTO.builder()
                         .batchId(batch.getBatchId())
@@ -256,22 +295,45 @@ public class InboundOrderService implements IInboundOrderService {
                 .collect(Collectors.toList());
     }
 
-    private static SectionDTO buildSectionDTO(InboundOrder inbound) {
+    /**
+     * Método responsável por fazer o build de uma Seção.
+     *
+     * @param InboundOrder - inboundOrder
+     * @return SectionDTO - retorna uma seção
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
+    private static SectionDTO buildSectionDTO(InboundOrder inboundOrder) {
         return SectionDTO.builder()
-                .sectionId(inbound.getSectionId().getSectionId())
-                .warehouseId(inbound.getWarehouseId().getWarehouseId())
+                .sectionId(inboundOrder.getSectionId().getSectionId())
+                .warehouseId(inboundOrder.getWarehouseId().getWarehouseId())
                 .build();
     }
 
-    private static List<Batch> getBatchStreamFilteredByProductId(Long productId, InboundOrder inbound) {
-        return inbound.getBatchList().stream()
+    /**
+     * Método responsável por filtrar os lotes que contém determinado produto.
+     *
+     * @param Long - productId
+     * @param InboundOrder - inboundOrder
+     * @return List<Batch> - retorna uma lista de lotes filtrados por produto.
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     */
+    private static List<Batch> getBatchStreamFilteredByProductId(Long productId, InboundOrder inboundOrder) {
+        return inboundOrder.getBatchList().stream()
                 .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Método responsável por trazer os lotes ordenados por um parâmetro, podendo ser de Lote, Quantidade de produto no lote ou Data de validade do produto.
+     *
+     * @param List<ProductWarehouseStockDTO> - productWarehouseStockDTOList
+     * @param String - sorting
+     * @return List<ProductWarehouseStockDTO> - retorna a lista de ProductWarehouseStockDTO de acordo com o parâmetro de ordenação passado
+     * @author Amanda Zotelli e Rosalia Padoin
+     */
     @Override
-    public List<ProductWarehouseStockDTO> getAllFilters(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter) {
-        SortingEnum enumSorting = SortingEnum.toEnum(filter);
+    public List<ProductWarehouseStockDTO> getAllOrdinancesForBatches(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String sorting) {
+        SortingEnum enumSorting = SortingEnum.toEnum(sorting);
         List<BatchDTO> batchSortedDTO;
 
         for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
