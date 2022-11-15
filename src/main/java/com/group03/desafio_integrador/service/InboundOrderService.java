@@ -259,12 +259,12 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
     /**
-     * Método responsável por construir um DTO de ProductWarehouseStock.
+     * Método responsável por construir um dto de ProductWarehouseStock.
      *
      * @param Long - productId
      * @param SectionDTO - sectionDto
      * @param List<BatchDTO> - batchStockDTOS
-     * @return ProductWarehouseStockDTO - retorna o build de um ProductWarehouseDTO
+     * @return ProductWarehouseStockDTO - Retorna o build de um ProductWarehouseDTO
      * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static ProductWarehouseStockDTO buildProductWarehouseStockDTO(
@@ -283,7 +283,7 @@ public class InboundOrderService implements IInboundOrderService {
      * Método responsável por criar uma Lista de Lotes, com o build de BatchDTO.
      *
      * @param List<Batch> - batchStream
-     * @return List<BatchDTO> - retorna uma Lista de Lotes
+     * @return List<BatchDTO> - Retorna uma Lista de Lotes
      * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static List<BatchDTO> getBatchStockDTOS(List<Batch> batchStream) {
@@ -299,7 +299,7 @@ public class InboundOrderService implements IInboundOrderService {
      * Método responsável por fazer o build de uma Seção.
      *
      * @param InboundOrder - inboundOrder
-     * @return SectionDTO - retorna uma seção
+     * @return SectionDTO - Retorna uma seção
      * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static SectionDTO buildSectionDTO(InboundOrder inboundOrder) {
@@ -314,7 +314,7 @@ public class InboundOrderService implements IInboundOrderService {
      *
      * @param Long - productId
      * @param InboundOrder - inboundOrder
-     * @return List<Batch> - retorna uma lista de lotes filtrados por produto.
+     * @return List<Batch> - Retorna uma lista de lotes filtrados por produto.
      * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
     private static List<Batch> getBatchStreamFilteredByProductId(Long productId, InboundOrder inboundOrder) {
@@ -328,7 +328,7 @@ public class InboundOrderService implements IInboundOrderService {
      *
      * @param List<ProductWarehouseStockDTO> - productWarehouseStockDTOList
      * @param String - sorting
-     * @return List<ProductWarehouseStockDTO> - retorna a lista de ProductWarehouseStockDTO de acordo com o parâmetro de ordenação passado
+     * @return List<ProductWarehouseStockDTO> - Retorna a lista de ProductWarehouseStockDTO de acordo com o parâmetro de ordenação passado
      * @author Amanda Zotelli e Rosalia Padoin
      */
     @Override
