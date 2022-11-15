@@ -41,6 +41,12 @@ public class BatchService implements IBatchService {
         return repository.save(batch);
     }
 
+    /**
+     * Método responsável por listar os lotes de produto de acordo com o Id do Produto
+     * @author Amanda Zotelli
+     * @param id - ProductAdvertising
+     * @return List<Batch>  - Retorna uma Lista da entidade do tipo Batch.
+     */
     @Override
     public List<Batch> findBatchByProductId(ProductAdvertising id) {
         return repository.findAllByProductId(id);

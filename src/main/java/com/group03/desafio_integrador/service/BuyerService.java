@@ -13,6 +13,13 @@ public class BuyerService implements IBuyerService {
 
     private final BuyerRepository repository;
 
+    /**
+     * Método responsável por retornar o comprador de acordo com o Id informado.
+     * @author Amanda Zotelli
+     * @param id - Long
+     * @return Buyer - Retorna uma entidade do tipo Buyer.
+     * @throws NotFoundException
+     */
     @Override
     public Buyer getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Buyer not found!"));
