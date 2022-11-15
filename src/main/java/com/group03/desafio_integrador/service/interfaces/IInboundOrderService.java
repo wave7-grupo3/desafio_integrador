@@ -37,5 +37,5 @@ public interface IInboundOrderService {
 
     List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception;
 
-    List<ProductWarehouseStockDTO> getAllFilters(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter);
+    List<ProductWarehouseStockDTO> getAllOrdinancesForBatches(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter);
 }

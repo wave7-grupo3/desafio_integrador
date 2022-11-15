@@ -99,13 +99,13 @@ public class ProductAdvertisingController {
         return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId), HttpStatus.OK);
     }
 
-    @GetMapping(value= "/list", params={"productId", "filter"})
-    public ResponseEntity<List<ProductWarehouseStockDTO>> getFilteredProductWarehouseStock(
+    @GetMapping(value= "/list", params={"productId", "sorting"})
+    public ResponseEntity<List<ProductWarehouseStockDTO>> getAllOrdinancesForBatches(
             @RequestParam("productId") Long productId,
-            @RequestParam("filter") String filter
+            @RequestParam("sorting") String sorting
     ) throws Exception {
         List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(productId);
-        return new ResponseEntity<>(inboundOrderService.getAllFilters(productWarehouseStockDTOList, filter), HttpStatus.OK);
+        return new ResponseEntity<>(inboundOrderService.getAllOrdinancesForBatches(productWarehouseStockDTOList, sorting), HttpStatus.OK);
     }
 
 
