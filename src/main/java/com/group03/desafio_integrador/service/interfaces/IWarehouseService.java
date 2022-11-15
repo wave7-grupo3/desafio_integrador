@@ -1,7 +1,11 @@
 package com.group03.desafio_integrador.service.interfaces;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.ProductWarehouseDTO;
+import com.group03.desafio_integrador.entities.InboundOrder;
 import com.group03.desafio_integrador.entities.Warehouse;
+
+import java.util.List;
 
 public interface IWarehouseService {
 
@@ -13,4 +17,8 @@ public interface IWarehouseService {
      * @throws NotFoundException
      */
     Warehouse getById(Long id) throws NotFoundException;
+
+    List<Warehouse> getAll();
+
+    ProductWarehouseDTO getAllStockProductWarehouse(Long id);
 }

@@ -35,5 +35,11 @@ public interface IProductAdvertisingService {
      */
     List<ProductAdvertising> getAllByCategory(String category);
 
+    /**
+     * Método responsável por registrar os pedidos
+     * @param purchase - PurchaseOrderDTO
+     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     * @author Amanda Zotelli, Gabriel Morais
+     */
     ShoppingCartTotalDTO registerOrder(PurchaseOrderDTO purchase);
 }

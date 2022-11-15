@@ -8,6 +8,7 @@ import com.group03.desafio_integrador.service.interfaces.IBatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -40,8 +41,14 @@ public class BatchService implements IBatchService {
         return repository.save(batch);
     }
 
+    /**
+     * Método responsável por listar os lotes de produto de acordo com o Id do Produto
+     * @author Amanda Zotelli
+     * @param id - ProductAdvertising
+     * @return List<Batch>  - Retorna uma Lista da entidade do tipo Batch.
+     */
     @Override
-    public Batch findBatchByProductId(ProductAdvertising id) {
-        return repository.findByProductId(id);
+    public List<Batch> findBatchByProductId(ProductAdvertising id) {
+        return repository.findAllByProductId(id);
     }
 }
