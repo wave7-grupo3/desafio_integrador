@@ -5,6 +5,7 @@ import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
+import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.entities_enum.SortingEnum;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
@@ -270,26 +271,19 @@ public class InboundOrderService implements IInboundOrderService {
 
     @Override
     public List<ProductWarehouseStockDTO> getAllFilters(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter) {
+        SortingEnum enumSorting = SortingEnum.toEnum(filter);
+        List<BatchDTO> batchSortedDTO;
 
-        List<BatchDTO> batchSortedDTO = new ArrayList<>();
-
-        if (filter.equalsIgnoreCase(String.valueOf(SortingEnum.V))) {
-            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+        for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+            if (enumSorting.equals(SortingEnum.V)) {
                 batchSortedDTO = SortingBatch.ordenatedByExpirationDate(product.getBatchDTO());
-                product.setBatchDTO(batchSortedDTO);
-            }
-        } else if (filter.equalsIgnoreCase(String.valueOf(SortingEnum.Q))) {
-            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+            } else if (enumSorting.equals(SortingEnum.Q)) {
                 batchSortedDTO = SortingBatch.ordenatedByQuantity(product.getBatchDTO());
-                product.setBatchDTO(batchSortedDTO);
-            }
-        } else {
-            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+            } else {
                 batchSortedDTO = SortingBatch.ordenatedByBatch(product.getBatchDTO());
-                product.setBatchDTO(batchSortedDTO);
             }
+            product.setBatchDTO(batchSortedDTO);
         }
-
         return productWarehouseStockDTOList;
     }
 
