@@ -5,12 +5,14 @@ import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
+import com.group03.desafio_integrador.entities.entities_enum.FilterEnum;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -201,6 +203,7 @@ public class InboundOrderService implements IInboundOrderService {
 
     }
 
+
     private static void verifyBatchDueDate(
             Long productId,
             List<Batch> batchStream,
@@ -266,7 +269,34 @@ public class InboundOrderService implements IInboundOrderService {
                 .filter(batchProduct -> batchProduct.getProductId().getProductId().equals(productId))
                 .collect(Collectors.toList());
     }
-}
 
-// TODO: ROTA GET 2
+    @Override
+    public List<ProductWarehouseStockDTO> getAllFilters(List<ProductWarehouseStockDTO> productWarehouseStockDTOList, String filter) {
+
+        List<BatchDTO> batchSortedDTO = new ArrayList<>();
+
+        if (filter.equalsIgnoreCase(String.valueOf(FilterEnum.V))) {
+            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+                batchSortedDTO = product.getBatchDTO().stream().sorted(Comparator.comparing(BatchDTO::getExpirationDate))
+                        .collect(Collectors.toList());
+                product.setBatchDTO(batchSortedDTO);
+            }
+        } else if (filter.equalsIgnoreCase(String.valueOf(FilterEnum.Q))) {
+            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+                batchSortedDTO = product.getBatchDTO().stream().sorted(Comparator.comparingInt(BatchDTO::getQuantity))
+                        .collect(Collectors.toList());
+                product.setBatchDTO(batchSortedDTO);
+            }
+        } else {
+            for (ProductWarehouseStockDTO product : productWarehouseStockDTOList) {
+                batchSortedDTO = product.getBatchDTO().stream().sorted(Comparator.comparing(BatchDTO::getBatchId))
+                        .collect(Collectors.toList());
+                product.setBatchDTO(batchSortedDTO);
+            }
+        }
+
+        return productWarehouseStockDTOList;
+    }
+
+}
 
