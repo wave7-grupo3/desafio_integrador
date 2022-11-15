@@ -59,7 +59,6 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por retornar todos os produtos cadastrados por categoria.
-     *
      * @param category - String
      * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
      * @throws NotFoundException
@@ -77,6 +76,12 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         return productAdvertisingList;
     }
 
+    /**
+     * Método responsável por registrar os pedidos
+     * @param purchase - PurchaseOrderDTO
+     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     * @author Amanda Zotelli, Gabriel Morais
+     */
     @Override
     public ShoppingCartTotalDTO registerOrder(PurchaseOrderDTO purchase) {
         verifyStock(purchase);
@@ -100,6 +105,13 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .build();
     }
 
+    /**
+     * Método responsável por estruturar o Builder para retorno do ShoppingCart.
+     * @param buyer - Buyer
+     * @param totalPrice - BigDecimal
+     * @return ShoppingCart - Retorna uma entidade do tipo ShoppingCart.
+     * @author Amanda Zotelli
+     */
     private static ShoppingCart shoppingCartBuilder(Buyer buyer, BigDecimal totalPrice) {
         return ShoppingCart.builder()
                 .buyer(buyer)
@@ -109,7 +121,12 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .build();
     }
 
-    // Associa o produto ao carrinho
+    /**
+     * Método responsável por salvar(associar) o produto ao ShoppingCart.
+     * @param products - Set<ProductAdvertising>
+     * @param shoppingCart - ShoppingCart
+     * @author Amanda Zotelli
+     */
     private void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
         ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
         List<CartProduct> cartProductList = new ArrayList<>();
@@ -126,26 +143,47 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         cartService.saveAll(cartProductList);
     }
 
+    /**
+     * Método responsável por verificar se existe estoque para realizar a venda e atualizar o estoque no lote.
+     * @param purchase - PurchaseOrderDTO
+     * @author Gabriel Morais, Mariana Saraiva
+     */
+    // TODO: 14/11/22 Analisar Refatoração
     public void verifyStock(PurchaseOrderDTO purchase) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productId = ProductAdvertising.builder().productId(product.getProductId()).build();
-            Batch batch = batchService.findBatchByProductId(productId);
 
-            if (batch == null) throw new NotFoundException("No batch found with this product!");
+            List<Batch> batchList = batchService.findBatchByProductId(productId);
 
-            Long idProduct = batch.getProductId().getProductId();
-            verifyProductExists(errorDetails, idProduct);
-            verifyProductStockQuantity(errorDetails, product, batch, idProduct);
-            verifyProductExpirationDate(errorDetails, batch, idProduct);
+            if (batchList.isEmpty()) throw new NotFoundException("No batch found with this product!");
 
-            if (!errorDetails.isEmpty()) throw new NotFoundException("Products not found", errorDetails);
-            
-            batchService.save(batch);
+            for (Batch batchOrder : batchList) {
+                List<ValidationErrorDetail> errorDetailsBatch = new ArrayList<>();
+
+                verifyProductExists(errorDetailsBatch, productId.getProductId());
+                verifyProductExpirationDate(errorDetailsBatch, batchOrder, productId.getProductId());
+                verifyProductStockQuantity(errorDetailsBatch, product, batchOrder, productId.getProductId());
+
+                if (errorDetailsBatch.isEmpty()) {
+                    return;
+                } else if (batchList.indexOf(batchOrder) == batchList.size() - 1 && !errorDetailsBatch.isEmpty()) {
+                    errorDetails.addAll(errorDetailsBatch);
+                }
+            }
         }
+
+        if (!errorDetails.isEmpty()) throw new NotFoundException("Products not found", errorDetails);
     }
 
+    /**
+     * Método responsável por verificar se a data de validade é superior há 3 semanas ao ser disponibilizado a venda.
+     * @param errorDetails - List<ValidationErrorDetail>
+     * @param batch - Batch
+     * @param idProduct - Long
+     * @author Amanda Zotelli
+     */
     private static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
@@ -155,10 +193,20 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         }
     }
 
+    /**
+     * Método responsável por verificar a quantidade disponivel de produtos no estoque.
+     * @param errorDetails - List<ValidationErrorDetail>
+     * @param product - ProductDTO
+     * @param batch - Batch
+     * @param idProduct - Long
+     * @author Amanda Zotelli
+     */
     private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
         if (batch.getProductQuantity() >= product.getQuantity()) {
-            Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
-            batch.setProductQuantity(updatedQuantity);
+            if (errorDetails.isEmpty()) {
+                Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
+                batch.setProductQuantity(updatedQuantity);
+            }
         } else {
             errorDetails.add(
                     ValidationErrorDetail.builder()
@@ -167,6 +215,12 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         }
     }
 
+    /**
+     * Método responsável por verificar se o produto existe(é cadastrado no sistema).
+     * @param errorDetails - List<ValidationErrorDetail>
+     * @param idProduct - Long
+     * @author Amanda Zotelli
+     */
     private void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
         try {
             getById(idProduct);
