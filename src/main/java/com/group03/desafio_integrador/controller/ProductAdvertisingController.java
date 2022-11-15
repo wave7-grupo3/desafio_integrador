@@ -94,11 +94,25 @@ public class ProductAdvertisingController {
         return new ResponseEntity<>(shoppingCartService.update(orderId), HttpStatus.OK);
     }
 
+    /**
+     * Rota responsável por retornar os lotes onde determinado produto aparece em seu armazém e seção.
+     * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @param productId - Long
+     * @return List<ProductWarehouseStockDTO> - Retorna uma Lista de ProductWarehouseDTO.
+     * @throws Exception
+     */
     @GetMapping(value="/list", params={"productId"})
     public ResponseEntity<List<ProductWarehouseStockDTO>> getAllProductWarehouseStock(@RequestParam("productId") Long productId) throws Exception {
         return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId), HttpStatus.OK);
     }
 
+    /**
+     * Rota responsável por retornar os lotes onde determinado produto aparece em seu armazém e seção, ordenados por um determinado parâmetro.
+     * @author Amanda Zotelli e Rosalia Padoin
+     * @param productId - Long
+     * @return List<ProductWarehouseStockDTO> - Retorna uma Lista de ProductWarehouseDTO.
+     * @throws Exception
+     */
     @GetMapping(value= "/list", params={"productId", "sorting"})
     public ResponseEntity<List<ProductWarehouseStockDTO>> getAllOrdinancesForBatches(
             @RequestParam("productId") Long productId,
