@@ -52,16 +52,36 @@ public class ProductAdvertisingController {
         return new ResponseEntity<>(service.getAllByCategory(category), HttpStatus.OK);
     }
 
+    /**
+     * Rota responsável por salvar um pedido com a lista de produtos com o request do tipo PurchaseOrder
+     * @author Amanda Zotelli
+     * @param purchase - PurchaseOrderDTO
+     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     */
     @PostMapping("/orders")
     public ResponseEntity<ShoppingCartTotalDTO> registerOrder(@RequestBody PurchaseOrderDTO purchase) {
         return new ResponseEntity<>(service.registerOrder(purchase), HttpStatus.CREATED);
     }
 
+    /**
+     * Rota responsável por listar os produtos no pedido.
+     * @author Amanda Zotelli
+     * @param id - Long
+     * @return List<CartProduct> - Retorna uma lista de entidade do tipo CartProduct.
+     * @throws NotFoundException
+     */
     @GetMapping("/orders/{id}")
     public ResponseEntity<List<CartProduct>> getCartProducts(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(cartService.getCartProducts(id), HttpStatus.OK);
     }
 
+    /**
+     * Rota responsável por modificar o status do pedido existente para FINALIZADO.
+     * @author Amanda Zotelli
+     * @param orderId - Long
+     * @return ShoppingCart- Retorna uma entidade do tipo ShoppingCart.
+     * @throws NotFoundException
+     */
     @PutMapping("/orders")
     public ResponseEntity<ShoppingCart> updateCartStatus(@RequestParam Long orderId) {
         return new ResponseEntity<>(shoppingCartService.update(orderId), HttpStatus.OK);
