@@ -35,10 +35,9 @@ public class ProductAdvertisingController {
     private IInboundOrderService inboundOrderService;
 
     /**
-     * Rota responsável por retornar todos os produtos cadastrados .
+     * Rota responsável por retornar todos os produtos cadastrados.
      *
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma entidade do tipo ProductAdvertising.
      * @author Mariana Saraiva
      */
     @GetMapping
@@ -50,8 +49,7 @@ public class ProductAdvertisingController {
      * Rota responsável por retornar todos os produtos cadastrados por categoria.
      *
      * @param category - String
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma lista contendo entidades do tipo ProductAdvertising conforme categoria.
      * @author Mariana Saraiva
      */
     @GetMapping("/list")
@@ -63,7 +61,7 @@ public class ProductAdvertisingController {
      * Rota responsável por salvar um pedido com a lista de produtos com o request do tipo PurchaseOrder
      * @author Amanda Zotelli
      * @param purchase - PurchaseOrderDTO
-     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     * @return Retorna um dto do tipo ShoppingCartTotalDTO.
      */
     @PostMapping("/orders")
     public ResponseEntity<ShoppingCartTotalDTO> registerOrder(@RequestBody PurchaseOrderDTO purchase) {
@@ -74,8 +72,7 @@ public class ProductAdvertisingController {
      * Rota responsável por listar os produtos no pedido.
      * @author Amanda Zotelli
      * @param id - Long
-     * @return List<CartProduct> - Retorna uma lista de entidade do tipo CartProduct.
-     * @throws NotFoundException
+     * @return Retorna uma lista de entidades do tipo CartProduct.
      */
     @GetMapping("/orders/{id}")
     public ResponseEntity<List<CartProduct>> getCartProducts(@PathVariable(value = "id") Long id) {
@@ -87,7 +84,7 @@ public class ProductAdvertisingController {
      * @author Amanda Zotelli
      * @param orderId - Long
      * @return ShoppingCart- Retorna uma entidade do tipo ShoppingCart.
-     * @throws NotFoundException
+     * @throws NotFoundException - NotFoundException
      */
     @PutMapping("/orders")
     public ResponseEntity<ShoppingCart> updateCartStatus(@RequestParam Long orderId) {
@@ -98,8 +95,8 @@ public class ProductAdvertisingController {
      * Rota responsável por retornar os lotes onde determinado produto aparece em seu armazém e seção.
      * @author Amanda Zotelli, Carol Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      * @param productId - Long
-     * @return List<ProductWarehouseStockDTO> - Retorna uma Lista de ProductWarehouseDTO.
-     * @throws Exception
+     * @return Retorna uma Lista de ProductWarehouseDTO.
+     * @throws Exception - Exception
      */
     @GetMapping(value="/list", params={"productId"})
     public ResponseEntity<List<ProductWarehouseStockDTO>> getAllProductWarehouseStock(@RequestParam("productId") Long productId) throws Exception {
@@ -110,8 +107,8 @@ public class ProductAdvertisingController {
      * Rota responsável por retornar os lotes onde determinado produto aparece em seu armazém e seção, ordenados por um determinado parâmetro.
      * @author Amanda Zotelli e Rosalia Padoin
      * @param productId - Long
-     * @return List<ProductWarehouseStockDTO> - Retorna uma Lista de ProductWarehouseDTO.
-     * @throws Exception
+     * @return Retorna uma Lista de ProductWarehouseDTO.
+     * @throws NotFoundException - NotFoundException
      */
     @GetMapping(value= "/list", params={"productId", "sorting"})
     public ResponseEntity<List<ProductWarehouseStockDTO>> getAllOrdinancesForBatches(
@@ -121,11 +118,5 @@ public class ProductAdvertisingController {
         List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(productId);
         return new ResponseEntity<>(inboundOrderService.getAllOrdinancesForBatches(productWarehouseStockDTOList, sorting), HttpStatus.OK);
     }
-
-
-
-
-
-
 
 }
