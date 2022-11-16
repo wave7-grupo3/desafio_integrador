@@ -128,16 +128,15 @@ class ProductAdvertisingServiceTest {
         doReturn(mockProductAdvertising).when(productAdvertisingService)
                 .getById(ArgumentMatchers.eq(mockCreateCartRequest.getProducts().get(0).getProductId()));
 
-        ShoppingCartTotalDTO response =  productAdvertisingService.registerOrder(mockCreateCartRequest);
+        ShoppingCartTotalDTO registerOrderResponse =  productAdvertisingService.registerOrder(mockCreateCartRequest);
 
         buyerService.getById(mockCreateCartRequest.getProducts().get(0).getProductId());
 
         verify(productAdvertisingService, times(1))
               .verifyStock(ArgumentMatchers.any(PurchaseOrderDTO.class));
 
-        assertThat(response).isNotNull();
-        assertThat(response.getTotalPrice()).isEqualTo(TestsMocks.mockCreateCartResponse().getTotalPrice());
-
+        assertThat(registerOrderResponse).isNotNull();
+        assertThat(registerOrderResponse.getTotalPrice()).isEqualTo(TestsMocks.mockCreateCartResponse().getTotalPrice());
     }
 
     @Test

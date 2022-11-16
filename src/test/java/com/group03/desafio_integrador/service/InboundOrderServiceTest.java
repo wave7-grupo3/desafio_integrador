@@ -11,9 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
@@ -30,6 +27,9 @@ class InboundOrderServiceTest {
 
     @Mock
     private BatchService batchService;
+
+    @Mock
+    private WarehouseService warehouseService;
     
     public final List<Batch> batchList = new ArrayList<>();
     private Batch mockBatch;
@@ -70,6 +70,7 @@ class InboundOrderServiceTest {
         assertThat(inboundOrderList.get(0)).isEqualTo(mockInboundOrder);
     }
 
+    //TODO: incluido linha 88
     @Test
     void save_returnSuccess_whenValidData() throws Exception {
         BDDMockito.doNothing().when(inboundOrderService)
@@ -78,12 +79,13 @@ class InboundOrderServiceTest {
         BDDMockito.when(inboundOrderRepository.save(ArgumentMatchers.any(InboundOrder.class)))
                 .thenReturn(mockInboundOrder);
 
-        BatchStockDTO newInboundOrder = inboundOrderService.save(mockCreateInboundOrder);
+        BatchStockDTO inboundResponse = inboundOrderService.save(mockCreateInboundOrder);
 
         BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
                 .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
 
-        assertThat(newInboundOrder).isNotNull();
+        assertThat(inboundResponse).isNotNull();
+        assertThat(inboundResponse.getBatchStock().containsAll(mockInboundOrder.getBatchList())).isTrue();
     }
 
     @Test
@@ -102,5 +104,32 @@ class InboundOrderServiceTest {
         assertThat(updatedBatch.getVolume()).isEqualTo(mockUpdateBatch.getVolume());
         assertThat(updatedBatch.getProductQuantity()).isEqualTo(mockUpdateBatch.getProductQuantity());
         assertThat(updatedBatch.getPrice()).isEqualTo(mockUpdateBatch.getPrice());
+    }
+
+    @Test
+    void validateOrder_doNotThrowError_whenValidData() throws Exception {
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateProducts(ArgumentMatchers.eq(batchList));
+        BDDMockito.doNothing().when(inboundOrderService)
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
+
+        inboundOrderService.validateOrder(mockCreateInboundOrder);
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateProducts(ArgumentMatchers.eq(batchList));
+
+        BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
+    }
+
+    @Test
+    void validateOrder_throwError_whenManagerInWarehouseNotFound() {
+        BDDMockito.doReturn(new Warehouse(1L, 3000.0, null)).when(warehouseService)
+                .
     }
 }

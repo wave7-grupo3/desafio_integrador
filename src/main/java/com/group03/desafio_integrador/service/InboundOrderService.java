@@ -99,7 +99,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws Exception
      */
     // TODO: fazer exception específico
-    private void validateWarehouse(Warehouse warehouseId) throws Exception {
+    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
         if (warehouse.getManager() == null) {
@@ -113,7 +113,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param List<Batch> - batchList
      * @throws NotFoundException
      */
-    private void validateProducts(List<Batch> batchList) {
+    protected void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (Batch batch: batchList) {
@@ -139,7 +139,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param InboundOrder - inboundOrder
      * @throws NotFoundException
      */
-    private void validateSection(InboundOrder inboundOrder) {
+    protected void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
         Section sectionExists = sectionService.getById(section.getSectionId());

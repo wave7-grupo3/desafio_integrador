@@ -32,5 +32,4 @@ public class Section {
     @Valid
     private CategoryEnum category;
 
-
 }
