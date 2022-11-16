@@ -153,6 +153,13 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    void getAllOrdinancesForBatches() {
+    void getAllOrdinancesForBatches_returnOrderedProduckWrehouseStrockDTOList_whenOrderParameterIsValid() throws Exception {
+        List<InboundOrder> productWarehouseStock = inboundOrderRepository.findAll();
+
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/fresh-products/list?productId=5")
+                        .contentType(MediaType.APPLICATION_JSON) );
+
+        response.andExpect(status().isOk());
     }
 }
