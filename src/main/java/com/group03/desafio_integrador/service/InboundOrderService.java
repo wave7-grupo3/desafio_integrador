@@ -103,7 +103,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @author Gabriel Morais
      */
     // TODO: fazer exception específico
-    private void validateWarehouse(Warehouse warehouseId) throws Exception {
+    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
         if (warehouse.getManager() == null) {
@@ -118,7 +118,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws NotFoundException
      * @author Gabriel Morais
      */
-    private void validateProducts(List<Batch> batchList) {
+    protected void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (Batch batch : batchList) {
@@ -145,7 +145,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws NotFoundException
      * @author Gabriel Morais
      */
-    private void validateSection(InboundOrder inboundOrder) {
+    protected void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
         Section sectionExists = sectionService.getById(section.getSectionId());
