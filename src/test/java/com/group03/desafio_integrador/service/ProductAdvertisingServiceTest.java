@@ -155,8 +155,6 @@ class ProductAdvertisingServiceTest {
         productAdvertisingService.verifyStock(mockCreateCartRequest);
 
         verify(productAdvertisingService, times(1))
-                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-        verify(productAdvertisingService, times(1))
                 .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
         verify(productAdvertisingService, times(1))
                 .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
@@ -182,10 +180,6 @@ class ProductAdvertisingServiceTest {
             return null;
         }).when(productAdvertisingService)
                 .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-        doNothing().when(productAdvertisingService)
-                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
-        doNothing().when(productAdvertisingService)
-                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
 
         doReturn(List.of(TestsMocks.mockBatch())).when(batchService)
                 .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
