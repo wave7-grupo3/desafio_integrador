@@ -156,10 +156,13 @@ class ProductAdvertisingControllerTestIT {
     void getAllOrdinancesForBatches_returnOrderedProduckWrehouseStrockDTOList_whenOrderParameterIsValid() throws Exception {
         List<InboundOrder> productWarehouseStock = inboundOrderRepository.findAll();
 
+        String expectedResponse = "[{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":2},\"productId\":5,\"batchDTO\":[{\"batchId\":3,\"quantity\":15,\"expirationDate\":\"2022-11-30\"},{\"batchId\":9,\"quantity\":15,\"expirationDate\":\"2022-12-26\"},{\"batchId\":1,\"quantity\":200,\"expirationDate\":\"2022-12-28\"}]},{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":1},\"productId\":5,\"batchDTO\":[{\"batchId\":4,\"quantity\":200,\"expirationDate\":\"2022-12-20\"},{\"batchId\":6,\"quantity\":15,\"expirationDate\":\"2022-12-22\"}]}]";
+
         ResultActions response = mockMvc.perform(
-                get("/api/v1/fresh-products/list?productId=5")
+                get("/api/v1/fresh-products/list?productId=5&sorting=V")
                         .contentType(MediaType.APPLICATION_JSON) );
 
-        response.andExpect(status().isOk());
+        response.andExpect(status().isOk())
+                .andExpect(content().string(expectedResponse));
     }
 }
