@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.dto.BatchStockDTO;
+import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
@@ -36,6 +37,7 @@ class InboundOrderServiceTest {
     private Batch mockUpdateBatch;
     private InboundOrder mockInboundOrder;
     private InboundOrder mockCreateInboundOrder;
+    private List<InboundOrder> mockCreateInboundOrderList;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +53,8 @@ class InboundOrderServiceTest {
         mockInboundOrder = TestsMocks.mockInboundOrder();
 
         mockCreateInboundOrder = TestsMocks.mockCreateInboundOrder();
+
+        mockCreateInboundOrderList = TestsMocks.mockCreateInboundOrderList();
 
     }
 
@@ -102,5 +106,29 @@ class InboundOrderServiceTest {
         assertThat(updatedBatch.getVolume()).isEqualTo(mockUpdateBatch.getVolume());
         assertThat(updatedBatch.getProductQuantity()).isEqualTo(mockUpdateBatch.getProductQuantity());
         assertThat(updatedBatch.getPrice()).isEqualTo(mockUpdateBatch.getPrice());
+    }
+
+    //@Test
+   // void getAllProductWarehouseStock() throws Exception {
+
+      //  BDDMockito.doNothing().when(inboundOrderService)
+     //           .validateOrder(ArgumentMatchers.eq(mockInboundOrder));
+
+      //  BDDMockito.when(inboundOrderRepository.findAll())
+      //          .thenReturn(mockCreateInboundOrderList);
+
+       // BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
+       //         .validateOrder(ArgumentMatchers.any(InboundOrder.class));
+
+      //  List<> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock();
+
+    //}
+
+    @Test
+    void getAllOrdinancesForBatches() {
+    }
+
+    @Test
+    void validateOrder() {
     }
 }

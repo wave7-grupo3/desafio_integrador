@@ -65,6 +65,8 @@ public class TestsMocks {
 
     }
 
+
+
     public static InboundOrder mockInboundOrder() {
 
         return new InboundOrder(1L,
@@ -82,6 +84,20 @@ public class TestsMocks {
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
                 batchList);
+    }
+
+    public static List<InboundOrder> mockCreateInboundOrderList() {
+        List<InboundOrder> inboundOrderList = new ArrayList<>();
+
+        InboundOrder inboundOrder = new InboundOrder(null,
+                LocalDate.parse("2022-11-09"),
+                Section.builder().sectionId(1L).build(),
+                Warehouse.builder().warehouseId(1L).build(),
+                batchList);
+
+        inboundOrderList.add(inboundOrder);
+
+        return inboundOrderList;
     }
 
     public static ProductAdvertising mockProductAdvertising() {
