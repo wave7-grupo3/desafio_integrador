@@ -36,4 +36,5 @@ public interface IBatchService {
 
     BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section);
 
+    BatchDueDateStockDTO getAllDueDateCategory(Integer numberOfDays, String category, String sorting);
 }

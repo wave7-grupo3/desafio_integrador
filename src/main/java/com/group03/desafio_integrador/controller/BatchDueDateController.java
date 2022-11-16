@@ -23,4 +23,11 @@ public class BatchDueDateController {
         return new ResponseEntity<>(batchService.getAllDueDate(numberOfDays, section), HttpStatus.OK);
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<BatchDueDateStockDTO> getAllDueDateCategory(@RequestParam Integer numberOfDays,
+                                                                      @RequestParam String category,
+                                                                      @RequestParam String sorting){
+        return new ResponseEntity<>(batchService.getAllDueDateCategory(numberOfDays, category, sorting), HttpStatus.OK);
+    }
+
 }
