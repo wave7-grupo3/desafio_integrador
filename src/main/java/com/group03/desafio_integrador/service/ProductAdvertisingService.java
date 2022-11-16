@@ -92,7 +92,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productAdvertising = getById(product.getProductId());
             productAdvertising.setQuantity(product.getQuantity());
-            products.add(getById(product.getProductId()));
+            products.add(getById(product.getProductId())); // TODO: verificar se pode ser usada a variavel da linha 93
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
         }
@@ -167,7 +167,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 verifyProductStockQuantity(errorDetailsBatch, product, batchOrder, productId.getProductId());
 
                 if (errorDetailsBatch.isEmpty()) {
-                    return;
+                    break;
                 } else if (batchList.indexOf(batchOrder) == batchList.size() - 1 && !errorDetailsBatch.isEmpty()) {
                     errorDetails.addAll(errorDetailsBatch);
                 }
@@ -184,7 +184,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+    protected void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
                     ValidationErrorDetail.builder()
@@ -201,7 +201,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
+    protected void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
         if (batch.getProductQuantity() >= product.getQuantity()) {
             if (errorDetails.isEmpty()) {
                 Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
@@ -221,7 +221,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
+    protected void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
         try {
             getById(idProduct);
         } catch (Exception ex) {

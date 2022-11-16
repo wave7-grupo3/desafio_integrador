@@ -1,18 +1,13 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advisor.ValidationErrorDetail;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
-import com.group03.desafio_integrador.entities.Buyer;
-import com.group03.desafio_integrador.entities.ShoppingCart;
+import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
-import com.group03.desafio_integrador.entities.ProductAdvertising;
-import com.group03.desafio_integrador.entities.Seller;
-import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
-import com.group03.desafio_integrador.repository.BuyerRepository;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
-import com.group03.desafio_integrador.repository.ShoppingCartRepository;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,14 +15,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import static org.mockito.BDDMockito.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -46,35 +37,24 @@ class ProductAdvertisingServiceTest {
     private ProductAdvertisingRepository productAdvertisingRepository;
 
     @Mock
-    private ShoppingCartService shoppingCartService;
-
-    @Mock
-    private BuyerRepository buyerRepository;
+    private BatchService batchService;
 
     private ProductAdvertising mockProductAdvertising;
 
     private List<ProductAdvertising> mockProductList;
 
-    private List<ProductAdvertising> mockProductListEmpty;
-
     private List<ProductAdvertising> mockProductListFresh;
 
     private List<ProductAdvertising> mockProductListFreshEmpty;
 
-    private Buyer buyer;
-
     private PurchaseOrderDTO mockCreateCartRequest;
-
-
 
     @BeforeEach
     void setUp() {
         mockProductAdvertising = TestsMocks.mockProductAdvertising();
         mockProductList = TestsMocks.mockProductList();
-        mockProductListEmpty = TestsMocks.mockProductListEmpty();
         mockProductListFresh = TestsMocks.mockProductListFresh();
         mockProductListFreshEmpty = TestsMocks.mockProductListFreshEmpty();
-        buyer = TestsMocks.mockBuyer();
         mockCreateCartRequest = TestsMocks.mockCreateCartRequest();
     }
 
@@ -84,7 +64,7 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getById_returnSuccess_whenProductAdvertisingExists() {
-        BDDMockito.when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.ofNullable(mockProductAdvertising));
+        when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.ofNullable(mockProductAdvertising));
         ProductAdvertising productById = productAdvertisingService.getById(1L);
 
         assertThat(productById).isNotNull();
@@ -93,7 +73,7 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getById_returnNotFoundException_whenProductAdvertisingIsEmpty() throws NotFoundException{
-        BDDMockito.when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
+        when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
 
         NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.getById(1L));
         assertThat(notFoundException.getMessage()).isEqualTo("Product not found!");
@@ -101,7 +81,7 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getAll_returnSuccess_whenProductAdvertisingListExists() {
-        BDDMockito.when(productAdvertisingRepository.findAll()).thenReturn(mockProductList);
+        when(productAdvertisingRepository.findAll()).thenReturn(mockProductList);
         List<ProductAdvertising> listProductAdvertising = productAdvertisingService.getAll();
 
         assertThat(listProductAdvertising).asList();
@@ -112,7 +92,7 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getAll_returnNotFoundException_whenProductAdvertisingListIsEmpty() throws NotFoundException{
-        BDDMockito.when(productAdvertisingRepository.findAll()).thenReturn(mockProductListEmpty);
+        when(productAdvertisingRepository.findAll()).thenReturn(List.of());
 
         NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.getAll());
         assertThat(notFoundException.getMessage()).isEqualTo("Product Advertising not found");
@@ -120,7 +100,7 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getAllByCategory_returnSuccess_whenProductAdvertisingCategoryListExists() {
-        BDDMockito.when(productAdvertisingRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class))).thenReturn(mockProductListFresh);
+        when(productAdvertisingRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class))).thenReturn(mockProductListFresh);
         List<ProductAdvertising> listProductAdvertisingFresh = productAdvertisingService.getAllByCategory(String.valueOf(CategoryEnum.FS));
 
         assertThat(listProductAdvertisingFresh).isNotNull();
@@ -130,50 +110,93 @@ class ProductAdvertisingServiceTest {
 
     @Test
     void getAllByCategory_returnNotFoundException_whenProductAdvertisingCategoryListIsEmpty() throws NotFoundException{
-        BDDMockito.when(productAdvertisingRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class))).thenReturn(mockProductListFreshEmpty);
+        when(productAdvertisingRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class))).thenReturn(mockProductListFreshEmpty);
 
         NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.getAllByCategory(String.valueOf(CategoryEnum.FS)));
         assertThat(notFoundException.getMessage()).isEqualTo("Category not found");
     }
 
-
-
     @Test
     void registerOrder_returnSuccess_whenIsRegisterOneOrder() throws Exception {
-        Set<ProductAdvertising> products = new HashSet<>();
 
-        ShoppingCart shoppingCart = ShoppingCart.builder()
-                .buyer(buyer)
-                .date(LocalDate.now())
-                .orderStatus(OrderStatusEnum.ABERTO)
-                .totalCartPrice(Double.valueOf(String.valueOf(150.0)))
-                .build();
-
-        BDDMockito.doNothing().when(productAdvertisingService)
+        doNothing().when(productAdvertisingService)
                 .verifyStock(ArgumentMatchers.eq(mockCreateCartRequest));
 
-        BDDMockito.doNothing().when(productAdvertisingService)
+        doNothing().when(productAdvertisingService)
                 .saveShoppingCart(ArgumentMatchers.anySet(), ArgumentMatchers.any(ShoppingCart.class));
 
+        doReturn(mockProductAdvertising).when(productAdvertisingService)
+                .getById(ArgumentMatchers.eq(mockCreateCartRequest.getProducts().get(0).getProductId()));
 
-        BDDMockito.when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class)))
-        .thenReturn(Optional.ofNullable(mockProductAdvertising));
+        ShoppingCartTotalDTO response =  productAdvertisingService.registerOrder(mockCreateCartRequest);
 
-        ShoppingCartTotalDTO shoppingCartTotalDTO = ShoppingCartTotalDTO.builder()
-                .totalPrice(Double.valueOf(String.valueOf(150.0)))
-                .build();
+        buyerService.getById(mockCreateCartRequest.getProducts().get(0).getProductId());
 
-        ShoppingCartTotalDTO shoppingCartTotal =  productAdvertisingService.registerOrder(mockCreateCartRequest);
-
-        buyerService.getById(buyer.getBuyerId());
-
-        BDDMockito.verify(productAdvertisingService, BDDMockito.times(1))
+        verify(productAdvertisingService, times(1))
               .verifyStock(ArgumentMatchers.any(PurchaseOrderDTO.class));
 
-        assertThat(shoppingCartTotal).isNotNull();
+        assertThat(response).isNotNull();
+        assertThat(response.getTotalPrice()).isEqualTo(TestsMocks.mockCreateCartResponse().getTotalPrice());
+
     }
 
     @Test
-    void verifyStock() {
+    void verifyStock_doNotThrowError_whenValidData() {
+
+        doNothing().when(productAdvertisingService)
+                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
+        doNothing().when(productAdvertisingService)
+                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+        doNothing().when(productAdvertisingService)
+                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+
+        doReturn(List.of(TestsMocks.mockBatch())).when(batchService)
+                .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
+
+        productAdvertisingService.verifyStock(mockCreateCartRequest);
+
+        verify(productAdvertisingService, times(1))
+                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
+        verify(productAdvertisingService, times(1))
+                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+        verify(productAdvertisingService, times(1))
+                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+    }
+
+    @Test
+    void verifyStock_throwError_whenBatchNotFound() {
+        doReturn(List.of()).when(batchService)
+                .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.verifyStock(mockCreateCartRequest));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("No batch found with this product!");
+    }
+
+    @Test
+    void verifyStock_throwError_whenProductsNotFound() {
+
+        var errorDetail = new ValidationErrorDetail("field", "message", "rejectedValue");
+        doAnswer(invocation -> {
+            List<ValidationErrorDetail> errorDetails = invocation.getArgument(0);
+            errorDetails.add(errorDetail);
+            return null;
+        }).when(productAdvertisingService)
+                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
+        doNothing().when(productAdvertisingService)
+                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+        doNothing().when(productAdvertisingService)
+                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
+
+        doReturn(List.of(TestsMocks.mockBatch())).when(batchService)
+                .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.verifyStock(mockCreateCartRequest));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Products not found");
+        assertThat(notFoundException.getErrors().get(0)).isEqualTo(errorDetail);
+
+        verify(productAdvertisingService, times(1))
+                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
     }
 }

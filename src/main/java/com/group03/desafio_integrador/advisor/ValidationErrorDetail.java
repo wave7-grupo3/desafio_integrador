@@ -6,6 +6,7 @@ import lombok.*;
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
 public class ValidationErrorDetail {
     private String field;
     private String message;
