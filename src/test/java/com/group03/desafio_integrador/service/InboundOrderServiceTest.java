@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
+import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
@@ -154,4 +155,5 @@ class InboundOrderServiceTest {
 
         assertThat(notFoundException.getMessage()).isEqualTo("Products not found");
     }
+
 }
