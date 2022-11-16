@@ -14,10 +14,10 @@ public class BuyerService implements IBuyerService {
     private final BuyerRepository repository;
 
     /**
-     * Método responsável por retornar o comprador de acordo com o Id informado.
+     * Método responsável por retornar o comprador conforme Id informado.
      * @author Amanda Zotelli
      * @param id - Long
-     * @return Buyer - Retorna uma entidade do tipo Buyer.
+     * @return Retorna uma entidade do tipo Buyer.
      * @throws NotFoundException - NotFoundException
      */
     @Override
