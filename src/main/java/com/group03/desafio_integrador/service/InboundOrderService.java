@@ -24,6 +24,10 @@ public class InboundOrderService implements IInboundOrderService {
     private final ISectionService sectionService;
     private final IBatchService batchService;
 
+    // TODO: 16/11/22 alterei um método productAdvertising para nao static para fins de testes
+    private static ProductAdvertisingService productAdvertisingService;
+
+
     /**
      * Método responsável por listar todos os pedidos de ordem do armazem.
      *
@@ -99,7 +103,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @author Gabriel Morais
      */
     // TODO: fazer exception específico
-    private void validateWarehouse(Warehouse warehouseId) throws Exception {
+    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
         if (warehouse.getManager() == null) {
@@ -114,7 +118,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws NotFoundException
      * @author Gabriel Morais
      */
-    private void validateProducts(List<Batch> batchList) {
+    protected void validateProducts(List<Batch> batchList) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (Batch batch : batchList) {
@@ -141,7 +145,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws NotFoundException
      * @author Gabriel Morais
      */
-    private void validateSection(InboundOrder inboundOrder) {
+    protected void validateSection(InboundOrder inboundOrder) {
         Section section = inboundOrder.getSectionId();
 
         Section sectionExists = sectionService.getById(section.getSectionId());
@@ -220,8 +224,9 @@ public class InboundOrderService implements IInboundOrderService {
             List<Batch> batchStream,
             List<ValidationErrorDetail> errorDetails
     ) {
-        for (Batch batch : batchStream) {
-            ProductAdvertisingService.verifyProductExpirationDate(errorDetails, batch, productId);
+            for (Batch batch : batchStream) {
+                // TODO: 16/11/22 método alterado para nao static
+                productAdvertisingService.verifyProductExpirationDate(errorDetails, batch, productId);
         }
     }
 
@@ -350,4 +355,6 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
 }
+
+
 
