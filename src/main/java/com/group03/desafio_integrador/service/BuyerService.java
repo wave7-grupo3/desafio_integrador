@@ -18,7 +18,7 @@ public class BuyerService implements IBuyerService {
      * @author Amanda Zotelli
      * @param id - Long
      * @return Buyer - Retorna uma entidade do tipo Buyer.
-     * @throws NotFoundException
+     * @throws NotFoundException - NotFoundException
      */
     @Override
     public Buyer getById(Long id) {
