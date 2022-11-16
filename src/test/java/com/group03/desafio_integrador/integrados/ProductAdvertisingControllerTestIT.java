@@ -8,6 +8,7 @@ import com.group03.desafio_integrador.entities.CartProduct;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
+import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
 import com.group03.desafio_integrador.repository.CartProductRepository;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
@@ -56,6 +57,7 @@ class ProductAdvertisingControllerTestIT {
     private PurchaseOrderDTO mockCreateCartRequest;
 
     private ShoppingCartTotalDTO mockCreateCartResponse;
+    private ShoppingCart mockShoppingCartFinished;
     private List<CartProduct> mockCartProductOrderList;
     static ShoppingCart shoppingCartId = ShoppingCart.builder().shoppingCartId(1L).build();
 
@@ -66,6 +68,7 @@ class ProductAdvertisingControllerTestIT {
         mockCreateCartRequest = TestsMocks.mockCreateCartRequest();
         mockCreateCartResponse = TestsMocks.mockCreateCartResponse();
         mockCartProductOrderList = TestsMocks.mockCartProductOrderList();
+        mockShoppingCartFinished = TestsMocks.mockShoppingCartFinished();
     }
 
     @AfterEach
@@ -107,7 +110,7 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    void getCartProducts() throws Exception {
+    void getCartProducts_returnCartProduct_whenShoppingCartExist() throws Exception {
         List<CartProduct> shoppingCart = cartProductRepository.findAllByShoppingCart(shoppingCartId);
 
         ResultActions response = mockMvc.perform(
@@ -119,6 +122,14 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    void updateCartStatus() {
+    void updateCartStatus_returnCartProduct_whenStatusIsUpdated() throws Exception {
+        Integer shoppingCartId = Math.toIntExact(mockShoppingCartFinished.getShoppingCartId());
+        ResultActions response = mockMvc.perform(put("/api/v1/fresh-products/orders?orderId=1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mockShoppingCartFinished)));
+
+        response.andExpect(status().isOk())
+               .andExpect(jsonPath("$.shoppingCartId", CoreMatchers.is(shoppingCartId)));
+               //.andExpect(jsonPath("$.orderStatus", CoreMatchers.is(mockShoppingCartFinished.getOrderStatus())));
     }
 }

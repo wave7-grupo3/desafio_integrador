@@ -127,7 +127,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param shoppingCart - ShoppingCart
      * @author Amanda Zotelli
      */
-    private void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
+    public void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
         ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
         List<CartProduct> cartProductList = new ArrayList<>();
 
@@ -184,7 +184,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+    public static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
                     ValidationErrorDetail.builder()
