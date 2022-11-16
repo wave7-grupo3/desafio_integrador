@@ -19,7 +19,7 @@ public class CartProductService implements ICartProductService {
     /**
      * Método responsável por listar todas as ordens de compra do sistema.
      * @author Amanda Zotelli
-     * @return List<CartProduct> - Retorna uma lista da entidade do tipo CartProduct.
+     * @return Retorna uma lista da entidade do tipo CartProduct.
      */
     @Override
     public List<CartProduct> getAll() {
@@ -30,7 +30,7 @@ public class CartProductService implements ICartProductService {
      * Método responsável por salvar uma nova ordem de compra.
      * @author Amanda Zotelli
      * @param cartProduct - CartProduct
-     * @return CartProduct - Retorna uma entidade do tipo BatchStockDTO.
+     * @return Retorna uma entidade do tipo BatchStockDTO.
      */
     @Override
     public CartProduct save(CartProduct cartProduct) {
