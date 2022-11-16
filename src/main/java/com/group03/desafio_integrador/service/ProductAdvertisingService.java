@@ -201,7 +201,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
+    protected static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
         if (batch.getProductQuantity() >= product.getQuantity()) {
             if (errorDetails.isEmpty()) {
                 Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
@@ -221,7 +221,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
+    protected void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
         try {
             getById(idProduct);
         } catch (Exception ex) {
