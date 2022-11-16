@@ -31,7 +31,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      *
      * @param id - Long
      * @return ProductAdvertising - Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @throws NotFoundException - NotFoundException
      * @author Gabriel Morais
      */
     @Override
@@ -43,8 +43,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por retornar todos os produtos cadastrados.
      *
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma lista entidade do tipo ProductAdvertising.
+     * @throws NotFoundException - NotFoundException
      * @author Mariana Saraiva
      */
     @Override
@@ -60,8 +60,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por retornar todos os produtos cadastrados por categoria.
      * @param category - String
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma lista de entidades do tipo ProductAdvertising que possuem a categoria informada.
+     * @throws NotFoundException - NotFoundException
      * @author Mariana Saraiva
      */
     @Override
@@ -79,7 +79,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por registrar os pedidos
      * @param purchase - PurchaseOrderDTO
-     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     * @return Retorna um dto do tipo ShoppingCartTotalDTO.
      * @author Amanda Zotelli, Gabriel Morais
      */
     @Override
@@ -109,7 +109,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * Método responsável por estruturar o Builder para retorno do ShoppingCart.
      * @param buyer - Buyer
      * @param totalPrice - BigDecimal
-     * @return ShoppingCart - Retorna uma entidade do tipo ShoppingCart.
+     * @return Retorna uma entidade do tipo ShoppingCart.
      * @author Amanda Zotelli
      */
     private static ShoppingCart shoppingCartBuilder(Buyer buyer, BigDecimal totalPrice) {
@@ -123,7 +123,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por salvar(associar) o produto ao ShoppingCart.
-     * @param products - Set<ProductAdvertising>
+     * @param products - Set do tipo ProductAdvertising
      * @param shoppingCart - ShoppingCart
      * @author Amanda Zotelli
      */
@@ -179,7 +179,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por verificar se a data de validade é superior há 3 semanas ao ser disponibilizado a venda.
-     * @param errorDetails - List<ValidationErrorDetail>
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param batch - Batch
      * @param idProduct - Long
      * @author Amanda Zotelli
@@ -194,8 +194,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     }
 
     /**
-     * Método responsável por verificar a quantidade disponivel de produtos no estoque.
-     * @param errorDetails - List<ValidationErrorDetail>
+     * Método responsável por verificar a quantidade disponível de produtos no estoque.
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param product - ProductDTO
      * @param batch - Batch
      * @param idProduct - Long
@@ -217,7 +217,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por verificar se o produto existe(é cadastrado no sistema).
-     * @param errorDetails - List<ValidationErrorDetail>
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
