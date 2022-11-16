@@ -78,46 +78,35 @@ public class BatchService implements IBatchService {
                 .collect(Collectors.toList());
 
         for (InboundOrder inboundOrder : filterOrderSectionList) {
-
-            // TODO: 15/11/22 verificar retorno da lista filtrada com os lotes de cada ordem
             List<Batch> batchFilterList = inboundOrder.getBatchList();
 
-                for (Batch batch : batchList) {
+            for (Batch batch : batchList) {
 
-                    List<Batch> teste = batchFilterList.stream().filter(id -> id.equals(batch.getBatchId())).collect(Collectors.toList());
-                    // List<Long> teste = batchFilterList.stream().filter(item -> item.equals(batch.getBatchId())).collect(Collectors.toList());
+                List<Batch> compareBatchWithId = batchFilterList.stream().filter(item -> item.getBatchId().equals(batch.getBatchId())).collect(Collectors.toList());
 
-                    if(!teste.isEmpty()) {
-                        BatchDueDateDTO batchDueDateDTO = BatchDueDateDTO.builder()
-                                .batchNumber(batch.getBatchId())
-                                .productId(batch.getProductId().getProductId())
-                                .category(Long.valueOf(section))
-                                .dueDate(batch.getExpirationDate())
-                                .quantity(batch.getProductQuantity())
-                                .build();
-
-                        listBatchDTO.add(batchDueDateDTO);
-                   }
+                if(!compareBatchWithId.isEmpty()) {
+                    BatchDueDateDTO batchDueDateDTO = buildBatchDueDateDTO(section, batch);
+                    listBatchDTO.add(batchDueDateDTO);
                 }
+            }
         }
 
-//        for (Batch batch : batchList) {
-//
-//            BatchDueDateDTO batchDueDateDTO = BatchDueDateDTO.builder()
-//                    .batchNumber(batch.getBatchId())
-//                    .productId(batch.getProductId().getProductId())
-//                    .category(Long.valueOf(section))
-//                    .dueDate(batch.getExpirationDate())
-//                    .quantity(batch.getProductQuantity())
-//                    .build();
-//
-//            listBatchDTO.add(batchDueDateDTO);
-//        }
+        if (listBatchDTO.isEmpty()) {
+            throw new NotFoundException("Not Found batch for expiration date and section");
+        }
 
-        BatchDueDateStockDTO batchDueDateStockDTO = BatchDueDateStockDTO.builder()
+        return BatchDueDateStockDTO.builder()
                 .batchDueDateStock(listBatchDTO)
                 .build();
+    }
 
-        return batchDueDateStockDTO;
+    private static BatchDueDateDTO buildBatchDueDateDTO(String section, Batch batch) {
+        return BatchDueDateDTO.builder()
+                .batchNumber(batch.getBatchId())
+                .productId(batch.getProductId().getProductId())
+                .category(Long.valueOf(section))
+                .dueDate(batch.getExpirationDate())
+                .quantity(batch.getProductQuantity())
+                .build();
     }
 }
