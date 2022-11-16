@@ -20,7 +20,7 @@ public class InboundOrderController {
     public IInboundOrderService service;
 
     /**
-     * Rota responsável pela criação de um pedido de Ordem para o armazém.
+     * Rota responsável pela criação de um pedido de armazenamento.
      * @author Gabriel Morais
      * @param inboundOrder - InboundOrder
      * @return Retorna um dto do tipo BatchStockDTO.
@@ -32,7 +32,7 @@ public class InboundOrderController {
     }
 
     /**
-     * Rota responsável por listar todos os pedidos de ordem para o armazém.
+     * Rota responsável por listar todos os pedidos de armazenamento.
      * @author Gabriel Morais
      * @return Retorna uma lista de Propriedades.
      */
@@ -52,5 +52,4 @@ public class InboundOrderController {
     public ResponseEntity<Batch> update(@Valid @RequestBody Batch batch) {
         return new ResponseEntity<>(service.update(batch), HttpStatus.CREATED);
     }
-
 }
