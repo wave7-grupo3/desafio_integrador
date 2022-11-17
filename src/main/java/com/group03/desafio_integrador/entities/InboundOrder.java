@@ -38,7 +38,6 @@ public class InboundOrder {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("inboundOrder")
     @Valid
-    @Size(min = 1)
     private List<Batch> batchList;
 
 }
