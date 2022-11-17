@@ -42,8 +42,8 @@ class InboundOrderServiceTest {
     @Mock
     private ProductAdvertisingService productAdvertisingService;
 
-    @Mock
-    private WarehouseService warehouseService;
+//    @Mock
+//    private WarehouseService warehouseService;
 
     public final List<Batch> batchList = new ArrayList<>();
     private Batch mockBatch;
@@ -137,7 +137,7 @@ class InboundOrderServiceTest {
         BDDMockito.doNothing().when(inboundOrderService)
               .validateOrder(ArgumentMatchers.any(InboundOrder.class));
 
-        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(5L);
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(1L);
 
         BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
                 .validateOrder(ArgumentMatchers.any(InboundOrder.class));
