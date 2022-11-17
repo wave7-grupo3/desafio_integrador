@@ -39,6 +39,7 @@ public class ProductAdvertisingController {
      *
      * @return Retorna uma entidade do tipo ProductAdvertising.
      * @author Mariana Saraiva
+     * @throws NotFoundException - NotFoundException
      */
     @GetMapping
     public ResponseEntity<List<ProductAdvertising>> getAll() {
