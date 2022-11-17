@@ -1,8 +1,6 @@
 package com.group03.desafio_integrador.utils.mocks;
 
-import com.group03.desafio_integrador.dto.ProductDTO;
-import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
-import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
+import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
@@ -14,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestsMocks {
-    static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
+    static ProductAdvertising productId = ProductAdvertising.builder().productId(5L).build();
 
     private static final List<Batch> batchList = new ArrayList<>();
     private static final List<Batch> sortBatchList = new ArrayList<>();
@@ -66,6 +64,8 @@ public class TestsMocks {
 
     }
 
+
+
     public static InboundOrder mockInboundOrder() {
 
         return new InboundOrder(1L,
@@ -83,6 +83,20 @@ public class TestsMocks {
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
                 batchList);
+    }
+
+    public static List<InboundOrder> mockCreateInboundOrderList() {
+        List<InboundOrder> inboundOrderList = new ArrayList<>();
+
+        InboundOrder inboundOrder = new InboundOrder(1L,
+                LocalDate.parse("2022-11-09"),
+                Section.builder().sectionId(1L).build(),
+                Warehouse.builder().warehouseId(1L).build(),
+                batchList);
+
+        inboundOrderList.add(inboundOrder);
+
+        return inboundOrderList;
     }
 
     public static ProductAdvertising mockProductAdvertising() {
@@ -311,6 +325,41 @@ public class TestsMocks {
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
                 sortBatchList);
+    public static Warehouse mockWarehouse() {
+        Manager manager = Manager.builder()
+                .managerId(1L)
+                .build();
+        return Warehouse.builder()
+                .warehouseId(1L)
+                .capacity(3000.0)
+                .manager(manager)
+                .build();
     }
+
+    public static List<ProductWarehouseStockDTO> mockProductWarehouseStockDTOList() {
+        List<BatchDTO> batchDTOList = new ArrayList<>();
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = new ArrayList<>();
+
+        SectionDTO sectionDTO = SectionDTO.builder().sectionId(1L).warehouseId(1L).build();
+        BatchDTO batchDTO = BatchDTO.builder()
+                .batchId(1L)
+                .quantity(10)
+                .expirationDate(LocalDate.parse("2023-01-30"))
+                .build();
+
+        batchDTOList.add(batchDTO);
+
+         ProductWarehouseStockDTO productWarehouseStockDTO = ProductWarehouseStockDTO.builder()
+                .sectionDTO(sectionDTO)
+                .productId(5L)
+                .batchDTO(batchDTOList)
+                .build();
+
+         productWarehouseStockDTOList.add(productWarehouseStockDTO);
+
+        return productWarehouseStockDTOList;
+    }
+
+
 
 }
