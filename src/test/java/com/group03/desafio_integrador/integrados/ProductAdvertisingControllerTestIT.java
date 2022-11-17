@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.integrados;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
@@ -42,38 +43,36 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ProductAdvertisingControllerTestIT {
 
-
      @Autowired
     private MockMvc mockMvc;
-
      @Autowired
      private ProductAdvertisingRepository productAdvertisingRepository;
-
      @Autowired
      private CartProductRepository cartProductRepository;
-
      @Autowired
      private InboundOrderRepository inboundOrderRepository;
-
     @Autowired
     private ObjectMapper objectMapper;
-
     private List<ProductAdvertising> mockProductList;
     private PurchaseOrderDTO mockCreateCartRequest;
 
+    private PurchaseOrderDTO mockErrorCartRequest;
     private ShoppingCartTotalDTO mockCreateCartResponse;
     private ShoppingCart mockShoppingCartFinished;
+
+    private InboundOrder mockCreateSortInboundOrder;
     private List<CartProduct> mockCartProductOrderList;
     static ShoppingCart shoppingCartId = ShoppingCart.builder().shoppingCartId(1L).build();
-
 
     @BeforeEach
     void setUp() {
         mockProductList = TestsMocks.mockProductList();
         mockCreateCartRequest = TestsMocks.mockCreateCartRequest();
         mockCreateCartResponse = TestsMocks.mockCreateCartResponse();
+        mockErrorCartRequest = TestsMocks.mockErrorCartRequest();
         mockCartProductOrderList = TestsMocks.mockCartProductOrderList();
         mockShoppingCartFinished = TestsMocks.mockShoppingCartFinished();
+        mockCreateSortInboundOrder = TestsMocks.mockCreateSortInboundOrder();
     }
 
     @AfterEach
@@ -105,13 +104,35 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    void registerOrder_returnTotalPrice_whenShoppingCartIsCriated() throws Exception {
+    void getAllByCategory_throwsNotFoundError_whenCategoryIsNotValid() throws Exception {
+        List<ProductAdvertising> productsFresh = productAdvertisingRepository.findAllByCategory(CategoryEnum.FS);
+
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/fresh-products/list?category=FT")
+                        .contentType(MediaType.APPLICATION_JSON) );
+
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", CoreMatchers.is("This category is not valid")));
+    }
+
+    @Test
+    void registerOrder_returnTotalPrice_whenShoppingCartIsCreated() throws Exception {
         ResultActions response = mockMvc.perform(post("/api/v1/fresh-products/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(mockCreateCartRequest)));
 
         response.andExpect(status().isCreated())
                .andExpect(jsonPath("$.totalPrice", CoreMatchers.is(mockCreateCartResponse.getTotalPrice())));
+    }
+
+    @Test
+    void registerOrder_throwsNotFoundError_whenProductDoesNotExistInABatch() throws Exception {
+        ResultActions response = mockMvc.perform(post("/api/v1/fresh-products/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(mockErrorCartRequest)));
+
+        response.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message", CoreMatchers.is("No batch found with this product!")));
     }
 
     @Test
@@ -140,29 +161,37 @@ class ProductAdvertisingControllerTestIT {
 
     @Test
     void getAllProductWarehouseStock_returnListProductWarehouseStockDTO_whenProductExists() throws Exception {
-        List<InboundOrder> productWarehouseStock = inboundOrderRepository.findAll();
+        Integer sectionId = Math.toIntExact(TestsMocks.mockCreateInboundOrder().getSectionId().getSectionId());
 
-        String expectedResponse = "[{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":2},\"productId\":5,\"batchDTO\":[{\"batchId\":1,\"quantity\":200,\"expirationDate\":\"2022-12-30\"},{\"batchId\":3,\"quantity\":15,\"expirationDate\":\"2022-12-30\"},{\"batchId\":9,\"quantity\":15,\"expirationDate\":\"2022-12-30\"}]},{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":1},\"productId\":5,\"batchDTO\":[{\"batchId\":4,\"quantity\":200,\"expirationDate\":\"2022-12-30\"},{\"batchId\":6,\"quantity\":15,\"expirationDate\":\"2022-12-30\"}]}]";
+        mockMvc.perform(
+                post("/api/v1/fresh-products/inboundorder/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
 
-        ResultActions response = mockMvc.perform(
-                get("/api/v1/fresh-products/list?productId=5")
-                        .contentType(MediaType.APPLICATION_JSON) );
+       ResultActions response = mockMvc.perform(
+                get("/api/v1/fresh-products/list?productId=1")
+                        .contentType(MediaType.APPLICATION_JSON));
+
 
         response.andExpect(status().isOk())
-                .andExpect(content().string(expectedResponse));
+                .andExpect(jsonPath("$..sectionDTO.sectionId", CoreMatchers.is(List.of(sectionId))));
+
     }
 
     @Test
-    void getAllOrdinancesForBatches_returnOrderedProduckWrehouseStrockDTOList_whenOrderParameterIsValid() throws Exception {
-        List<InboundOrder> productWarehouseStock = inboundOrderRepository.findAll();
+    void getAllOrdinancesForBatches_returnOrderedProduckWarehouseStrockDTOListByExpirantionDate_whenOrderParameterIsValid() throws Exception {
+        String dueDate = TestsMocks.mockCreateSortInboundOrder().getBatchList().get(0).getExpirationDate().toString();
 
-        String expectedResponse = "[{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":2},\"productId\":5,\"batchDTO\":[{\"batchId\":3,\"quantity\":15,\"expirationDate\":\"2022-11-30\"},{\"batchId\":9,\"quantity\":15,\"expirationDate\":\"2022-12-26\"},{\"batchId\":1,\"quantity\":200,\"expirationDate\":\"2022-12-28\"}]},{\"sectionDTO\":{\"sectionId\":1,\"warehouseId\":1},\"productId\":5,\"batchDTO\":[{\"batchId\":4,\"quantity\":200,\"expirationDate\":\"2022-12-20\"},{\"batchId\":6,\"quantity\":15,\"expirationDate\":\"2022-12-22\"}]}]";
+        mockMvc.perform(
+                post("/api/v1/fresh-products/inboundorder/")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateSortInboundOrder())));
 
         ResultActions response = mockMvc.perform(
-                get("/api/v1/fresh-products/list?productId=5&sorting=V")
-                        .contentType(MediaType.APPLICATION_JSON) );
+                get("/api/v1/fresh-products/list?productId=1&sorting=V")
+                        .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk())
-                .andExpect(content().string(expectedResponse));
+                .andExpect(jsonPath("$..batchDTO[0].expirationDate", CoreMatchers.is(List.of(dueDate))));
     }
 }
