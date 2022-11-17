@@ -1,9 +1,6 @@
 package com.group03.desafio_integrador.integrados;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
-import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
@@ -11,7 +8,6 @@ import com.group03.desafio_integrador.entities.InboundOrder;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.ShoppingCart;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
-import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
 import com.group03.desafio_integrador.repository.CartProductRepository;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
 import com.group03.desafio_integrador.repository.ProductAdvertisingRepository;
@@ -30,7 +26,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,25 +38,35 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class ProductAdvertisingControllerTestIT {
 
-     @Autowired
+    @Autowired
     private MockMvc mockMvc;
-     @Autowired
-     private ProductAdvertisingRepository productAdvertisingRepository;
-     @Autowired
-     private CartProductRepository cartProductRepository;
-     @Autowired
-     private InboundOrderRepository inboundOrderRepository;
+
+    @Autowired
+    private ProductAdvertisingRepository productAdvertisingRepository;
+
+    @Autowired
+    private CartProductRepository cartProductRepository;
+
+    @Autowired
+    private InboundOrderRepository inboundOrderRepository;
+
     @Autowired
     private ObjectMapper objectMapper;
+
     private List<ProductAdvertising> mockProductList;
+
     private PurchaseOrderDTO mockCreateCartRequest;
 
     private PurchaseOrderDTO mockErrorCartRequest;
+
     private ShoppingCartTotalDTO mockCreateCartResponse;
+
     private ShoppingCart mockShoppingCartFinished;
 
     private InboundOrder mockCreateSortInboundOrder;
+
     private List<CartProduct> mockCartProductOrderList;
+
     static ShoppingCart shoppingCartId = ShoppingCart.builder().shoppingCartId(1L).build();
 
     @BeforeEach
@@ -85,21 +90,23 @@ class ProductAdvertisingControllerTestIT {
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products")
-                        .contentType(MediaType.APPLICATION_JSON) );
+                        .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
         assertThat(products).asList();
     }
 
     @Test
+    //TODO 17/11 finalizar teste Amanda
     void getAllByCategory_returnFilteredProductListByCategory_whenValidCategory() throws Exception {
         List<ProductAdvertising> productsFresh = productAdvertisingRepository.findAllByCategory(CategoryEnum.FS);
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products/list?category=FS")
-                        .contentType(MediaType.APPLICATION_JSON) );
+                        .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
+                //.andExpect(jsonPath("$..category", CoreMatchers.is(List.of(productsFresh.get(0).getCategory().toString()))));
         assertThat(productsFresh).asList();
     }
 
@@ -109,7 +116,7 @@ class ProductAdvertisingControllerTestIT {
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products/list?category=FT")
-                        .contentType(MediaType.APPLICATION_JSON) );
+                        .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message", CoreMatchers.is("This category is not valid")));
@@ -122,7 +129,7 @@ class ProductAdvertisingControllerTestIT {
                 .content(objectMapper.writeValueAsString(mockCreateCartRequest)));
 
         response.andExpect(status().isCreated())
-               .andExpect(jsonPath("$.totalPrice", CoreMatchers.is(mockCreateCartResponse.getTotalPrice())));
+                .andExpect(jsonPath("$.totalPrice", CoreMatchers.is(mockCreateCartResponse.getTotalPrice())));
     }
 
     @Test
@@ -136,15 +143,16 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
+    //TODO finalizar teste 17/11 Amanda
     void getCartProducts_returnCartProduct_whenShoppingCartExist() throws Exception {
         List<CartProduct> shoppingCart = cartProductRepository.findAllByShoppingCart(shoppingCartId);
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products/orders/1")
-                        .contentType(MediaType.APPLICATION_JSON) );
+                        .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-        //assertThat(shoppingCart).isEqualTo(mockCartProductOrderList);
+                //.andExpect(jsonPath("$..shoppingCart.shoppingCartId", CoreMatchers.is(List.of(shoppingCart.get(0).getShoppingCart().getShoppingCartId()))));
     }
 
     @Test
@@ -155,8 +163,7 @@ class ProductAdvertisingControllerTestIT {
                 .content(objectMapper.writeValueAsString(mockShoppingCartFinished)));
 
         response.andExpect(status().isOk())
-               .andExpect(jsonPath("$.shoppingCartId", CoreMatchers.is(shoppingCartId)));
-               //.andExpect(jsonPath("$.orderStatus", CoreMatchers.is(mockShoppingCartFinished.getOrderStatus())));
+                .andExpect(jsonPath("$.shoppingCartId", CoreMatchers.is(shoppingCartId)));
     }
 
     @Test
@@ -168,10 +175,9 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
 
-       ResultActions response = mockMvc.perform(
+        ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products/list?productId=1")
                         .contentType(MediaType.APPLICATION_JSON));
-
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$..sectionDTO.sectionId", CoreMatchers.is(List.of(sectionId))));

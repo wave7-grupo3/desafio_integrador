@@ -14,9 +14,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestsMocks {
+
     static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
     private static final List<Batch> batchList = new ArrayList<>();
+
     private static final List<Batch> sortBatchList = new ArrayList<>();
 
     private static final List<ProductAdvertising> productList = new ArrayList<>();
