@@ -1,8 +1,6 @@
 package com.group03.desafio_integrador.utils.mocks;
 
-import com.group03.desafio_integrador.dto.ProductDTO;
-import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
-import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
+import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
 import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
@@ -18,19 +16,24 @@ public class TestsMocks {
 
     private static final List<Batch> batchList = new ArrayList<>();
 
+    private static final List<Batch> batchListWithBatchId = new ArrayList<>();
+
     private static final List<ProductAdvertising> productList = new ArrayList<>();
 
     public static Batch mockBatch() {
 
-        return new Batch(1L,
+        Batch batch = new Batch(1L,
                 productId,
                 10.0F,
                 15,
                 LocalDate.parse("2022-11-30"),
                 LocalDateTime.of(2022, 11, 9, 11, 43, 0),
                 30.0F,
-                LocalDate.parse("2022-11-30"),
+                LocalDate.parse("2022-12-30"),
                 BigDecimal.valueOf(150.00));
+
+        batchListWithBatchId.add(batch);
+        return batch;
     }
 
     public static Batch createBatch() {
@@ -73,7 +76,7 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-09"),
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
-                batchList);
+                batchListWithBatchId);
 
     }
 
@@ -275,6 +278,26 @@ public class TestsMocks {
                 mockBuyer(),
                 10.0
         );
+    }
+
+    public static BatchDueDateDTO mockBatchDueDateDTO() {
+        return new BatchDueDateDTO(
+                1L,
+                1L,
+                0L,
+                LocalDate.parse("2022-12-30"),
+                3
+        );
+    }
+
+    public static BatchDueDateStockDTO mockbatchDueDateStockDTO(){
+        List<BatchDueDateDTO> batchDueDateDTOList = new ArrayList<>();
+
+        batchDueDateDTOList.add(mockBatchDueDateDTO());
+
+        return BatchDueDateStockDTO.builder()
+                .batchDueDateStock(batchDueDateDTOList)
+                .build();
     }
 
     public static Buyer buyer() {
