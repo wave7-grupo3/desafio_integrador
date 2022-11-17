@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.integrados;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
 import com.group03.desafio_integrador.entities.CartProduct;
