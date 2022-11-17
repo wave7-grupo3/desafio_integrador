@@ -1,8 +1,11 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
+
 import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
+
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.repository.*;
 import com.group03.desafio_integrador.utils.mocks.TestsMocks;
@@ -13,12 +16,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class InboundOrderServiceTest {
@@ -35,12 +38,19 @@ class InboundOrderServiceTest {
 
     @Mock
     private BatchService batchService;
-    
+
+    @Mock
+    private ProductAdvertisingService productAdvertisingService;
+
+    @Mock
+    private WarehouseService warehouseService;
+
     public final List<Batch> batchList = new ArrayList<>();
     private Batch mockBatch;
     private Batch mockUpdateBatch;
     private InboundOrder mockInboundOrder;
     private InboundOrder mockCreateInboundOrder;
+
     private List<InboundOrder> mockCreateInboundOrderList;
     private Warehouse mockWarehouse;
     private List<ProductWarehouseStockDTO> mockProductWarehouseStockDTOList;
@@ -65,6 +75,7 @@ class InboundOrderServiceTest {
         mockProductWarehouseStockDTOList = TestsMocks.mockProductWarehouseStockDTOList();
 
         mockWarehouse = TestsMocks.mockWarehouse();
+
     }
 
     @AfterEach
@@ -91,12 +102,13 @@ class InboundOrderServiceTest {
         BDDMockito.when(inboundOrderRepository.save(ArgumentMatchers.any(InboundOrder.class)))
                 .thenReturn(mockInboundOrder);
 
-        BatchStockDTO newInboundOrder = inboundOrderService.save(mockCreateInboundOrder);
+        BatchStockDTO inboundResponse = inboundOrderService.save(mockCreateInboundOrder);
 
         BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
                 .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
 
-        assertThat(newInboundOrder).isNotNull();
+        assertThat(inboundResponse).isNotNull();
+        assertThat(inboundResponse.getBatchStock().containsAll(mockInboundOrder.getBatchList())).isTrue();
     }
 
     @Test
@@ -139,5 +151,47 @@ class InboundOrderServiceTest {
 
         assertThat(productWarehouseStockDTOList).isNotNull();
         assertThat(productWarehouseStockDTOList).asList();
+    }
+    
+   @Test
+    void validateOrder_doNotThrowError_whenValidData() throws Exception {
+        doNothing().when(inboundOrderService)
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+        doNothing().when(inboundOrderService)
+                .validateProducts(ArgumentMatchers.anyList());
+        doNothing().when(inboundOrderService)
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
+
+        inboundOrderService.validateOrder(mockCreateInboundOrder);
+
+        verify(inboundOrderService, times(1))
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+
+        verify(inboundOrderService, times(1))
+                .validateProducts(ArgumentMatchers.anyList());
+
+        verify(inboundOrderService, times(1))
+                .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
+    }
+
+    @Test
+    void validateOrder_throwError_whenManagerInWarehouseNotFound() {
+        BDDMockito.doReturn(new Warehouse(1L, 3000.0, null))
+                .when(warehouseService)
+                .getById(ArgumentMatchers.anyLong());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> inboundOrderService.validateOrder(mockCreateInboundOrder));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Manager not found for this Warehouse!");
+    }
+
+    @Test
+    void validateProducts_throwError_whenProductNotFound(){
+        doThrow(new NotFoundException("")).when(productAdvertisingService)
+                .getById(ArgumentMatchers.anyLong());
+
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> inboundOrderService.validateProducts(batchList));
+
+        assertThat(notFoundException.getMessage()).isEqualTo("Products not found");
     }
 }
