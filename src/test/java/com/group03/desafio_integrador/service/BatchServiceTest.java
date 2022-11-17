@@ -131,17 +131,17 @@ class BatchServiceTest {
     }
 
 //    TODO: Finalizar teste Mariana
-//    @Test
-//    void getAllDueDateCategory_returnBatchDueDateStockDTO_whenDataIsNotEmpty() {
-//        BDDMockito.when(batchRepository.findAllByExpirationDateGreaterThan(ArgumentMatchers.any(LocalDate.class)))
-//                .thenReturn(mockBatchList);
-//        BDDMockito.when(productRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class)))
-//                .thenReturn(mockProductListFresh);
-//
-//        BatchDueDateStockDTO batchDueDateStockDTO = batchService.getAllDueDateCategory(1, "FS", "asc");
-//
-//        assertThat(batchDueDateStockDTO).isNotNull();
-//        assertThat(batchDueDateStockDTO).isInstanceOf(BatchDueDateStockDTO.class);
-//    }
+    @Test
+    void getAllDueDateCategory_returnBatchDueDateStockDTO_whenDataIsNotEmpty() {
+        BDDMockito.when(batchRepository.findAllByExpirationDateGreaterThan(ArgumentMatchers.any(LocalDate.class)))
+                .thenReturn(mockBatchList);
+        BDDMockito.when(productRepository.findAllByCategory(ArgumentMatchers.any(CategoryEnum.class)))
+                .thenReturn(mockProductListFresh);
+
+        BatchDueDateStockDTO batchDueDateStockDTO = batchService.getAllDueDateCategory(1, "FS", "asc");
+
+        assertThat(batchDueDateStockDTO).isNotNull();
+        assertThat(batchDueDateStockDTO).isInstanceOf(BatchDueDateStockDTO.class);
+    }
 
 }
