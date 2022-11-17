@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestsMocks {
-    static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
+    static ProductAdvertising productId = ProductAdvertising.builder().productId(5L).build();
 
     private static final List<Batch> batchList = new ArrayList<>();
 
@@ -92,7 +92,7 @@ public class TestsMocks {
     public static List<InboundOrder> mockCreateInboundOrderList() {
         List<InboundOrder> inboundOrderList = new ArrayList<>();
 
-        InboundOrder inboundOrder = new InboundOrder(null,
+        InboundOrder inboundOrder = new InboundOrder(1L,
                 LocalDate.parse("2022-11-09"),
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
@@ -280,6 +280,7 @@ public class TestsMocks {
         );
     }
 
+
     public static BatchDueDateDTO mockBatchDueDateDTO() {
         return new BatchDueDateDTO(
                 1L,
@@ -300,12 +301,39 @@ public class TestsMocks {
                 .build();
     }
 
-    public static Buyer buyer() {
-        return new Buyer(
-                1L,
-                "Lucas",
-                "lucas@email.com"
-        );
+    public static Warehouse mockWarehouse() {
+        Manager manager = Manager.builder()
+                .managerId(1L)
+                .build();
+        return Warehouse.builder()
+                .warehouseId(1L)
+                .capacity(3000.0)
+                .manager(manager)
+                .build();
+    }
+
+    public static List<ProductWarehouseStockDTO> mockProductWarehouseStockDTOList() {
+        List<BatchDTO> batchDTOList = new ArrayList<>();
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = new ArrayList<>();
+
+        SectionDTO sectionDTO = SectionDTO.builder().sectionId(1L).warehouseId(1L).build();
+        BatchDTO batchDTO = BatchDTO.builder()
+                .batchId(1L)
+                .quantity(10)
+                .expirationDate(LocalDate.parse("2023-01-30"))
+                .build();
+
+        batchDTOList.add(batchDTO);
+
+         ProductWarehouseStockDTO productWarehouseStockDTO = ProductWarehouseStockDTO.builder()
+                .sectionDTO(sectionDTO)
+                .productId(5L)
+                .batchDTO(batchDTOList)
+                .build();
+
+         productWarehouseStockDTOList.add(productWarehouseStockDTO);
+
+        return productWarehouseStockDTOList;
     }
 
 }

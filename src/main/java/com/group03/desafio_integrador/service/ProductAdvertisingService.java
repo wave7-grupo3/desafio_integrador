@@ -31,7 +31,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      *
      * @param id - Long
      * @return ProductAdvertising - Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @throws NotFoundException - NotFoundException
      * @author Gabriel Morais
      */
     @Override
@@ -43,8 +43,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por retornar todos os produtos cadastrados.
      *
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma lista entidade do tipo ProductAdvertising.
+     * @throws NotFoundException - NotFoundException
      * @author Mariana Saraiva
      */
     @Override
@@ -60,8 +60,8 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por retornar todos os produtos cadastrados por categoria.
      * @param category - String
-     * @return List<ProductAdvertising>- Retorna uma entidade do tipo ProductAdvertising.
-     * @throws NotFoundException
+     * @return Retorna uma lista de entidades do tipo ProductAdvertising que possuem a categoria informada.
+     * @throws NotFoundException - NotFoundException
      * @author Mariana Saraiva
      */
     @Override
@@ -79,7 +79,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     /**
      * Método responsável por registrar os pedidos
      * @param purchase - PurchaseOrderDTO
-     * @return ShoppingCartTotalDTO - Retorna um dto do tipo ShoppingCartTotalDTO.
+     * @return Retorna um dto do tipo ShoppingCartTotalDTO.
      * @author Amanda Zotelli, Gabriel Morais
      */
     @Override
@@ -92,7 +92,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productAdvertising = getById(product.getProductId());
             productAdvertising.setQuantity(product.getQuantity());
-            products.add(getById(product.getProductId()));
+            products.add(getById(product.getProductId())); //TODO: 15/11/2022 verificar o uso da variavel productAdvertising
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
         }
@@ -105,11 +105,13 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .build();
     }
 
+
+
     /**
      * Método responsável por estruturar o Builder para retorno do ShoppingCart.
      * @param buyer - Buyer
      * @param totalPrice - BigDecimal
-     * @return ShoppingCart - Retorna uma entidade do tipo ShoppingCart.
+     * @return Retorna uma entidade do tipo ShoppingCart.
      * @author Amanda Zotelli
      */
     private static ShoppingCart shoppingCartBuilder(Buyer buyer, BigDecimal totalPrice) {
@@ -123,11 +125,11 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por salvar(associar) o produto ao ShoppingCart.
-     * @param products - Set<ProductAdvertising>
+     * @param products - Set do tipo ProductAdvertising
      * @param shoppingCart - ShoppingCart
      * @author Amanda Zotelli
      */
-    public void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
+    protected void saveShoppingCart(Set<ProductAdvertising> products, ShoppingCart shoppingCart) {
         ShoppingCart cartSaved = shoppingCartService.save(shoppingCart);
         List<CartProduct> cartProductList = new ArrayList<>();
 
@@ -149,7 +151,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @author Gabriel Morais, Mariana Saraiva
      */
     // TODO: 14/11/22 Analisar Refatoração
-    public void verifyStock(PurchaseOrderDTO purchase) {
+    protected void verifyStock(PurchaseOrderDTO purchase) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (ProductDTO product : purchase.getProducts()) {
@@ -179,12 +181,12 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por verificar se a data de validade é superior há 3 semanas ao ser disponibilizado a venda.
-     * @param errorDetails - List<ValidationErrorDetail>
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param batch - Batch
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    public static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+    public void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
                     ValidationErrorDetail.builder()
@@ -194,14 +196,14 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
     }
 
     /**
-     * Método responsável por verificar a quantidade disponivel de produtos no estoque.
-     * @param errorDetails - List<ValidationErrorDetail>
+     * Método responsável por verificar a quantidade disponível de produtos no estoque.
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param product - ProductDTO
      * @param batch - Batch
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private static void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
+    protected void verifyProductStockQuantity(List<ValidationErrorDetail> errorDetails, ProductDTO product, Batch batch, Long idProduct) {
         if (batch.getProductQuantity() >= product.getQuantity()) {
             if (errorDetails.isEmpty()) {
                 Integer updatedQuantity = batch.getProductQuantity() - product.getQuantity();
@@ -217,11 +219,11 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
     /**
      * Método responsável por verificar se o produto existe(é cadastrado no sistema).
-     * @param errorDetails - List<ValidationErrorDetail>
+     * @param errorDetails - lista do tipo ValidationErrorDetail
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    private void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
+    protected void verifyProductExists(List<ValidationErrorDetail> errorDetails, Long idProduct) {
         try {
             getById(idProduct);
         } catch (Exception ex) {
