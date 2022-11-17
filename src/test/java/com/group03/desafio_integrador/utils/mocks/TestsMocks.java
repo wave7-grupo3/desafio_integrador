@@ -310,6 +310,20 @@ public class TestsMocks {
         return productWarehouseStockDTOList;
     }
 
+    public static ProductWarehouseDTO mockProductWarehouseDTO() {
+        List<WarehouseStockDTO> WarehouseStockDTOList = new ArrayList<>();
 
+        WarehouseStockDTO warehouseStockDTO = WarehouseStockDTO.builder()
+                .warehouseCode(1L)
+                .totalQuantity(String.valueOf(30))
+                .build();
 
+        WarehouseStockDTOList.add(warehouseStockDTO );
+
+        return ProductWarehouseDTO.builder()
+                .productId(1L)
+                .warehouses(WarehouseStockDTOList)
+                .build();
+
+    }
 }
