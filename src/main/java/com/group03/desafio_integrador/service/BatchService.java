@@ -66,6 +66,14 @@ public class BatchService implements IBatchService {
         return repository.findAllByProductId(id);
     }
 
+    /**
+     * Rota responsável por retornar os lotes armazenados em um setor de um armazém ordenados por sua data de vencimento.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param section - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section) {
         LocalDate currentDate = calculateDate(numberOfDays);
@@ -102,6 +110,16 @@ public class BatchService implements IBatchService {
         return LocalDate.now().plusDays(numberOfDays);
     }
 
+    /**
+     * Rota responsável por retornar os lotes dentro de uma data de validade e pertençam a uma categoria de produto
+     * ordenados de forma crescente.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param category - String
+     * @param sorting - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public BatchDueDateStockDTO getAllDueDateCategory(Integer numberOfDays, String category, String sorting) {
         LocalDate currentDate = calculateDate(numberOfDays);
