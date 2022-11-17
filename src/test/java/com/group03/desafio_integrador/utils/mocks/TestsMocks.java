@@ -12,9 +12,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestsMocks {
-    static ProductAdvertising productId = ProductAdvertising.builder().productId(5L).build();
+
+    static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
     private static final List<Batch> batchList = new ArrayList<>();
+
+    private static final List<Batch> sortBatchList = new ArrayList<>();
 
     private static final List<Batch> batchListWithBatchId = new ArrayList<>();
 
@@ -285,6 +288,56 @@ public class TestsMocks {
         );
     }
 
+    public static PurchaseOrderDTO mockErrorCartRequest() {
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+
+        ProductDTO productDTO = ProductDTO.builder()
+                .productId(55L)
+                .quantity(5)
+                .build();
+
+        productDTOList.add(productDTO);
+
+        return PurchaseOrderDTO.builder()
+                .buyerId(1L)
+                .products(productDTOList)
+                .build();
+
+    }
+
+    public static InboundOrder mockCreateSortInboundOrder() {
+
+        Batch expiringSoonerBatch = new Batch(null,
+                productId,
+                10.0F,
+                5,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                30.0F,
+                LocalDate.parse("2022-12-30"),
+                BigDecimal.valueOf(150.00));
+
+        sortBatchList.add(expiringSoonerBatch);
+
+        Batch batch = new Batch(null,
+                productId,
+                10.0F,
+                5,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                30.0F,
+                LocalDate.parse("2023-02-25"),
+                BigDecimal.valueOf(150.00));
+
+        sortBatchList.add(batch);
+
+        return new InboundOrder(null,
+                LocalDate.parse("2022-11-09"),
+                Section.builder().sectionId(1L).build(),
+                Warehouse.builder().warehouseId(1L).build(),
+                sortBatchList);
+}
 
     public static BatchDueDateDTO mockBatchDueDateDTO() {
         return new BatchDueDateDTO(
