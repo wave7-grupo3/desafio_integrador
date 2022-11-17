@@ -186,7 +186,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    public void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+    public static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
                     ValidationErrorDetail.builder()

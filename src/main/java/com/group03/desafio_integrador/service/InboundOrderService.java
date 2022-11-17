@@ -24,9 +24,6 @@ public class InboundOrderService implements IInboundOrderService {
     private final ISectionService sectionService;
     private final IBatchService batchService;
 
-    // TODO: 16/11/22 alterei um método productAdvertising para nao static para fins de testes
-    private static ProductAdvertisingService productAdvertisingService;
-
 
     /**
      * Método responsável por listar todos os pedidos de ordem do armazem.
@@ -99,11 +96,9 @@ public class InboundOrderService implements IInboundOrderService {
      * Método responsável por realizar a verificação se o armazem existe.
      *
      * @param Warehouse - warehouseId
-     * @throws Exception
      * @author Gabriel Morais
      */
-    // TODO: fazer exception específico
-    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
+    protected void validateWarehouse(Warehouse warehouseId) {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
         if (warehouse.getManager() == null) {
@@ -225,8 +220,7 @@ public class InboundOrderService implements IInboundOrderService {
             List<ValidationErrorDetail> errorDetails
     ) {
             for (Batch batch : batchStream) {
-                // TODO: 16/11/22 método alterado para nao static
-                productAdvertisingService.verifyProductExpirationDate(errorDetails, batch, productId);
+                ProductAdvertisingService.verifyProductExpirationDate(errorDetails, batch, productId);
         }
     }
 

@@ -3,7 +3,6 @@ package com.group03.desafio_integrador.advisor;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
-@Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
