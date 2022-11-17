@@ -39,11 +39,24 @@ public class WarehouseService implements IWarehouseService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Warehouse not found!"));
     }
 
+    // TODO: 16/11/22 ver quem criou este método
+    /**
+     * Método responsável por retornar a lista de todos os armazéns cadastrados.
+     * @author grupo3
+     * @return Retorna uma lista contendo entidades do tipo Warehouse.
+     */
     @Override
     public List<Warehouse> getAll() {
         return repository.findAll();
     }
 
+    /**
+     * Método responsável por retornar o estoque de um produto em todos os armazéns.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param id - Long
+     * @return Retorna uma entidade do tipo productWarehouseDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public ProductWarehouseDTO getAllStockProductWarehouse(Long id) {
         productService.getById(id);
@@ -71,6 +84,13 @@ public class WarehouseService implements IWarehouseService {
         return productWarehouseDTO;
     }
 
+    /**
+     * Método responsável por construir uma response personalizada - builder.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param inboundOrder - InboundOrder
+     * @param quantitySum - Integer
+     * @return Retorna builder do tipo WarehouseDTO.
+     */
     private static WarehouseStockDTO buildWarehouseStockDTO(InboundOrder inboundOrder, Integer quantitySum) {
         return WarehouseStockDTO.builder()
                 .warehouseCode(inboundOrder.getWarehouseId().getWarehouseId())
@@ -78,6 +98,12 @@ public class WarehouseService implements IWarehouseService {
                 .build();
     }
 
+    /**
+     * Método responsável por construir uma response personalizada - builder.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param id - Long
+     * @return Retorna builder do tipo productWarehouseDTO.
+     */
     private static ProductWarehouseDTO buildProductWarehouseDTO(Long id) {
         return ProductWarehouseDTO.builder()
                 .productId(id)
@@ -85,21 +111,44 @@ public class WarehouseService implements IWarehouseService {
                 .build();
     }
 
-    private static void incrementQuantityStockInWarehouse(ProductWarehouseDTO productWarehouseDTO, Integer quantitySum, WarehouseStockDTO warehouseStockDTO) {
+    /**
+     * Método responsável por incrementar a quantidade de estoque de um produto no armazém.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param productWarehouseDTO - ProductWarehouseDTO
+     * @param quantitySum - Integer
+     * @param warehouseStockDTO - WarehouseStockDTO
+     */
+    private static void incrementQuantityStockInWarehouse(ProductWarehouseDTO productWarehouseDTO,
+                                                          Integer quantitySum,
+                                                          WarehouseStockDTO warehouseStockDTO) {
         productWarehouseDTO.getWarehouses().forEach(warehouse -> {
             if(warehouse.getWarehouseCode().equals(warehouseStockDTO.getWarehouseCode())) {
-                Integer sum = Integer.valueOf(warehouse.getTotalQuantity()) + quantitySum;
+                Integer sum = Integer.parseInt(warehouse.getTotalQuantity()) + quantitySum;
                 warehouse.setTotalQuantity(String.valueOf(sum));
             }
         });
     }
 
+    /**
+     * Método responsável por filtrar os armazéns pelo Id dentro de uma lista de estoque de produtos.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param productWarehouseDTO - ProductWarehouseDTO
+     * @param warehouseStockDTO - WarehouseStockDTO
+     * @return Retorna uma lista filtrada com os dados do armazém que possuem estoque de um produto específico.
+     */
     private static List<WarehouseStockDTO> getFilterWarehouseById(ProductWarehouseDTO productWarehouseDTO, WarehouseStockDTO warehouseStockDTO) {
         return productWarehouseDTO.getWarehouses().stream()
                 .filter(warehouse -> warehouseStockDTO.getWarehouseCode().equals(warehouse.getWarehouseCode()))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Método responsável por calcular o estoque de um produto existente em todos os lotes contidos no armazém.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param id- Long
+     * @param inboundOrder - InboundOrder
+     * @return Retorna um valor total do estoque do tipo Integer.
+     */
     private static Integer calculateQuantityStockInBatch(Long id, InboundOrder inboundOrder) {
         return inboundOrder.getBatchList().stream()
                 .filter(batch -> batch.getProductId().getProductId().equals(id))

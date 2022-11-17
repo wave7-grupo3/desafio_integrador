@@ -1,7 +1,7 @@
 package com.group03.desafio_integrador.controller;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductWarehouseDTO;
-import com.group03.desafio_integrador.entities.InboundOrder;
 import com.group03.desafio_integrador.service.interfaces.IWarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,13 @@ public class WarehouseController {
     @Autowired
     private IWarehouseService warehouseService;
 
+    /**
+     * Rota responsável por retornar o estoque de um produto em todos os armazéns.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param id - Long
+     * @return Retorna uma entidade do tipo productWarehouseDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProductWarehouseDTO> getAllStockProductWarehouse(@PathVariable(value = "id") Long id) {
         return new ResponseEntity<>(warehouseService.getAllStockProductWarehouse(id), HttpStatus.OK);

@@ -34,7 +34,25 @@ public interface IBatchService {
      */
     List<Batch> findBatchByProductId(ProductAdvertising id);
 
+    /**
+     * Rota responsável por retornar os lotes armazenados em um setor de um armazém ordenados por sua data de vencimento.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param section - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section);
 
+    /**
+     * Rota responsável por retornar os lotes dentro de uma data de validade e pertençam a uma categoria de produto
+     * ordenados de forma crescente.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param category - String
+     * @param sorting - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     BatchDueDateStockDTO getAllDueDateCategory(Integer numberOfDays, String category, String sorting);
 }

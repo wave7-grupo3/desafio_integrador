@@ -66,6 +66,14 @@ public class BatchService implements IBatchService {
         return repository.findAllByProductId(id);
     }
 
+    /**
+     * Método responsável por retornar os lotes armazenados em um setor de um armazém ordenados por sua data de vencimento.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param section - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public BatchDueDateStockDTO getAllDueDate(Integer numberOfDays, String section) {
         LocalDate currentDate = calculateDate(numberOfDays);
@@ -102,6 +110,16 @@ public class BatchService implements IBatchService {
         return LocalDate.now().plusDays(numberOfDays);
     }
 
+    /**
+     * Método responsável por retornar os lotes dentro de uma data de validade e pertençam a uma categoria de produto
+     * ordenados de forma crescente.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @param category - String
+     * @param sorting - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public BatchDueDateStockDTO getAllDueDateCategory(Integer numberOfDays, String category, String sorting) {
         LocalDate currentDate = calculateDate(numberOfDays);
@@ -128,6 +146,14 @@ public class BatchService implements IBatchService {
         return BatchDueDateStockDTO.builder().batchDueDateStock(listBatchDTO).build();
     }
 
+    /**
+     *  Método responsável por retornar uma lista ordenada conforme parâmetro informado.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param listBatchDTO - lista contendo entidades do tipo BatchDueDateDTO
+     * @param sorting - String
+     * @return Retorna uma entidade do tipo BatchDueDateStockDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     private static List<BatchDueDateDTO> sortList(String sorting, List<BatchDueDateDTO> listBatchDTO) {
         if ("DESC".equalsIgnoreCase(sorting)) {
             listBatchDTO = listBatchDTO.stream().sorted(Comparator.comparing(BatchDueDateDTO::getDueDate).reversed()).collect(Collectors.toList());
@@ -137,6 +163,14 @@ public class BatchService implements IBatchService {
         return listBatchDTO;
     }
 
+    /**
+     * Método responsável por executar o build de uma BatchDueDateDTO.
+     *
+     * @param section - String
+     * @param batch - Batch
+     * @return Retorna uma BatchDueDateDTO.
+     * @author Carolina Hakamada, Gabriel Morais, Mariana Saraiva
+     */
     private static BatchDueDateDTO buildBatchDueDateDTO(String section, Batch batch) {
         return BatchDueDateDTO.builder()
                 .batchNumber(batch.getBatchId())

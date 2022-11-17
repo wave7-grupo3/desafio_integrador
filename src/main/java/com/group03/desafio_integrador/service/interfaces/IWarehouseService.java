@@ -18,7 +18,20 @@ public interface IWarehouseService {
      */
     Warehouse getById(Long id) throws NotFoundException;
 
+    // TODO: 16/11/22 ver quem criou este método
+    /**
+     * Método responsável por retornar a lista de todos os armazéns cadastrados.
+     * @author grupo3
+     * @return Retorna uma lista contendo entidades do tipo Warehouse.
+     */
     List<Warehouse> getAll();
 
+    /**
+     * Método responsável por retornar o estoque de um produto em todos os armazéns.
+     * @author Gabriel Morais, Rosalia Padoin, Mariana Saraiva
+     * @param id - Long
+     * @return Retorna uma entidade do tipo productWarehouseDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     ProductWarehouseDTO getAllStockProductWarehouse(Long id);
 }

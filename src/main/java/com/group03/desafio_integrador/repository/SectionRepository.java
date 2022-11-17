@@ -7,5 +7,11 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SectionRepository extends JpaRepository<Section, Long> {
+    /**
+     * Método responsável por retornar a categoria da sessão.
+     * @author Gabriel Morais
+     * @param category - CategoryEnum
+     * @return Retorna uma entidade do tipo Section.
+     */
     Section findByCategory(CategoryEnum category);
 }
