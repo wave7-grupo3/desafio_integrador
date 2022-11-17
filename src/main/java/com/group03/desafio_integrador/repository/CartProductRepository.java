@@ -15,5 +15,4 @@ public interface CartProductRepository extends JpaRepository<CartProduct, Long> 
      * @return Retorna uma lista da entidade do tipo CartProduct.
      */
     List<CartProduct> findAllByShoppingCart(ShoppingCart shoppingCart);
-
 }
