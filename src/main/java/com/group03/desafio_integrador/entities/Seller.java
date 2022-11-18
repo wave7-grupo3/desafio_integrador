@@ -33,4 +33,6 @@ public class Seller {
     @Size(min = 1)
     private List<ProductAdvertising> productAdvertisingList;
 
+    // colocar aqui ou em produto e trazer relacionamento??
+    private Integer customerEvaluator;
 }
