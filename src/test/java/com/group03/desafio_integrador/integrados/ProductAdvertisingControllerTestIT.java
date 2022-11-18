@@ -112,6 +112,19 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
+    void getAllByCategory_returnFilteredProductListByCategoryRF_whenValidCategory() throws Exception {
+        List<ProductAdvertising> productsFresh = productAdvertisingRepository.findAllByCategory(CategoryEnum.RF);
+
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/fresh-products/list?category=RF")
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        response.andExpect(status().isOk());
+        //.andExpect(jsonPath("$..category", CoreMatchers.is(List.of(productsFresh.get(0).getCategory().toString()))));
+        assertThat(productsFresh).asList();
+    }
+
+    @Test
     void getAllByCategory_throwsNotFoundError_whenCategoryIsNotValid() throws Exception {
         List<ProductAdvertising> productsFresh = productAdvertisingRepository.findAllByCategory(CategoryEnum.FS);
 
@@ -186,7 +199,7 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    void getAllOrdinancesForBatches_returnOrderedProduckWarehouseStrockDTOListByExpirantionDate_whenOrderParameterIsValid() throws Exception {
+    void getAllOrdinancesForBatches_returnOrderedProductWarehouseStockDTOListByExpirationDate_whenOrderParameterIsValid() throws Exception {
         String dueDate = TestsMocks.mockCreateSortInboundOrder().getBatchList().get(0).getExpirationDate().toString();
 
         mockMvc.perform(
