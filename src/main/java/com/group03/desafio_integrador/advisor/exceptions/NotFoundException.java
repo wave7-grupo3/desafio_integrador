@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public class NotFoundException extends RuntimeException {
 
-    @Transient
+//    @Transient
     private List<ValidationErrorDetail> errors;
 
     public NotFoundException(String message) {

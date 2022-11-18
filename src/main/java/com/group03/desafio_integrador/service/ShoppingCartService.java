@@ -38,4 +38,9 @@ public class ShoppingCartService implements IShoppingCartService {
        shoppingCart.setOrderStatus(OrderStatusEnum.FINALIZADO);
        return save(shoppingCart);
     }
+
+    @Override
+    public ShoppingCart getById(Long id) {
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Shopping Cart not found!"));
+    }
 }

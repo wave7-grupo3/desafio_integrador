@@ -19,4 +19,6 @@ public interface IShoppingCartService {
      * @return ShoppingCart - Retorna uma entidade do tipo shoppingCart.
      */
     ShoppingCart update(Long id);
+
+    ShoppingCart getById(Long id);
 }
