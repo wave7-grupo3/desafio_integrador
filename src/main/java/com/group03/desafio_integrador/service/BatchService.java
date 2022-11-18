@@ -100,12 +100,25 @@ public class BatchService implements IBatchService {
         return BatchDueDateStockDTO.builder().batchDueDateStock(listBatchDTO).build();
     }
 
+    /**
+     * Método responsável por retornar uma lista de ordem de entrada filtrada por seção.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param section - String
+     * @param inboundOrderList - List<InboundOrder>
+     * @return Retorna uma lista do tipo List<InboundOrder>.
+     */
     private static List<InboundOrder> getFilterOrderSection(String section, List<InboundOrder> inboundOrderList) {
         return inboundOrderList.stream()
                 .filter(orderBatch -> section.equals(String.valueOf(orderBatch.getSectionId().getSectionId())))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Método responsável por retornar uma data com os dias inseridos a mais.
+     * @author Gabriel Morais, Mariana Saraiva, Carolina Hakamada
+     * @param numberOfDays - Integer
+     * @return Retorna uma data do tipo LocalDate.
+     */
     private static LocalDate calculateDate(Integer numberOfDays) {
         return LocalDate.now().plusDays(numberOfDays);
     }

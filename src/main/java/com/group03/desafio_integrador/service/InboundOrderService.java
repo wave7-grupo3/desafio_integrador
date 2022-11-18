@@ -166,6 +166,13 @@ public class InboundOrderService implements IInboundOrderService {
         inboundOrder.setSectionId(sectionExists);
     }
 
+    /**
+     * Método responsável por fornecer uma lista de produtos do armazém filtrado pelo seu id.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @param sectionDto - SectionDTO
+     * @param productWarehouse - List<ProductWarehouseStockDTO>
+     * @return Retorna uma lista do tipo List<ProductWarehouseStockDTO>
+     */
     private static List<ProductWarehouseStockDTO> getFilterWarehouseById(SectionDTO sectionDto, List<ProductWarehouseStockDTO> productWarehouse) {
         return productWarehouse.stream()
                 .filter(productDTO -> productDTO.getSectionDTO().getSectionId().equals(sectionDto.getSectionId()) && productDTO.getSectionDTO().getWarehouseId().equals(sectionDto.getWarehouseId()))
