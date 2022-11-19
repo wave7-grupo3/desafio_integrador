@@ -20,19 +20,17 @@ public class Seller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
+//    @NotNull
     private Long sellerId;
 
     @NotBlank
-    @Size(min = 10, max = 40, message = "The name must have at least 10 characters and cannot exceed 40 characters")
+    @Size(min = 3, max = 40, message = "The name must have at least 3 characters and cannot exceed 40 characters")
     private String sellerName;
 
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("seller")
-    @Valid
     @Size(min = 1)
     private List<ProductAdvertising> productAdvertisingList;
 
-    // colocar aqui ou em produto e trazer relacionamento??
     private Integer customerEvaluator;
 }
