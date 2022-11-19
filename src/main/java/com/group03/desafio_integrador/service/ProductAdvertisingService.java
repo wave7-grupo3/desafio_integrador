@@ -91,9 +91,9 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
 
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productAdvertising = getById(product.getProductId());
-//            Integer currentCustomerEvaluator = productAdvertising.getSeller().getCustomerEvaluator();
+            Integer currentCustomerEvaluator = productAdvertising.getSeller().getCustomerEvaluator();
             productAdvertising.setQuantity(product.getQuantity());
-//            productAdvertising.getSeller().setCustomerEvaluator(product.getQuantity() + currentCustomerEvaluator);
+            productAdvertising.getSeller().setCustomerEvaluator(product.getQuantity() + currentCustomerEvaluator);
             products.add(productAdvertising);
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
