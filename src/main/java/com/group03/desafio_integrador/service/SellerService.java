@@ -28,7 +28,13 @@ public class SellerService implements ISellerService {
 
     @Override
     public List<Seller> getAll() {
-        return repository.findAll();
+        List<Seller> sellerList = repository.findAll();
+
+        if (sellerList.isEmpty()) {
+            throw new NotFoundException("No registered seller found!");
+        }
+
+        return sellerList;
     }
 
     @Override
@@ -44,7 +50,7 @@ public class SellerService implements ISellerService {
 
     @Override
     public Seller update(Seller seller) {
-        getById(seller.getSellerId());
+        this.getById(seller.getSellerId());
 
         return repository.save(seller);
     }
