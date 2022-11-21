@@ -1,10 +1,16 @@
 package com.group03.desafio_integrador;
 
+import com.group03.desafio_integrador.entities.Manager;
+import com.group03.desafio_integrador.entities.Warehouse;
+import com.group03.desafio_integrador.service.ManagerService;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.ArrayList;
 
 @SpringBootApplication
 public class DesafioIntegradorApplication {
@@ -16,5 +22,15 @@ public class DesafioIntegradorApplication {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    CommandLineRunner run(ManagerService managerService) {
+        return args -> {
+            managerService.saveManager(new Manager(null,
+                    "John Travolta",
+                    "john",
+                    "12345"));
+        };
     }
 }

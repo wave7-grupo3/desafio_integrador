@@ -8,15 +8,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ManagerService implements IManagerService, UserDetailsService {
 
     private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -37,11 +41,8 @@ public class ManagerService implements IManagerService, UserDetailsService {
         if (managerName != null) {
             throw new RuntimeException("Manager already exists");
         }
+        manager.setPassword(passwordEncoder.encode(manager.getPassword()));
         managerRepository.save(manager);
     }
 
-    @Override
-    public Manager getByUsername(String username) {
-        return null;
-    }
 }

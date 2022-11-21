@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class ManagerController {
 
     @Autowired
-    private final ManagerService managerService;
+    private ManagerService managerService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveManager(Manager manager) {
-        return new ResponseEntity<>(managerService.saveManager(manager), HttpStatus.CREATED);
-
+    public ResponseEntity<?> saveManager(@RequestBody Manager manager) {
+        managerService.saveManager(manager);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }

@@ -23,8 +23,8 @@ public class Manager {
 
     private String password;
 
-    @OneToOne(mappedBy = "manager", cascade = CascadeType.PERSIST)
-    @JsonIgnoreProperties("manager")
-    private Warehouse warehouse;
+//    @OneToOne(mappedBy = "manager", cascade = CascadeType.PERSIST)
+//    @JsonIgnoreProperties("manager")
+//    private Warehouse warehouse;
 
 }
