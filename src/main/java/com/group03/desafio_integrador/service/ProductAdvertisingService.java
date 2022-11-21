@@ -105,8 +105,6 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
                 .build();
     }
 
-
-
     /**
      * Método responsável por estruturar o Builder para retorno do ShoppingCart.
      * @param buyer - Buyer

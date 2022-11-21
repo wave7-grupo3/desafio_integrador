@@ -24,10 +24,10 @@ public class InboundOrderController {
     public IInboundOrderService service;
 
     /**
-     * Rota responsável pela criação de um pedido de Ordem para o armazem.
+     * Rota responsável pela criação de um pedido de armazenamento.
      * @author Gabriel Morais
      * @param inboundOrder - InboundOrder
-     * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
+     * @return Retorna um dto do tipo BatchStockDTO.
      */
     // TODO: fazer DTO de inboundOrder
     @PostMapping
@@ -40,9 +40,9 @@ public class InboundOrderController {
     }
 
     /**
-     * Rota responsável por listar todas os pedidos de ordem para o armazem.
+     * Rota responsável por listar todos os pedidos de armazenamento.
      * @author Gabriel Morais
-     * @return List<InboundOrder> - Retorna uma lista de Propriedades.
+     * @return Retorna uma lista de Propriedades.
      */
     @GetMapping
     public ResponseEntity<List<InboundOrder>> getAll() {
@@ -53,7 +53,7 @@ public class InboundOrderController {
      * Rota responsável pela alteração de um lote.
      * @author Gabriel Morais
      * @param batch - Batch
-     * @return Batch - Retorna uma entidade do tipo Batch.
+     * @return Retorna uma entidade do tipo Batch.
      */
     // TODO: fazer DTO batch
     @PutMapping
