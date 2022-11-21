@@ -107,8 +107,7 @@ public class InboundOrderService implements IInboundOrderService {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
         Manager manager = managerRepository.findByUsername(managerAuth);
 
-        if (warehouse.getManagers() == null || !warehouse.getManagers()
-                .get(0).getManagerId().equals(manager
+        if (warehouse.getManager() == null || !warehouse.getManager().getManagerId().equals(manager
                 .getManagerId())) {
             throw new NotFoundException("Manager not found for this Warehouse!");
         }
