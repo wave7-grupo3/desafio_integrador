@@ -26,7 +26,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * @param headers - HttpHeaders
      * @param status - HttpStatus
      * @param request - WebRequest
-     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     * @return Retorna uma entidade do tipo ExceptionDetails.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -53,7 +53,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * Método responsável pelo tratamento das exceções geradas quando a solicitação não for encontrada.
      * @author Ingrid Paulino
      * @param ex - NotFoundException
-     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     * @return Retorna uma entidade do tipo ExceptionDetails.
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionDetails> handlerNotFoundException(NotFoundException ex) {
@@ -67,6 +67,12 @@ public class HandlerException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Método responsável pelo tratamento das exceções geradas quando a solicitação não for encontrada.
+     * @author Rosalia Padoin, Carolina Hakamada, Ingrid Paulino
+     * @param ex - NotAcceptableException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
     @ExceptionHandler(NotAcceptableException.class)
     public ResponseEntity<ExceptionDetails> handlerNotAcceptableException(NotAcceptableException ex) {
         ExceptionDetails exceptionDetails = ExceptionDetails.builder()
@@ -78,6 +84,12 @@ public class HandlerException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    /**
+     * Método responsável pelo tratamento das exceções quando uma entidade nao for processada corretamente.
+     * @author Rosalia Padoin
+     * @param ex - UnprocessableEntityException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
     @ExceptionHandler(UnprocessableEntityException.class)
     public ResponseEntity<ExceptionDetails> handlerBadRequestException(UnprocessableEntityException ex) {
         ExceptionDetails exceptionDetails = ExceptionDetails.builder()
@@ -88,6 +100,4 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
-
-
 }
