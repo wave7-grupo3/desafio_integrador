@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.repository.ManagerRepository;
 import com.group03.desafio_integrador.service.interfaces.IManagerService;
@@ -37,12 +38,10 @@ public class ManagerService implements IManagerService, UserDetailsService {
     @Override
     public void saveManager(Manager manager) {
         Manager managerName = managerRepository.findByName(manager.getName());
-        // TODO: 20/11/22 criar exception
         if (managerName != null) {
-            throw new RuntimeException("Manager already exists");
+            throw new UnprocessableEntityException("Manager already exists");
         }
         manager.setPassword(passwordEncoder.encode(manager.getPassword()));
         managerRepository.save(manager);
     }
-
 }
