@@ -26,12 +26,6 @@ public class InboundOrderService implements IInboundOrderService {
     private final ISectionService sectionService;
     private final IBatchService batchService;
 
-<<<<<<< HEAD
-=======
-    // TODO: 16/11/22 alterei um método productAdvertising para nao static para fins de testes
-    private static ProductAdvertisingService productAdvertisingService;
->>>>>>> feature/ml-fix-warnings-java-docs
-
     /**
      * Método responsável por listar todos os pedidos de ordem do armazém.
      *
@@ -101,26 +95,20 @@ public class InboundOrderService implements IInboundOrderService {
     /**
      * Método responsável por realizar a verificação se o armazém existe e se possui um representante.
      *
-<<<<<<< HEAD
-     * @param Warehouse - warehouseId
-     * @author Gabriel Morais
-     */
-    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) {
-=======
-     * @param warehouseId - do tipo Warehouse
+     * @param warehouseId - Warehouse
+     * @param managerAuth - String
      * @throws NotFoundException - NotFoundException
      * @author Gabriel Morais
      */
     // TODO: fazer exception específico
     // TODO: 16/11/22 verificar o nome do método pois estamos verificando se o manager foi encontrado no armazém e o
     //  nome atual sugere que estamos verificando o armazém indicando generalização.
-    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
->>>>>>> feature/ml-fix-warnings-java-docs
+    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
-
         Manager manager = managerRepository.findByUsername(managerAuth);
 
-        if (warehouse.getManager() == null || !warehouse.getManager().getManagerId().equals(manager
+        if (warehouse.getManagers() == null || !warehouse.getManagers()
+                .get(0).getManagerId().equals(manager
                 .getManagerId())) {
             throw new NotFoundException("Manager not found for this Warehouse!");
         }
@@ -188,20 +176,12 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
     /**
-<<<<<<< HEAD
      * Método responsável por fornecer uma lista de produtos do armazém filtrado pelo seu id.
      * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
-     * @param sectionDto - SectionDTO
-     * @param productWarehouse - List<ProductWarehouseStockDTO>
-     * @return Retorna uma lista do tipo List<ProductWarehouseStockDTO>
-=======
-     * Método responsável por retornar um filtro de warehouses e sections que possuem certo produto em seu estoque.
-     *
      * @param sectionDto - do tipo SectionDTO
      * @param productWarehouse - lista do tipo ProductWarehouseStockDTO
      * @return lista de warehouses e sections que possuem certo produto em seu estoque.
      * @author Gabriel Morais
->>>>>>> feature/ml-fix-warnings-java-docs
      */
     private static List<ProductWarehouseStockDTO> getFilterWarehouseById(SectionDTO sectionDto, List<ProductWarehouseStockDTO> productWarehouse) {
         return productWarehouse.stream()
@@ -216,7 +196,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @return Retorna uma lista de dto do tipo ProductWarehouseStockDTO.
      * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
-    public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
+    public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId, String managerAuth) throws Exception {
+
 
         List<InboundOrder> inboundOrderList = getAll();
         List<Batch> batchStream;
@@ -224,7 +205,7 @@ public class InboundOrderService implements IInboundOrderService {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (InboundOrder inbound : inboundOrderList) {
-            validateOrder(inbound);
+            validateOrder(inbound, managerAuth);
             batchStream = getBatchStreamFilteredByProductId(productId, inbound);
             SectionDTO sectionDto = buildSectionDTO(inbound);
             verifyBatchDueDate(productId, batchStream, errorDetails);

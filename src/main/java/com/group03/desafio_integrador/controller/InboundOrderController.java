@@ -58,6 +58,10 @@ public class InboundOrderController {
     // TODO: fazer DTO batch
     @PutMapping
     public ResponseEntity<Batch> update(@Valid @RequestBody Batch batch) {
+        String username = jwtBean.getDecodedJWT().getSubject();
+        if(username == null) {
+            throw new NotFoundException("Nao autenticado");
+        }
         return new ResponseEntity<>(service.update(batch), HttpStatus.CREATED);
     }
 
