@@ -36,9 +36,45 @@ public class ManagerController {
      * @param manager - Manager
      * @throws NotFoundException - NotFoundException
      */
-    @PutMapping("/update")
+    @PutMapping("/update/all")
     public ResponseEntity<Manager> updateManager(@RequestBody Manager manager) {
         return ResponseEntity.ok(managerService.updateManager(manager));
+    }
+
+    /**
+     * Rota responsável pela atualização do nome de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param name - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @PatchMapping("/update/name/{id}")
+    public ResponseEntity<Manager> updateNameManager(@RequestBody String name, @PathVariable String id) {
+        managerService.updateNameManager(name, id);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Rota responsável pela atualização do username de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @PatchMapping("/update/username/{id}")
+    public ResponseEntity<?> updateUsernameManager(@RequestBody String username, @PathVariable String id) {
+        managerService.updateUsernameManager(username, id);
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Rota responsável pela atualização da senha de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param password - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @PatchMapping("/update/password/{id}")
+    public ResponseEntity<?> updatePasswordManager(@RequestBody String password, @PathVariable String id) {
+        managerService.updatePasswordManager(password, id);
+        return ResponseEntity.ok().build();
     }
 
     /**

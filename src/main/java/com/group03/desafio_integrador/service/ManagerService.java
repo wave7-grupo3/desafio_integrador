@@ -53,17 +53,48 @@ public class ManagerService implements IManagerService, UserDetailsService {
     }
 
     /**
-     * Método responsável pela atualização de um representante no banco de dados.
+     * Método responsável pela atualização de mais de um dado de um representante no banco de dados.
      * @author Rosalia Padoin
      * @param manager - Manager
      * @throws NotFoundException - NotFoundException
      */
     @Override
     public Manager updateManager(Manager manager) {
-        managerRepository.findById(manager.getManagerId())
-                .orElseThrow(() -> new NotFoundException("Manager not found!"));
-
+        getManagerById(manager.getManagerId());
         return managerRepository.save(manager);
+    }
+
+    /**
+     * Método responsável pela atualização da senha de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param password - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public void updatePasswordManager(String password, String id) {
+
+    }
+
+    /**
+     * Método responsável pela atualização do username de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public void updateUsernameManager(String username, String id) {
+
+    }
+
+    /**
+     * Método responsável pela atualização do nome de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param name - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public void updateNameManager(String name, String id) {
+
     }
 
     /**
@@ -90,7 +121,7 @@ public class ManagerService implements IManagerService, UserDetailsService {
     @Override
     public Manager getManagerById(Long id) {
         return managerRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Manager by id " + id + " not found!"));
+                .orElseThrow(() -> new NotFoundException("Manager with id " + id + " not found!"));
     }
 
     /**

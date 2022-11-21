@@ -24,6 +24,30 @@ public interface IManagerService {
     Manager updateManager(Manager manager);
 
     /**
+     * Método responsável pela atualização da senha de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param password - String
+     * @throws NotFoundException - NotFoundException
+     */
+    void updatePasswordManager(String password, String id);
+
+    /**
+     * Método responsável pela atualização do username de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws NotFoundException - NotFoundException
+     */
+    void updateUsernameManager(String username, String id);
+
+    /**
+     * Método responsável pela atualização do nome de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param name - String
+     * @throws NotFoundException - NotFoundException
+     */
+    void updateNameManager(String name, String id);
+
+    /**
      * Método responsável por listar todos os representantes cadastrados.
      * @author Rosalia Padoin
      * @return Retorna uma lista contendo entidades do tipo Manager.
@@ -45,4 +69,5 @@ public interface IManagerService {
      * @throws NotFoundException - NotFoundException
      */
     void deleteManager(Long id);
+
 }
