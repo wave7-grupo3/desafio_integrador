@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador;
 
+import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.entities.Warehouse;
 import com.group03.desafio_integrador.service.ManagerService;
@@ -22,6 +23,11 @@ public class DesafioIntegradorApplication {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    JWTBean jwt() {
+        return new JWTBean();
     }
 
     @Bean

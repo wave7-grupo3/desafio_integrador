@@ -7,6 +7,7 @@ import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.SortingEnum;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
+import com.group03.desafio_integrador.repository.ManagerRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InboundOrderService implements IInboundOrderService {
     private final InboundOrderRepository inboundOrderRepository;
+    private final ManagerRepository managerRepository;
     private final IProductAdvertisingService productService;
     private final IWarehouseService warehouseService;
     private final ISectionService sectionService;
@@ -69,8 +71,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @author Gabriel Morais
      */
     @Override
-    public BatchStockDTO save(InboundOrder inboundOrder) throws Exception {
-        validateOrder(inboundOrder);
+    public BatchStockDTO save(InboundOrder inboundOrder, String managerAuth) throws Exception {
+        validateOrder(inboundOrder, managerAuth);
 
         InboundOrder order = inboundOrderRepository.save(inboundOrder);
 
@@ -84,10 +86,10 @@ public class InboundOrderService implements IInboundOrderService {
      * @throws Exception
      * @author Gabriel Morais
      */
-    public void validateOrder(InboundOrder inboundOrder) throws Exception {
+    public void validateOrder(InboundOrder inboundOrder, String managerAuth) throws Exception {
         List<Batch> batchList = inboundOrder.getBatchList();
 
-        validateWarehouse(inboundOrder.getWarehouseId());
+        validateWarehouse(inboundOrder.getWarehouseId(), managerAuth);
         validateProducts(batchList);
         validateSection(inboundOrder);
     }
@@ -98,10 +100,13 @@ public class InboundOrderService implements IInboundOrderService {
      * @param Warehouse - warehouseId
      * @author Gabriel Morais
      */
-    protected void validateWarehouse(Warehouse warehouseId) {
+    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
 
-        if (warehouse.getManager() == null) {
+        Manager manager = managerRepository.findByUsername(managerAuth);
+
+        if (warehouse.getManager() == null || !warehouse.getManager().getManagerId().equals(manager
+                .getManagerId())) {
             throw new NotFoundException("Manager not found for this Warehouse!");
         }
     }

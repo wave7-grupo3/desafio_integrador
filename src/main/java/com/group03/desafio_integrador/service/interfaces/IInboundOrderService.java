@@ -19,7 +19,7 @@ public interface IInboundOrderService {
      */
 
     // TODO: implementar Exception específica
-    BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
+    BatchStockDTO save(InboundOrder inboundOrder, String username) throws Exception;
 
     /**
      * Método responsável por listar todos os pedidos de ordem do armazém.

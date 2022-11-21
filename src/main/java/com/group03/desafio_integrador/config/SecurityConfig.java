@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.config;
 
+import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.filter.CustomAuthenticationFilter;
 import com.group03.desafio_integrador.filter.CustomAuthorizationFilter;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder bCryptPasswordEncoder;
+    private final JWTBean jwtBean;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -36,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/api/v1/fresh-products/inboundorder/**").authenticated();
         http.authorizeRequests().anyRequest().permitAll();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
-        http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new CustomAuthorizationFilter(jwtBean), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean

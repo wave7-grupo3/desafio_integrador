@@ -1,5 +1,7 @@
 package com.group03.desafio_integrador.controller;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.dto.BatchStockDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.InboundOrder;
@@ -15,6 +17,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/fresh-products/inboundorder")
 public class InboundOrderController {
+    @Autowired
+    private JWTBean jwtBean;
 
     @Autowired
     public IInboundOrderService service;
@@ -28,7 +32,11 @@ public class InboundOrderController {
     // TODO: fazer DTO de inboundOrder
     @PostMapping
     public ResponseEntity<BatchStockDTO> save(@Valid @RequestBody InboundOrder inboundOrder) throws Exception {
-        return new ResponseEntity<>(service.save(inboundOrder), HttpStatus.CREATED);
+        String username = jwtBean.getDecodedJWT().getSubject();
+        if(username == null) {
+            throw new NotFoundException("Nao autenticado");
+        }
+        return new ResponseEntity<>(service.save(inboundOrder, username), HttpStatus.CREATED);
     }
 
     /**
