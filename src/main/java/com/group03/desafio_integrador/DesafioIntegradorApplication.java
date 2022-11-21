@@ -3,7 +3,9 @@ package com.group03.desafio_integrador;
 import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.entities.Warehouse;
+import com.group03.desafio_integrador.repository.WarehouseRepository;
 import com.group03.desafio_integrador.service.ManagerService;
+import com.group03.desafio_integrador.service.WarehouseService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -31,12 +33,32 @@ public class DesafioIntegradorApplication {
     }
 
     @Bean
-    CommandLineRunner run(ManagerService managerService) {
+    CommandLineRunner run(ManagerService managerService) { // WarehouseRepository warehouseRepository
         return args -> {
             managerService.saveManager(new Manager(null,
                     "John Travolta",
                     "john",
                     "12345"));
+
+            managerService.saveManager(new Manager(null,
+                    "Tom Hanks",
+                    "tom",
+                    "12345"));
+
+            managerService.saveManager(new Manager(null,
+                    "Jason Momoa",
+                    "json",
+                    "12345"));
+
+            managerService.saveManager(new Manager(null,
+                    "Orlando Blum",
+                    "orlando",
+                    "12345"));
+
+
+//            warehouseRepository.save(new Warehouse(null, 3000.0, new ArrayList<>(managerService.getByUsername("tom"))))
+
+
         };
     }
 }
