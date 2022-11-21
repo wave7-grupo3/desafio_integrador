@@ -1,13 +1,13 @@
 package com.group03.desafio_integrador.dto;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
-@Setter
 @Getter
+//@Setter
+//@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class BatchDueDateDTO {
 

@@ -39,7 +39,6 @@ public class WarehouseService implements IWarehouseService {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Warehouse not found!"));
     }
 
-    // TODO: 16/11/22 ver quem criou este método
     /**
      * Método responsável por retornar a lista de todos os armazéns cadastrados.
      * @author grupo3

@@ -92,7 +92,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
         for (ProductDTO product : purchase.getProducts()) {
             ProductAdvertising productAdvertising = getById(product.getProductId());
             productAdvertising.setQuantity(product.getQuantity());
-            products.add(getById(product.getProductId())); //TODO: 15/11/2022 verificar o uso da variavel productAdvertising
+            products.add(getById(product.getProductId()));
             BigDecimal productPrice = productAdvertising.getProductPrice().multiply(new BigDecimal(product.getQuantity()));
             totalPrice = totalPrice.add(productPrice);
         }
@@ -148,7 +148,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param purchase - PurchaseOrderDTO
      * @author Gabriel Morais, Mariana Saraiva
      */
-    // TODO: 14/11/22 Analisar Refatoração
+
     protected void verifyStock(PurchaseOrderDTO purchase) {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
@@ -184,7 +184,7 @@ public class ProductAdvertisingService implements IProductAdvertisingService {
      * @param idProduct - Long
      * @author Amanda Zotelli
      */
-    public void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
+    public static void verifyProductExpirationDate(List<ValidationErrorDetail> errorDetails, Batch batch, Long idProduct) {
         if (batch.getExpirationDate().isBefore(LocalDate.now().plusWeeks(3))) {
             errorDetails.add(
                     ValidationErrorDetail.builder()

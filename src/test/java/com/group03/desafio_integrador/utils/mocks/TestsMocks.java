@@ -12,23 +12,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestsMocks {
-    static ProductAdvertising productId = ProductAdvertising.builder().productId(5L).build();
+
+    static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
 
     private static final List<Batch> batchList = new ArrayList<>();
+
+    private static final List<Batch> sortBatchList = new ArrayList<>();
+
+    private static final List<Batch> batchListWithBatchId = new ArrayList<>();
 
     private static final List<ProductAdvertising> productList = new ArrayList<>();
 
     public static Batch mockBatch() {
 
-        return new Batch(1L,
+        Batch batch = new Batch(1L,
                 productId,
                 10.0F,
                 15,
                 LocalDate.parse("2022-11-30"),
                 LocalDateTime.of(2022, 11, 9, 11, 43, 0),
                 30.0F,
-                LocalDate.parse("2022-11-30"),
+                LocalDate.parse("2022-12-30"),
                 BigDecimal.valueOf(150.00));
+
+        batchListWithBatchId.add(batch);
+        return batch;
     }
 
     public static Batch createBatch() {
@@ -40,7 +48,7 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-30"),
                 LocalDateTime.of(2022, 11, 9, 11, 43, 0),
                 30.0F,
-                LocalDate.parse("2022-11-30"),
+                LocalDate.parse("2022-12-30"),
                 BigDecimal.valueOf(150.00));
 
         batchList.add(batch);
@@ -58,28 +66,41 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-30"),
                 LocalDateTime.of(2022, 11, 9, 11, 43, 0),
                 40.0F,
-                LocalDate.parse("2022-11-30"),
+                LocalDate.parse("2022-12-30"),
                 BigDecimal.valueOf(200.00));
 
     }
 
 
-
     public static InboundOrder mockInboundOrder() {
+        batchList.add(TestsMocks.mockBatch());
 
         return new InboundOrder(1L,
                 LocalDate.parse("2022-11-09"),
                 Section.builder().sectionId(1L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
-                batchList);
+                batchListWithBatchId);
 
     }
 
     public static InboundOrder mockCreateInboundOrder() {
+        batchList.add(TestsMocks.createBatch());
 
         return new InboundOrder(null,
                 LocalDate.parse("2022-11-09"),
                 Section.builder().sectionId(1L).build(),
+                Warehouse.builder().warehouseId(1L).build(),
+                batchList);
+    }
+
+
+    public static InboundOrder mockCreateErrorInboundOrder() {
+
+        batchList.add(TestsMocks.createBatch());
+
+        return new InboundOrder(null,
+                LocalDate.parse("2022-11-09"),
+                Section.builder().sectionId(3L).build(),
                 Warehouse.builder().warehouseId(1L).build(),
                 batchList);
     }
@@ -264,7 +285,6 @@ public class TestsMocks {
 
     }
 
-    // PUT rota para alterar o status de um pedido de ABERTO para FINALIZADO
     public static ShoppingCart mockShoppingCartFinished() {
         return new ShoppingCart(
                 1L,
@@ -273,6 +293,77 @@ public class TestsMocks {
                 mockBuyer(),
                 10.0
         );
+    }
+
+    public static PurchaseOrderDTO mockErrorCartRequest() {
+
+        List<ProductDTO> productDTOList = new ArrayList<>();
+
+        ProductDTO productDTO = ProductDTO.builder()
+                .productId(55L)
+                .quantity(5)
+                .build();
+
+        productDTOList.add(productDTO);
+
+        return PurchaseOrderDTO.builder()
+                .buyerId(1L)
+                .products(productDTOList)
+                .build();
+
+    }
+
+    public static InboundOrder mockCreateSortInboundOrder() {
+
+        Batch expiringSoonerBatch = new Batch(null,
+                productId,
+                10.0F,
+                5,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                30.0F,
+                LocalDate.parse("2022-12-30"),
+                BigDecimal.valueOf(150.00));
+
+        sortBatchList.add(expiringSoonerBatch);
+
+        Batch batch = new Batch(null,
+                productId,
+                10.0F,
+                5,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                30.0F,
+                LocalDate.parse("2023-02-25"),
+                BigDecimal.valueOf(150.00));
+
+        sortBatchList.add(batch);
+
+        return new InboundOrder(null,
+                LocalDate.parse("2022-11-09"),
+                Section.builder().sectionId(1L).build(),
+                Warehouse.builder().warehouseId(1L).build(),
+                sortBatchList);
+}
+
+    public static BatchDueDateDTO mockBatchDueDateDTO() {
+        return new BatchDueDateDTO(
+                1L,
+                1L,
+                0L,
+                LocalDate.parse("2022-12-30"),
+                3
+        );
+    }
+
+    public static BatchDueDateStockDTO mockbatchDueDateStockDTO(){
+        List<BatchDueDateDTO> batchDueDateDTOList = new ArrayList<>();
+
+        batchDueDateDTOList.add(mockBatchDueDateDTO());
+
+        return BatchDueDateStockDTO.builder()
+                .batchDueDateStock(batchDueDateDTOList)
+                .build();
     }
 
     public static Warehouse mockWarehouse() {
@@ -310,6 +401,21 @@ public class TestsMocks {
         return productWarehouseStockDTOList;
     }
 
+    public static ProductWarehouseDTO mockProductWarehouseDTO() {
+        List<WarehouseStockDTO> WarehouseStockDTOList = new ArrayList<>();
 
+        WarehouseStockDTO warehouseStockDTO = WarehouseStockDTO.builder()
+                .warehouseCode(1L)
+                .totalQuantity(String.valueOf(30))
+                .build();
+
+        WarehouseStockDTOList.add(warehouseStockDTO );
+
+        return ProductWarehouseDTO.builder()
+                .productId(1L)
+                .warehouses(WarehouseStockDTOList)
+                .build();
+
+    }
 
 }
