@@ -237,7 +237,9 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-30"),
                 OrderStatusEnum.ABERTO,
                 mockBuyer(),
-                10.0
+                10.0,
+                1.0,
+                new PaymentCart()
                 );
     }
 
@@ -247,7 +249,9 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-30"),
                 OrderStatusEnum.ABERTO,
                 mockBuyer(),
-                10.0
+                10.0,
+                1.0,
+                new PaymentCart()
         );
     }
 
@@ -284,7 +288,9 @@ public class TestsMocks {
                 LocalDate.parse("2022-11-30"),
                 OrderStatusEnum.FINALIZADO,
                 mockBuyer(),
-                10.0
+                10.0,
+                1.0,
+                new PaymentCart()
         );
     }
 

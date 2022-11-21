@@ -171,10 +171,10 @@ class ProductAdvertisingControllerTestIT {
     void getAllProductWarehouseStock_returnListProductWarehouseStockDTO_whenProductExists() throws Exception {
         Integer sectionId = Math.toIntExact(TestsMocks.mockCreateInboundOrder().getSectionId().getSectionId());
 
-        mockMvc.perform(
-                post("/api/v1/fresh-products/inboundorder/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
+//        mockMvc.perform(
+//                post("/api/v1/fresh-products/inboundorder/")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/fresh-products/list?productId=1")

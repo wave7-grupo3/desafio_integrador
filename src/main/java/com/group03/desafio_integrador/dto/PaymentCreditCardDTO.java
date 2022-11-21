@@ -1,13 +1,10 @@
 package com.group03.desafio_integrador.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.group03.desafio_integrador.entities.ShoppingCart;
-import com.group03.desafio_integrador.entities.entities_enum.PaymentStatusEnum;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -18,6 +15,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentCreditCardDTO {
 
     @NotBlank

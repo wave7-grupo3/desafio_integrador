@@ -144,7 +144,7 @@ class ProductAdvertisingServiceTest {
 
         doNothing().when(productAdvertisingService)
                 .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-        doNothing().when(productAdvertisingService)
+        ProductAdvertisingService
                 .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
         doNothing().when(productAdvertisingService)
                 .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());

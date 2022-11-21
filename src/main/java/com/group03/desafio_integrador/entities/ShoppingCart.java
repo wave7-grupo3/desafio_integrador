@@ -40,4 +40,10 @@ public class ShoppingCart {
 
     private Double totalCartPrice;
 
+    private Double discountPayment;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "payment_id")
+    private PaymentCart paymentCart;
+
 }
