@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.utils.mocks;
 
 
+import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
 import com.group03.desafio_integrador.entities.entities_enum.CategoryEnum;
@@ -13,6 +14,8 @@ import java.util.List;
 
 
 public class SellerTestsMocks {
+    static ProductAdvertising productId = ProductAdvertising.builder().productId(1L).build();
+
     private static final List<ProductAdvertising> productList = new ArrayList<>();
 
     private static final List<Seller> sellerList = new ArrayList<>();
@@ -90,5 +93,18 @@ public class SellerTestsMocks {
         sellerList.add(seller2);
 
         return sellerList;
+    }
+
+    public static Batch mockBatch() {
+
+        return new Batch(1L,
+                productId,
+                10.0F,
+                15,
+                LocalDate.parse("2022-11-30"),
+                LocalDateTime.of(2022, 11, 9, 11, 43, 0),
+                30.0F,
+                LocalDate.parse("2022-12-30"),
+                BigDecimal.valueOf(150.00));
     }
 }
