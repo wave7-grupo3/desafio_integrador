@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.advisor;
 
+import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -76,4 +77,17 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ExceptionDetails> handlerBadRequestException(UnprocessableEntityException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Unprocessable Entity!")
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message(ex.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+
 }
