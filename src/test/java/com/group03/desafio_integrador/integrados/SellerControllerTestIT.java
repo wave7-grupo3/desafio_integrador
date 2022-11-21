@@ -83,10 +83,10 @@ public class SellerControllerTestIT {
         ResultActions response = mockMvc.perform(
                 post("/api/v1/seller")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockSeller)));
+                        .content(objectMapper.writeValueAsString(mockCreateSeller)));
 
         response.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockSeller.getSellerName())));
+                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockCreateSeller.getSellerName())));
 
     }
 
@@ -115,9 +115,14 @@ public class SellerControllerTestIT {
 //        response.andExpect(status().isNoContent());
 //    }
 
-//    @Test
-//    void filterproductsMoreQuantityPerSeller() {
-//
-//    }
+    @Test
+    void filterProductPerSeller_returnProductSellerDTO_whenSuccess() throws Exception {
 
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/seller/list?productId=1&orderBy=QT")
+                        .contentType(MediaType.APPLICATION_JSON) );
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].seller", CoreMatchers.is(mockSeller.getSellerName())));
+    }
 }
