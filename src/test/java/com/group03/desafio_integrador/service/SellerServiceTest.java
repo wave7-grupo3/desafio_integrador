@@ -1,10 +1,12 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.dto.ProductSellerDTO;
+import com.group03.desafio_integrador.entities.Batch;
+import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
 import com.group03.desafio_integrador.repository.SellerRepository;
 import com.group03.desafio_integrador.utils.mocks.SellerTestsMocks;
-import com.group03.desafio_integrador.utils.mocks.TestsMocks;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,15 +34,28 @@ class SellerServiceTest {
     @Mock
     private SellerRepository sellerRepository;
 
+    @Mock
+    private ProductAdvertisingService productService;
+
+    @Mock
+    private BatchService batchService;
+
     private Seller mockSeller;
     private List<Seller> mockSellerList;
     private Seller mockCreateSeller;
+    private Batch mockBatch;
+    private List<ProductAdvertising> mockProductList;
+
+    private final List<Batch> mockBatchList = new ArrayList<>();
 
     @BeforeEach
     void setUp() {
         mockSeller = SellerTestsMocks.mockSeller();
         mockSellerList = SellerTestsMocks.mockSellerList();
         mockCreateSeller = SellerTestsMocks.mockcreateSeller();
+        mockProductList = SellerTestsMocks.mockProductList();
+        mockBatch = SellerTestsMocks.mockBatch();
+        mockBatchList.add(mockBatch);
     }
 
     @AfterEach
@@ -77,7 +93,7 @@ class SellerServiceTest {
 
         assertThat(seller).isNotNull();
         assertThat(seller.getSellerId()).isEqualTo(mockSeller.getSellerId());
-        assertThat(seller.getCustomerEvaluator()).isNotNegative();
+        assertThat(seller.getSellerRating()).isNotNegative();
         assertThat(seller).isEqualTo(mockSeller);
     }
 
@@ -130,7 +146,20 @@ class SellerServiceTest {
         verify(sellerRepository, times(1)).deleteById(1L);
     }
 
-//    @Test
-//    void filterproductsMoreQuantityPerSeller() {
-//    }
+    @Test
+    void getSellerDTO_returnProductSellerDTO() {
+        BDDMockito.when(sellerRepository.findAll())
+                .thenReturn(mockSellerList);
+
+        BDDMockito.when(productService.getById(ArgumentMatchers.anyLong()))
+                .thenReturn(mockProductList.get(0));
+
+        BDDMockito.when(batchService.findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class)))
+                .thenReturn(mockBatchList);
+
+        List<ProductSellerDTO> productSellerDTOList = sellerService.getSellerDTO(1L);
+
+        assertThat(productSellerDTOList).isNotNull();
+        assertThat(productSellerDTOList).asList();
+    }
 }
