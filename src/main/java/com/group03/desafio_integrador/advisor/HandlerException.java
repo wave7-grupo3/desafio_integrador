@@ -3,6 +3,7 @@ package com.group03.desafio_integrador.advisor;
 import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,24 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(errorDetail, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
+     * Método responsável pelo tratamento das exceções geradas ao tentar salvar um representante com uma chave que
+     * já existe na base com a constraint unique = true.
+     * @author Rosalia Padoin
+     * @param ex - NotFoundException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Unprocessable Entity!")
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message("It was not possible to execute your request because you are trying to register a username that already exists in the base")
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
     /**
