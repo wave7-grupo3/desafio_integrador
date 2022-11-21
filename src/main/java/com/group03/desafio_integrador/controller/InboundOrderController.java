@@ -29,7 +29,6 @@ public class InboundOrderController {
      * @param inboundOrder - InboundOrder
      * @return Retorna um dto do tipo BatchStockDTO.
      */
-    // TODO: fazer DTO de inboundOrder
     @PostMapping
     public ResponseEntity<BatchStockDTO> save(@Valid @RequestBody InboundOrder inboundOrder) throws Exception {
         String username = jwtBean.getDecodedJWT().getSubject();
@@ -55,7 +54,6 @@ public class InboundOrderController {
      * @param batch - Batch
      * @return Retorna uma entidade do tipo Batch.
      */
-    // TODO: fazer DTO batch
     @PutMapping
     public ResponseEntity<Batch> update(@Valid @RequestBody Batch batch) {
         String username = jwtBean.getDecodedJWT().getSubject();

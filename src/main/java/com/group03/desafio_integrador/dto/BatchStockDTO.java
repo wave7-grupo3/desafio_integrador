@@ -12,8 +12,8 @@ import java.util.List;
  */
 
 @Getter
-@Setter
-@NoArgsConstructor
+//@Setter
+//@NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class BatchStockDTO {
