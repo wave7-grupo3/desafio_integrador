@@ -25,7 +25,6 @@ public class InboundOrderController {
      * @param inboundOrder - InboundOrder
      * @return BatchStockDTO - Retorna um dto do tipo BatchStockDTO.
      */
-    // TODO: fazer DTO de inboundOrder
     @PostMapping
     public ResponseEntity<BatchStockDTO> save(@Valid @RequestBody InboundOrder inboundOrder) throws Exception {
         return new ResponseEntity<>(service.save(inboundOrder), HttpStatus.CREATED);
@@ -47,7 +46,6 @@ public class InboundOrderController {
      * @param batch - Batch
      * @return Batch - Retorna uma entidade do tipo Batch.
      */
-    // TODO: fazer DTO batch
     @PutMapping
     public ResponseEntity<Batch> update(@Valid @RequestBody Batch batch) {
         return new ResponseEntity<>(service.update(batch), HttpStatus.CREATED);

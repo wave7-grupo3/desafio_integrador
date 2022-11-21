@@ -18,7 +18,6 @@ public interface IWarehouseService {
      */
     Warehouse getById(Long id) throws NotFoundException;
 
-    // TODO: 16/11/22 ver quem criou este método
     /**
      * Método responsável por retornar a lista de todos os armazéns cadastrados.
      * @author grupo3
