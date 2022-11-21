@@ -98,7 +98,6 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    //TODO 17/11 finalizar teste Amanda
     void getAllByCategory_returnFilteredProductListByCategory_whenValidCategory() throws Exception {
         List<ProductAdvertising> productsFresh = productAdvertisingRepository.findAllByCategory(CategoryEnum.FS);
 
@@ -107,7 +106,6 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-                //.andExpect(jsonPath("$..category", CoreMatchers.is(List.of(productsFresh.get(0).getCategory().toString()))));
         assertThat(productsFresh).asList();
     }
 
@@ -120,7 +118,6 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-        //.andExpect(jsonPath("$..category", CoreMatchers.is(List.of(productsFresh.get(0).getCategory().toString()))));
         assertThat(productsFresh).asList();
     }
 
@@ -157,7 +154,6 @@ class ProductAdvertisingControllerTestIT {
     }
 
     @Test
-    //TODO finalizar teste 17/11 Amanda
     void getCartProducts_returnCartProduct_whenShoppingCartExist() throws Exception {
         List<CartProduct> shoppingCart = cartProductRepository.findAllByShoppingCart(shoppingCartId);
 
@@ -166,7 +162,6 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-                //.andExpect(jsonPath("$..shoppingCart.shoppingCartId", CoreMatchers.is(List.of(shoppingCart.get(0).getShoppingCart().getShoppingCartId()))));
     }
 
     @Test
@@ -178,24 +173,6 @@ class ProductAdvertisingControllerTestIT {
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.shoppingCartId", CoreMatchers.is(shoppingCartId)));
-    }
-
-    @Test
-    void getAllProductWarehouseStock_returnListProductWarehouseStockDTO_whenProductExists() throws Exception {
-        Integer sectionId = Math.toIntExact(TestsMocks.mockCreateInboundOrder().getSectionId().getSectionId());
-
-        mockMvc.perform(
-                post("/api/v1/fresh-products/inboundorder/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
-
-        ResultActions response = mockMvc.perform(
-                get("/api/v1/fresh-products/list?productId=1")
-                        .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(status().isOk())
-                .andExpect(jsonPath("$..sectionDTO.sectionId", CoreMatchers.is(List.of(sectionId))));
-
     }
 
     @Test
