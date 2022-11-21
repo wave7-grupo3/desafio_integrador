@@ -19,11 +19,8 @@ public class Manager {
 
     private String name;
 
+    @Column(nullable = false, unique = true)
     private String username;
 
     private String password;
-
-//    @OneToOne(mappedBy = "manager", cascade = CascadeType.PERSIST)
-//    @JsonIgnoreProperties("manager")
-//    private Warehouse warehouse;
 }
