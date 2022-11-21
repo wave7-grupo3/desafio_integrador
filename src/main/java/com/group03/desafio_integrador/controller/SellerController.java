@@ -1,6 +1,6 @@
 package com.group03.desafio_integrador.controller;
 
-import com.group03.desafio_integrador.dto.ProductQuantitySellerDTO;
+import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Seller;
 import com.group03.desafio_integrador.service.interfaces.ISellerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,8 +44,11 @@ public class SellerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @GetMapping(value = "/list", params = {"productId"})
-    public ResponseEntity<List<ProductQuantitySellerDTO>> filterproductsMoreQuantityPerSeller(@RequestParam("productId") Long productId) {
-        return new ResponseEntity<>(sellerService.filterproductsMoreQuantityPerSeller(productId), HttpStatus.OK);
+    @GetMapping(value = "/list", params = {"productId", "orderBy"})
+    public ResponseEntity<List<ProductSellerDTO>> filterProductPerSeller(
+            @RequestParam("productId") Long productId,
+            @RequestParam("orderBy") String orderBy
+    ) {
+        return new ResponseEntity<>(sellerService.filterProductsPerSeller(productId, orderBy), HttpStatus.OK);
     }
 }

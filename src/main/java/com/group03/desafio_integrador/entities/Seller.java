@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -32,5 +30,5 @@ public class Seller {
     @Size(min = 1)
     private List<ProductAdvertising> productAdvertisingList;
 
-    private Integer customerEvaluator;
+    private Integer sellerRating;
 }

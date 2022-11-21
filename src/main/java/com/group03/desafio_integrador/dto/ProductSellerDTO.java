@@ -9,11 +9,11 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @Builder
-public class ProductQuantitySellerDTO {
+public class ProductSellerDTO {
     private Long productId;
     private Integer quantity;
     private LocalDate fabrication;
     private LocalDate expirationDate;
-    private Integer customerEvaluator;
+    private Integer sellerRating;
     private String seller;
 }

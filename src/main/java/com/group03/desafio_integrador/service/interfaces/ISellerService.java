@@ -1,6 +1,6 @@
 package com.group03.desafio_integrador.service.interfaces;
 
-import com.group03.desafio_integrador.dto.ProductQuantitySellerDTO;
+import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Seller;
 
 import java.util.List;
@@ -16,5 +16,5 @@ public interface ISellerService {
 
     void deleteById(Long id);
 
-    List<ProductQuantitySellerDTO>  filterproductsMoreQuantityPerSeller(Long id);
+    List<ProductSellerDTO>  filterProductsPerSeller(Long id, String orderBy);
 }

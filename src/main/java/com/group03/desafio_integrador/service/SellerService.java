@@ -1,8 +1,7 @@
 package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
-import com.group03.desafio_integrador.dto.BatchDueDateDTO;
-import com.group03.desafio_integrador.dto.ProductQuantitySellerDTO;
+import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
@@ -44,6 +43,9 @@ public class SellerService implements ISellerService {
 
     @Override
     public Seller save(Seller seller) {
+        if (seller == null) {
+            throw new NotFoundException("Seller cannot be null!");
+        }
 
         return repository.save(seller);
     }
@@ -63,7 +65,29 @@ public class SellerService implements ISellerService {
     }
 
     @Override
-    public List<ProductQuantitySellerDTO> filterproductsMoreQuantityPerSeller(Long id) {
+    public List<ProductSellerDTO> filterProductsPerSeller(Long id, String orderBy) {
+        if (orderBy.isEmpty()) {
+            throw new NotFoundException("Param invalid");
+        }
+
+        List<ProductSellerDTO> productQuantitySellerDTOList = getSellerDTO(id);
+
+        if (orderBy.equalsIgnoreCase("QT")) {
+            return productQuantitySellerDTOList.stream()
+                    .sorted(Comparator.comparing(ProductSellerDTO::getQuantity).reversed())
+                    .collect(Collectors.toList());
+        } else if (orderBy.equalsIgnoreCase("ED")){
+            return productQuantitySellerDTOList.stream()
+                    .sorted(Comparator.comparing(ProductSellerDTO::getExpirationDate))
+                    .collect(Collectors.toList());
+        } else {
+            throw new NotFoundException("Param not found!");
+        }
+
+    }
+
+
+    public List<ProductSellerDTO> getSellerDTO(Long id) {
         ProductAdvertising productId = productService.getById(id);
 
         List<Seller> sellerList = getAll().stream()
@@ -72,32 +96,29 @@ public class SellerService implements ISellerService {
 
         List<Batch> batchList = batchService.findBatchByProductId(productId);
 
-        List<ProductQuantitySellerDTO> productQuantitySellerDTOList = new ArrayList<>();
+        List<ProductSellerDTO> productQuantitySellerDTOList = new ArrayList<>();
 
         for (Seller seller : sellerList) {
 
             for (Batch batch : batchList) {
-
-                ProductQuantitySellerDTO productBuild = ProductQuantitySellerDTO.builder()
-                        .productId(id)
-                        .quantity(batch.getProductQuantity())
-                        .fabrication(batch.getFabricationDate())
-                        .expirationDate((batch.getExpirationDate()))
-                        .customerEvaluator(seller.getCustomerEvaluator())
-                        .seller(seller.getSellerName())
-                        .build();
-
-
+                ProductSellerDTO productBuild = buildSellerDTO(id, seller, batch);
                 productQuantitySellerDTOList.add(productBuild);
             }
         }
 
-//        return productQuantitySellerDTOList.stream()
-//                .sorted(Comparator.comparing(ProductQuantitySellerDTO::getExpirationDate))
-//                .collect(Collectors.toList());
+        if (productQuantitySellerDTOList.isEmpty()) throw new NotFoundException("There is no such product registered for this seller!");
 
-        return productQuantitySellerDTOList.stream()
-                .sorted(Comparator.comparing(ProductQuantitySellerDTO::getQuantity).reversed())
-                .collect(Collectors.toList());
+        return productQuantitySellerDTOList;
+    }
+
+    private static ProductSellerDTO buildSellerDTO(Long id, Seller seller, Batch batch) {
+        return ProductSellerDTO.builder()
+                .productId(id)
+                .quantity(batch.getProductQuantity())
+                .fabrication(batch.getFabricationDate())
+                .expirationDate((batch.getExpirationDate()))
+                .sellerRating(seller.getSellerRating())
+                .seller(seller.getSellerName())
+                .build();
     }
 }
