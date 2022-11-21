@@ -91,7 +91,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * @return Retorna uma entidade do tipo ExceptionDetails.
      */
     @ExceptionHandler(UnprocessableEntityException.class)
-    public ResponseEntity<ExceptionDetails> handlerBadRequestException(UnprocessableEntityException ex) {
+    public ResponseEntity<ExceptionDetails> handlerUnprocessableEntityException(UnprocessableEntityException ex) {
         ExceptionDetails exceptionDetails = ExceptionDetails.builder()
                 .title("Unprocessable Entity!")
                 .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
