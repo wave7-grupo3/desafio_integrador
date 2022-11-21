@@ -32,5 +32,4 @@ public class Warehouse {
     @JoinColumn(name = "manager_id")
     @Valid
     private Manager manager;
-
 }

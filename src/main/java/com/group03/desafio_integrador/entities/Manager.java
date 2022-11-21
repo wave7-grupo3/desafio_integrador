@@ -26,5 +26,4 @@ public class Manager {
 //    @OneToOne(mappedBy = "manager", cascade = CascadeType.PERSIST)
 //    @JsonIgnoreProperties("manager")
 //    private Warehouse warehouse;
-
 }
