@@ -54,11 +54,6 @@ public class DesafioIntegradorApplication {
                     "Orlando Blum",
                     "orlando",
                     "12345"));
-
-
-//            warehouseRepository.save(new Warehouse(null, 3000.0, new ArrayList<>(managerService.getByUsername("tom"))))
-
-
         };
     }
 }
