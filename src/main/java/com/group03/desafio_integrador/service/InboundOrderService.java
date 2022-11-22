@@ -95,24 +95,12 @@ public class InboundOrderService implements IInboundOrderService {
     /**
      * Método responsável por realizar a verificação se o armazém existe e se possui um representante.
      *
-<<<<<<< HEAD
      * @param warehouseId - Warehouse
      * @param managerAuth - String
      * @throws NotFoundException - NotFoundException
      * @author Gabriel Morais
      */
-    // TODO: fazer exception específico
-    // TODO: 16/11/22 verificar o nome do método pois estamos verificando se o manager foi encontrado no armazém e o
-    //  nome atual sugere que estamos verificando o armazém indicando generalização.
-    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) {
-=======
-     * @param warehouseId - do tipo Warehouse
-     * @throws NotFoundException - NotFoundException
-     * @author Gabriel Morais
-     */
-    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
-
->>>>>>> develop
+    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
         Manager manager = managerRepository.findByUsername(managerAuth);
 
