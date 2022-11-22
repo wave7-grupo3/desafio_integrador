@@ -98,7 +98,7 @@ public class SellerService implements ISellerService {
     }
 
     /**
-     * Método responsável ordenar os dados de acordo com a data de expiração do produto ou quantidade de produtos mais vendidos.
+     * Método responsável por ordenar os dados de acordo com a data de expiração do produto ou quantidade de produtos mais vendidos.
      * @author Mariana Saraiva
      * @param id - Long
      * @param orderBy - String
