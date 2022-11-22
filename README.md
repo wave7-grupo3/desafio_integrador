@@ -106,6 +106,7 @@ The tool chosen to document the API was Postman and JavaDoc for the project.
 
 :warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
+:warning: Access to User Story [aqui](https://docs.google.com/document/d/118AX5P3NlDLnshKkdZL28OKniYRMJXyY/edit?usp=sharing&ouid=112226650940292038577&rtpof=true&sd=true).
 
 ### Class diagram:
 The class diagram is the representation of the structure and relationships of the classes that model the objects in a database.
@@ -240,6 +241,7 @@ A ferramenta escolhida para documentar a API foi o Postman e JavaDoc para o proj
 
 :warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
+:warning: Acesse ao User Story [aqui](https://docs.google.com/document/d/118AX5P3NlDLnshKkdZL28OKniYRMJXyY/edit?usp=sharing&ouid=112226650940292038577&rtpof=true&sd=true).
 
 ### Diagrama de classes:
 O diagrama de classes é a representação da estrutura e relações das classes que servem de modelo para os objetos de uma banco de dados.
