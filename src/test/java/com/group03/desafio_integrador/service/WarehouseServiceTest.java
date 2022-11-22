@@ -97,18 +97,4 @@ class WarehouseServiceTest {
         assertThat(warehouseList).isNotEmpty();
     }
 
-    // TODO: 17/11/22 Finalizar o teste - Requisito 04 - Carolina
-    @Test
-    void getAllStockProductWarehouse() {
-        BDDMockito.when(productService.getById(ArgumentMatchers.any(Long.class))).thenReturn(mockProductAdvertising);
-
-        BDDMockito.when(inboundOrderRepository.findAll()).thenReturn(mockInboundOrderList);
-
-        //BDDMockito.when(warehouseService.getAllStockProductWarehouse(ArgumentMatchers.any(Long.class))).thenReturn(mockProductWarehouseDTO);
-
-        ProductWarehouseDTO productWarehouseDTO = warehouseService.getAllStockProductWarehouse(1L);
-
-        assertThat(productWarehouseDTO).isNotNull();
-    }
-
 }

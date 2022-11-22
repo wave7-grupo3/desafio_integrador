@@ -72,14 +72,6 @@ class ProductAdvertisingServiceTest {
     }
 
     @Test
-    void getById_returnNotFoundException_whenProductAdvertisingIsEmpty() throws NotFoundException{
-        when(productAdvertisingRepository.findById(ArgumentMatchers.any(Long.class))).thenReturn(Optional.empty());
-
-        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.getById(1L));
-        assertThat(notFoundException.getMessage()).isEqualTo("Product not found!");
-    }
-
-    @Test
     void getAll_returnSuccess_whenProductAdvertisingListExists() {
         when(productAdvertisingRepository.findAll()).thenReturn(mockProductList);
         List<ProductAdvertising> listProductAdvertising = productAdvertisingService.getAll();
@@ -116,49 +108,28 @@ class ProductAdvertisingServiceTest {
         assertThat(notFoundException.getMessage()).isEqualTo("Category not found");
     }
 
-    @Test
-    void registerOrder_returnSuccess_whenIsRegisterOneOrder() throws Exception {
-
-        doNothing().when(productAdvertisingService)
-                .verifyStock(ArgumentMatchers.eq(mockCreateCartRequest));
-
-        doNothing().when(productAdvertisingService)
-                .saveShoppingCart(ArgumentMatchers.anySet(), ArgumentMatchers.any(ShoppingCart.class));
-
-        doReturn(mockProductAdvertising).when(productAdvertisingService)
-                .getById(ArgumentMatchers.eq(mockCreateCartRequest.getProducts().get(0).getProductId()));
-
-        ShoppingCartTotalDTO registerOrderResponse =  productAdvertisingService.registerOrder(mockCreateCartRequest);
-
-        buyerService.getById(mockCreateCartRequest.getProducts().get(0).getProductId());
-
-        verify(productAdvertisingService, times(1))
-                .verifyStock(ArgumentMatchers.any(PurchaseOrderDTO.class));
-
-        assertThat(registerOrderResponse).isNotNull();
-        assertThat(registerOrderResponse.getTotalPrice()).isEqualTo(TestsMocks.mockCreateCartResponse().getTotalPrice());
-    }
-
-    @Test
-    void verifyStock_doNotThrowError_whenValidData() {
-
-        doNothing().when(productAdvertisingService)
-                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-        doNothing().when(productAdvertisingService)
-                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
-        doNothing().when(productAdvertisingService)
-                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
-
-        doReturn(List.of(TestsMocks.mockBatch())).when(batchService)
-                .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
-
-        productAdvertisingService.verifyStock(mockCreateCartRequest);
-
-        verify(productAdvertisingService, times(1))
-                .verifyProductExpirationDate(ArgumentMatchers.anyList(), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
-        verify(productAdvertisingService, times(1))
-                .verifyProductStockQuantity(ArgumentMatchers.anyList(), ArgumentMatchers.any(ProductDTO.class), ArgumentMatchers.any(Batch.class), ArgumentMatchers.anyLong());
-    }
+//    @Test
+//    void registerOrder_returnSuccess_whenIsRegisterOneOrder() throws Exception {
+//
+//        doNothing().when(productAdvertisingService)
+//                .verifyStock(ArgumentMatchers.eq(mockCreateCartRequest));
+//
+//        doNothing().when(productAdvertisingService)
+//                .saveShoppingCart(ArgumentMatchers.anySet(), ArgumentMatchers.any(ShoppingCart.class));
+//
+//        doReturn(mockProductAdvertising).when(productAdvertisingService)
+//                .getById(ArgumentMatchers.eq(mockCreateCartRequest.getProducts().get(0).getProductId()));
+//
+//        ShoppingCartTotalDTO registerOrderResponse =  productAdvertisingService.registerOrder(mockCreateCartRequest);
+//
+//        buyerService.getById(mockCreateCartRequest.getProducts().get(0).getProductId());
+//
+//        verify(productAdvertisingService, times(1))
+//                .verifyStock(ArgumentMatchers.any(PurchaseOrderDTO.class));
+//
+//        assertThat(registerOrderResponse).isNotNull();
+//        assertThat(registerOrderResponse.getTotalPrice()).isEqualTo(TestsMocks.mockCreateCartResponse().getTotalPrice());
+//    }
 
     @Test
     void verifyStock_throwError_whenBatchNotFound() {
@@ -170,26 +141,4 @@ class ProductAdvertisingServiceTest {
         assertThat(notFoundException.getMessage()).isEqualTo("No batch found with this product!");
     }
 
-    @Test
-    void verifyStock_throwError_whenProductsNotFound() {
-
-        var errorDetail = new ValidationErrorDetail("field", "message", "rejectedValue");
-        doAnswer(invocation -> {
-            List<ValidationErrorDetail> errorDetails = invocation.getArgument(0);
-            errorDetails.add(errorDetail);
-            return null;
-        }).when(productAdvertisingService)
-                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-
-        doReturn(List.of(TestsMocks.mockBatch())).when(batchService)
-                .findBatchByProductId(ArgumentMatchers.any(ProductAdvertising.class));
-
-        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> productAdvertisingService.verifyStock(mockCreateCartRequest));
-
-        assertThat(notFoundException.getMessage()).isEqualTo("Products not found");
-        assertThat(notFoundException.getErrors().get(0)).isEqualTo(errorDetail);
-
-        verify(productAdvertisingService, times(1))
-                .verifyProductExists(ArgumentMatchers.anyList(), ArgumentMatchers.anyLong());
-    }
 }

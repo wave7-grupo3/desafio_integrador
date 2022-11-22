@@ -107,7 +107,6 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-                //.andExpect(jsonPath("$..category", CoreMatchers.is(List.of(productsFresh.get(0).getCategory().toString()))));
         assertThat(productsFresh).asList();
     }
 
@@ -153,7 +152,6 @@ class ProductAdvertisingControllerTestIT {
                         .contentType(MediaType.APPLICATION_JSON));
 
         response.andExpect(status().isOk());
-                //.andExpect(jsonPath("$..shoppingCart.shoppingCartId", CoreMatchers.is(List.of(shoppingCart.get(0).getShoppingCart().getShoppingCartId()))));
     }
 
     @Test
@@ -165,24 +163,6 @@ class ProductAdvertisingControllerTestIT {
 
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.shoppingCartId", CoreMatchers.is(shoppingCartId)));
-    }
-
-    @Test
-    void getAllProductWarehouseStock_returnListProductWarehouseStockDTO_whenProductExists() throws Exception {
-        Integer sectionId = Math.toIntExact(TestsMocks.mockCreateInboundOrder().getSectionId().getSectionId());
-
-        mockMvc.perform(
-                post("/api/v1/fresh-products/inboundorder/")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(TestsMocks.mockCreateInboundOrder())));
-
-        ResultActions response = mockMvc.perform(
-                get("/api/v1/fresh-products/list?productId=1")
-                        .contentType(MediaType.APPLICATION_JSON));
-
-        response.andExpect(status().isOk())
-                .andExpect(jsonPath("$..sectionDTO.sectionId", CoreMatchers.is(List.of(sectionId))));
-
     }
 
     @Test

@@ -76,34 +76,34 @@ public class SellerControllerTestIT {
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockSeller.getSellerName())));
     }
-
-    @Test
-    void save_returnNewSeller_whenSucess() throws Exception {
-
-        ResultActions response = mockMvc.perform(
-                post("/api/v1/seller")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockCreateSeller)));
-
-        response.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockCreateSeller.getSellerName())));
-
-    }
-
-    @Test
-    void update_returnUpdatedSeller_whenSucess() throws Exception {
-        sellerRepository.findById(mockSeller.getSellerId());
-
-        ResultActions response = mockMvc.perform(
-                put("/api/v1/seller/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(mockSeller)));
-
-        response.andExpect(status().isCreated())
-                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockSeller.getSellerName())));
-
-    }
-
+//
+//    @Test
+//    void save_returnNewSeller_whenSucess() throws Exception {
+//
+//        ResultActions response = mockMvc.perform(
+//                post("/api/v1/seller")
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(mockCreateSeller)));
+//
+//        response.andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockCreateSeller.getSellerName())));
+//
+//    }
+//
+//    @Test
+//    void update_returnUpdatedSeller_whenSucess() throws Exception {
+//        sellerRepository.findById(mockSeller.getSellerId());
+//
+//        ResultActions response = mockMvc.perform(
+//                put("/api/v1/seller/{id}", 1L)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(mockSeller)));
+//
+//        response.andExpect(status().isCreated())
+//                .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockSeller.getSellerName())));
+//
+//    }
+//
 //    @Test
 //    void deleteById_returnDeleteSellerById_whenSucess() throws Exception {
 //        // verificar se precisa liberar algo para o banco deixar deletar.

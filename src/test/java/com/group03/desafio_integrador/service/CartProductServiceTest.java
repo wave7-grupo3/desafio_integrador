@@ -92,7 +92,5 @@ class CartProductServiceTest {
         List<CartProduct> cartProductList = cartProductService.getCartProducts(shoppingCartId);
 
         assertThat(cartProductList).isNotNull();
-//        assertThat(cartProductList).isEqualTo(TestsMocks.mockCartProductOrderList());
-
     }
 }

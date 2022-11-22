@@ -42,9 +42,6 @@ class InboundOrderServiceTest {
     @Mock
     private ProductAdvertisingService productAdvertisingService;
 
-//    @Mock
-//    private WarehouseService warehouseService;
-
     public final List<Batch> batchList = new ArrayList<>();
     private Batch mockBatch;
     private Batch mockUpdateBatch;
