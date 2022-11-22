@@ -22,8 +22,9 @@ The API was developed to:
 
 - To be able to query the stock, list which products are in which warehouse, and given a specific product, also understand in which warehouse it is stored.
 
-- To be able to register the purchase order so that the collaborators within Fullfilment
-  can assemble the order(s) to ship them.
+- To be able to register the purchase order so that the collaborators within Fullfilment can assemble the order(s) to ship them.
+
+- Being able to register, query, edit, and delete vendors within the system.
 
 
 
@@ -68,6 +69,11 @@ The routes implemented to contemplate these issues were:
 - User stories are told from the point of view of the **warehouse representative** based on their needs. The services are exposed from the **warehouse of care**.
   - The user stories are told from the point of view of the **warehouse representative** based on his needs.
 
+- The user stories are told from the point of view of the **seller** based on their needs.
+  - The `/api/v1/seller`: responsible for creating new sales person, updating the information of any registered sales person, performing queries according to the established metrics and deleting the sales persons i.e. this route is the sales person management system.
+  - `/api/v1/seller/list`: responsible for returning the products from the sellers according to the most sold quantity or according to the nearest expiration date.
+  - `/api/v1/seller/rating`: Responsible for listing the top-ranked sellers.
+
 The routes used were designed to make the application more dynamic and functional for the target audience.
 
 ### Validations
@@ -89,7 +95,7 @@ Among Spring Boot's __validation__ annotations, which were used in the `Entities
 
 Unit and integration testing was done using JUnit for the assertions and Mockito to do the Mocks.
 
-The layers were tested, with at least 80% coverage of methods and lines, checking the consistency of the methods used for the development of the project.
+The layers were tested, with at least 80% coverage of methods and lines, checking the consistency of the methods used for the development of the project. In the individual requirement, the minimum test coverage of 50% of methods and rows.
 
 
 ### API Documentation
@@ -116,8 +122,8 @@ Enter your individual information
 :warning: Go to Postman's Private [here]().
 
 #### Mariana Saraiva
-Enter your individual info
-:warning: Go to Postman's Private [here]().
+Responsible for performing the salesman management system.
+:warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 #### Rosália Padoin
 Enter your individual information
@@ -172,12 +178,12 @@ A API foi desenvolvida para:
 - Poder cadastrar o pedido de compra para que os colaboradores dentro do Fullfilment
 possam montar o (s) pedido (s) para despachá-los.
 
+- Poder cadastrar, consultar, editar e deletar os vendedores dentro do sistema.
 
 
 ### Habilidades
 
-Implementa uma API REST no âmbito do slogan e aplicar os conteúdos trabalhados durante o BOOTCAMP MELI (Git, Java, Spring, Testes, Banco de Dados,
-Qualidade e Segurança), que podem ser usados a partir de uma proposta, especificação de requisitos e documentação anexa.
+Implementa uma API REST no âmbito do slogan e aplicar os conteúdos trabalhados durante o BOOTCAMP MELI (Git, Java, Spring, Testes, Banco de Dados, Qualidade e Segurança), que podem ser usados a partir de uma proposta, especificação de requisitos e documentação anexa.
 
 MSC
 - Estruturar a API conforme as boas práticas seguindo a arquitetura MSC e alguns princípios do SOLID:
@@ -204,9 +210,7 @@ As rotas implementadas para contemplar estas questões foram:
 - As histórias do usuário são contadas do ponto de vista do **representante do armazém** com base em suas necessidades. Os serviços são expostos a partir do **armazém de fullfilment**. 
   - `/api/v1/fresh-products/inboundorder`: responsável por inserir o lote no armazém do atendimento, para registrar a existência de estoque.
 
-- As histórias de usuários são narradas do ponto de vista do **comprador** com base em
-  suas necessidades. Os serviços são expostos a partir do **Marketplace** para serem
-  consumidos pelo comprador que os solicita.
+- As histórias de usuários são narradas do ponto de vista do **comprador** com base em suas necessidades. Os serviços são expostos a partir do **Marketplace** para serem consumidos pelo comprador que os solicita.
   - `/api/v1/fresh-products`: responsável por permitir ao comprador que adicione o produto ao carrinho de compras. Ainda nesta rota, podemos consultar um produto em estoque no armazém para saber a sua localização em um setor e os diferentes lotes onde se encontra.
 
 - As histórias do usuário são contadas do ponto de vista do **representante do warehouse** com base em suas necessidades. Os serviços são expostos a partir do **armazém de atendimento**.
@@ -214,6 +218,11 @@ As rotas implementadas para contemplar estas questões foram:
 
 - As histórias do usuário são contadas do ponto de vista do **representante do warehouse** com base em suas necessidades. Os serviços são expostos a partir do **armazém de atendimento**.
   - `/api/v1/fresh-products/due-date/`: responssável por consultar os produtos em estoque que estáo próximos a data de vencimento no almoxarifado, a fim de aplicar alguma ação comercial com eles.
+
+- As histórias do usuário são contadas do ponto de vista do **vendedor** com base em suas necessidades.
+  - `/api/v1/seller`: responsável por criar novo vendedor, atualiar as infomações de qualquer vendedor cadastrado, realizar consultas de acordo com a métricas estabelecidas e deletar os vendedores, ou seja, essa rota é realiza o sistema de gerenciamento de vendedores.
+  - `/api/v1/seller/list`: responsável por retornar os produtos dos vendedores de acordo com a quantidade mais vendida ou de acordo com a data de vencimento mais próxima.
+  - `/api/v1/seller/rating`: responsável por listar os vendedores maelhores ranqueados.
 
 _As rotas utilizadas foram idealizadas para deixar a aplicação mais dinâmica e funcional para o público alvo._
 
@@ -236,14 +245,15 @@ Entre as anotações de __validação__ do Spring Boot, que foram utilizadas na 
 
 Os testes de unidades e de integração foram feitos utilizando o JUnit para as assertions e Mockito para fazer os Mocks.
 
-As camadas foram testadas, com cobertura de miníma de 80% de métodos e linhas, verificando a consistência dos métodos utilizados para o desenvolvimento do projeto.
+As camadas foram testadas no projeto global, com cobertura de miníma de 80% de métodos e linhas, verificando a consistência dos métodos utilizados para o desenvolvimento do projeto. Já no requisito individual, a cobertura de testes mínima de 50% de métodos e linhas.
 
 
 
 ### Documentação da API
 A ferramenta escolhida para documentar a API foi o Postman e JavaDoc para o projeto.
 
-:warning: Acesse a documentação do Postman [aqui](https://documenter.getpostman.com/view/23627905/2s8YmUKzJM).
+:warning: Acesse a documentação do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
+
 
 ### Requisito 6
 
@@ -264,8 +274,8 @@ Inserir as informações individuais
 :warning: Acesse a Individual do Postman [aqui]().
 
 #### Mariana Saraiva
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
+Responsável por realizar o sistema de gerenciamento de vendedores.
+:warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 #### Rosália Padoin
 Inserir as informações individuais
