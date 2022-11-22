@@ -95,6 +95,7 @@ public class InboundOrderService implements IInboundOrderService {
     /**
      * Método responsável por realizar a verificação se o armazém existe e se possui um representante.
      *
+<<<<<<< HEAD
      * @param warehouseId - Warehouse
      * @param managerAuth - String
      * @throws NotFoundException - NotFoundException
@@ -104,6 +105,14 @@ public class InboundOrderService implements IInboundOrderService {
     // TODO: 16/11/22 verificar o nome do método pois estamos verificando se o manager foi encontrado no armazém e o
     //  nome atual sugere que estamos verificando o armazém indicando generalização.
     protected void validateWarehouse(Warehouse warehouseId, String managerAuth) {
+=======
+     * @param warehouseId - do tipo Warehouse
+     * @throws NotFoundException - NotFoundException
+     * @author Gabriel Morais
+     */
+    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
+
+>>>>>>> develop
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
         Manager manager = managerRepository.findByUsername(managerAuth);
 
@@ -175,12 +184,22 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
     /**
+<<<<<<< HEAD
      * Método responsável por fornecer uma lista de produtos do armazém filtrado pelo seu id.
      * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      * @param sectionDto - do tipo SectionDTO
      * @param productWarehouse - lista do tipo ProductWarehouseStockDTO
      * @return lista de warehouses e sections que possuem certo produto em seu estoque.
      * @author Gabriel Morais
+=======
+
+     * Método responsável por retornar um filtro de warehouses e sections que possuem certo produto em seu estoque.
+     *
+     * @param sectionDto - do tipo SectionDTO
+     * @param productWarehouse - lista do tipo ProductWarehouseStockDTO
+     * @return lista de warehouses e sections que possuem certo produto em seu estoque.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+>>>>>>> develop
      */
     private static List<ProductWarehouseStockDTO> getFilterWarehouseById(SectionDTO sectionDto, List<ProductWarehouseStockDTO> productWarehouse) {
         return productWarehouse.stream()
