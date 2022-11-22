@@ -69,8 +69,9 @@ The routes implemented to contemplate these issues were:
 - User stories are told from the point of view of the **warehouse representative** based on their needs. The services are exposed from the **warehouse of care**.
     - The user stories are told from the point of view of the **warehouse representative** based on his needs.
 
+:rotating_light: Requirement 6
 - The user stories are told from the point of view of the **seller** based on their needs.
-    - The `/api/v1/seller`: responsible for creating new sales person, updating the information of any registered sales person, performing queries according to the established metrics and deleting the sales persons i.e. this route is the sales person management system.
+    - `/api/v1/seller`: responsible for creating new sales person, updating the information of any registered sales person, performing queries according to the established metrics and deleting the sales persons i.e. this route is the sales person management system.
     - `/api/v1/seller/list`: responsible for returning the products from the sellers according to the most sold quantity or according to the nearest expiration date.
     - `/api/v1/seller/rating`: Responsible for listing the top-ranked sellers.
 
@@ -101,7 +102,9 @@ The layers were tested, with at least 80% coverage of methods and lines, checkin
 ### API Documentation
 The tool chosen to document the API was Postman and JavaDoc for the project.
 
-:warning: Access the Postman documentation [here](https://documenter.getpostman.com/view/23627905/2s8YmUKzJM).
+:rotating_light: Requirement 6
+
+:warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
 ### Class diagram:
@@ -109,13 +112,6 @@ The class diagram is the representation of the structure and relationships of th
 <p align="center">
   <img src="https://github.com/wave7-grupo3/desafio_integrador/commit/180274b85ece49d9e60f3909a4dffb6f8d036483" alt="Class Diagram"/>
 </p>
-
-
-### Requirement 6
-#### Mariana Saraiva
-Responsible for performing the salesman management system.
-
-:warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
 ## How to access the project
@@ -207,6 +203,7 @@ As rotas implementadas para contemplar estas questões foram:
 - As histórias do usuário são contadas do ponto de vista do **representante do warehouse** com base em suas necessidades. Os serviços são expostos a partir do **armazém de atendimento**.
     - `/api/v1/fresh-products/due-date/`: responssável por consultar os produtos em estoque que estáo próximos a data de vencimento no almoxarifado, a fim de aplicar alguma ação comercial com eles.
 
+:rotating_light: Requerimento 6
 - As histórias do usuário são contadas do ponto de vista do **vendedor** com base em suas necessidades.
     - `/api/v1/seller`: responsável por criar novo vendedor, atualiar as infomações de qualquer vendedor cadastrado, realizar consultas de acordo com a métricas estabelecidas e deletar os vendedores, ou seja, essa rota é realiza o sistema de gerenciamento de vendedores.
     - `/api/v1/seller/list`: responsável por retornar os produtos dos vendedores de acordo com a quantidade mais vendida ou de acordo com a data de vencimento mais próxima.
@@ -239,8 +236,9 @@ As camadas foram testadas no projeto global, com cobertura de miníma de 80% de 
 
 ### Documentação da API
 A ferramenta escolhida para documentar a API foi o Postman e JavaDoc para o projeto.
+:rotating_light: Requerimento 6
 
-:warning: Acesse a documentação do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
+:warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
 ### Diagrama de classes:
@@ -248,12 +246,6 @@ O diagrama de classes é a representação da estrutura e relações das classes
 <p align="center">
   <img src="https://github.com/wave7-grupo3/desafio_integrador/commit/180274b85ece49d9e60f3909a4dffb6f8d036483" alt="Class Diagram"/>
 </p>
-
-
-### Requisito 6
-
-Responsável por realizar o sistema de gerenciamento de vendedores.
-:warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
 ## Como acessar o projeto
