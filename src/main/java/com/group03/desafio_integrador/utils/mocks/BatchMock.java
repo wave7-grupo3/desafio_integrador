@@ -17,7 +17,7 @@ public class BatchMock {
                         Float.valueOf("10.0"),
                         10,
                         LocalDate.parse("2022-11-30"),
-                        LocalDateTime.parse("2022-11-30 11:43:00"),
+                        LocalDateTime.of(2022, 11, 30, 11, 43, 0),
                         Float.valueOf("30.0"),
                         LocalDate.parse("2023-01-15"),
                         BigDecimal.valueOf(150.00)),
@@ -26,7 +26,7 @@ public class BatchMock {
                         Float.valueOf("10.0"),
                         10,
                         LocalDate.parse("2022-11-30"),
-                        LocalDateTime.parse("2022-11-30 11:43:00"),
+                        LocalDateTime.of(2022, 11, 30, 11, 43, 0),
                         Float.valueOf("50.0"),
                         LocalDate.parse("2023-02-25"),
                         BigDecimal.valueOf(150.00)));
