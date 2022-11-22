@@ -51,4 +51,10 @@ public class SellerController {
     ) {
         return new ResponseEntity<>(sellerService.filterProductsPerSeller(productId, orderBy), HttpStatus.OK);
     }
+
+    @GetMapping(value = "/rating", params = {"order"})
+    public ResponseEntity<List<ProductSellerDTO>> filterTopRankedSeller(@RequestParam("order") String order) {
+        return new ResponseEntity<>(sellerService.filterTopRankedSeller(order), HttpStatus.OK);
+    }
+
 }

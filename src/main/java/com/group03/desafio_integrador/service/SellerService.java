@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Batch;
@@ -102,12 +103,12 @@ public class SellerService implements ISellerService {
      * @param id - Long
      * @param orderBy - String
      * @return Retorna uma lista do tipo ProductSellerDTO.
-     * @throws NotFoundException - NotFoundException
+     * @throws NotAcceptableException - NotAcceptableException
      */
     @Override
     public List<ProductSellerDTO> filterProductsPerSeller(Long id, String orderBy) {
         if (orderBy.isEmpty()) {
-            throw new NotFoundException("Param invalid");
+            throw new NotAcceptableException("Param invalid");
         }
 
         List<ProductSellerDTO> productQuantitySellerDTOList = getSellerDTO(id);
@@ -121,7 +122,7 @@ public class SellerService implements ISellerService {
                     .sorted(Comparator.comparing(ProductSellerDTO::getExpirationDate))
                     .collect(Collectors.toList());
         } else {
-            throw new NotFoundException("Param not found!");
+            throw new NotAcceptableException("Param not found!");
         }
 
     }
@@ -175,5 +176,45 @@ public class SellerService implements ISellerService {
                 .sellerRating(seller.getSellerRating())
                 .seller(seller.getSellerName())
                 .build();
+    }
+
+    /**
+     * Método responsável por ordenar os vendedores de acordo a pontuação de vendas
+     * @author Mariana Saraiva
+     * @param order - String
+     * @return Retorna um dto do tipo ProductSellerDTO.
+     * @throws NotFoundException - NotFoundException
+     * @throws  NotAcceptableException - NotAcceptableException
+     */
+    @Override
+    public List<ProductSellerDTO> filterTopRankedSeller(String order) {
+        List<Seller> sellerList = getAll();
+
+        if (sellerList.isEmpty()) throw new NotFoundException("Not found seller register");
+        if (order.isEmpty()) throw new NotAcceptableException("Param invalid");
+
+        List<ProductSellerDTO> productSellerDTOList = new ArrayList<>();
+
+        for (Seller seller : sellerList) {
+
+            ProductSellerDTO productSellerDTO = ProductSellerDTO.builder()
+                    .seller(seller.getSellerName())
+                    .sellerRating(seller.getSellerRating())
+                    .build();
+
+            productSellerDTOList.add(productSellerDTO);
+        }
+
+        if ("DESC".equalsIgnoreCase(order)) {
+            productSellerDTOList.stream()
+                    .sorted(Comparator.comparing(ProductSellerDTO::getSellerRating).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            productSellerDTOList.stream()
+                    .sorted(Comparator.comparing(ProductSellerDTO::getSellerRating))
+                    .collect(Collectors.toList());
+        }
+
+        return productSellerDTOList;
     }
 }

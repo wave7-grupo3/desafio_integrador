@@ -1,5 +1,6 @@
 package com.group03.desafio_integrador.service.interfaces;
 
+import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Seller;
@@ -59,4 +60,14 @@ public interface ISellerService {
      * @throws NotFoundException - NotFoundException
      */
     List<ProductSellerDTO>  filterProductsPerSeller(Long id, String orderBy);
+
+    /**
+     * Método responsável por ordenar os vendedores de acordo a pontuação de vendas
+     * @author Mariana Saraiva
+     * @param order - String
+     * @return Retorna um dto do tipo ProductSellerDTO.
+     * @throws NotFoundException - NotFoundException
+     * @throws NotAcceptableException - NotAcceptableException
+     */
+    List<ProductSellerDTO> filterTopRankedSeller(String order);
 }
