@@ -103,31 +103,19 @@ The tool chosen to document the API was Postman and JavaDoc for the project.
 
 :warning: Access the Postman documentation [here](https://documenter.getpostman.com/view/23627905/2s8YmUKzJM).
 
+
+### Class diagram:
+The class diagram is the representation of the structure and relationships of the classes that model the objects in a database.
+<p align="center">
+  <img src="https://github.com/wave7-grupo3/desafio_integrador/commit/180274b85ece49d9e60f3909a4dffb6f8d036483" alt="Class Diagram"/>
+</p>
+
+
 ### Requirement 6
-
-#### Amanda Zotelli
-Enter the individual information
-:warning: Go to Postman's Individual [here]().
-
-#### Carolina Hakamada
-Enter your individual information
-:warning: Go to Postman's Private [here]().
-
-#### Gabriel Morais
-Enter your individual information
-:warning: Go to Postman's Private [here]().
-
-#### Ingrid Paulino
-Enter your individual information
-:warning: Go to Postman's Private [here]().
-
 #### Mariana Saraiva
 Responsible for performing the salesman management system.
-:warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
-#### Rosália Padoin
-Enter your individual information
-:warning: Go to Postman's Individual [here]().
+:warning: Access Postman's Individual [here](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
 ## How to access the project
@@ -255,31 +243,17 @@ A ferramenta escolhida para documentar a API foi o Postman e JavaDoc para o proj
 :warning: Acesse a documentação do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
 
 
+### Diagrama de classes:
+O diagrama de classes é a representação da estrutura e relações das classes que servem de modelo para os objetos de uma banco de dados.
+<p align="center">
+  <img src="https://github.com/wave7-grupo3/desafio_integrador/commit/180274b85ece49d9e60f3909a4dffb6f8d036483" alt="Class Diagram"/>
+</p>
+
+
 ### Requisito 6
 
-#### Amanda Zotelli[]
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
-
-#### Carolina Hakamada
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
-
-#### Gabriel Morais
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
-
-#### Ingrid Paulino
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
-
-#### Mariana Saraiva
 Responsável por realizar o sistema de gerenciamento de vendedores.
 :warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/24320901/2s8YmULKQL).
-
-#### Rosália Padoin
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
 
 
 ## Como acessar o projeto
