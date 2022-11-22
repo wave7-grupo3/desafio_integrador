@@ -33,7 +33,7 @@ public class SellerController {
         return new ResponseEntity<>(sellerService.save(seller), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     public ResponseEntity<Seller> update(@Valid @RequestBody Seller seller) {
         return new ResponseEntity<>(sellerService.update(seller), HttpStatus.CREATED);
     }
