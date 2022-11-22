@@ -20,7 +20,6 @@ public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long warehouseId;
 
     @NotNull

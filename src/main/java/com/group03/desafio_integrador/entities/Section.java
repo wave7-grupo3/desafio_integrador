@@ -20,7 +20,6 @@ public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long sectionId;
 
     @NotBlank

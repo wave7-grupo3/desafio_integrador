@@ -25,7 +25,6 @@ public class Batch {
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_id")
-    @NotNull
     private ProductAdvertising productId;
 
     @NotNull

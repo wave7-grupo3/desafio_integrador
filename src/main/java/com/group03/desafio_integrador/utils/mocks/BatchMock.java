@@ -11,7 +11,7 @@ import java.util.List;
 public class BatchMock {
 
     public static List<Batch> BatchFromDatabase() {
-        List.of(
+        return List.of(
                 new Batch(null,
                         ProductAdvertising.builder().productId(1L).build(),
                         Float.valueOf("10.0"),
