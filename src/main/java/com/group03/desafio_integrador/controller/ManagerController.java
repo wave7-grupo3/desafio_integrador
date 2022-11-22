@@ -105,8 +105,8 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteManager(@PathVariable Long id) {
-        managerService.deleteManager(id);
+    public ResponseEntity<?> deleteManagerById(@PathVariable Long id) {
+        managerService.deleteManagerById(id);
         return ResponseEntity.ok().build();
     }
 

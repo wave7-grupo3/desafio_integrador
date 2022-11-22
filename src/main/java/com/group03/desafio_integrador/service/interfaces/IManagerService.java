@@ -68,6 +68,6 @@ public interface IManagerService {
      * @author Rosalia Padoin
      * @throws NotFoundException - NotFoundException
      */
-    void deleteManager(Long id);
+    void deleteManagerById(Long id);
 
 }

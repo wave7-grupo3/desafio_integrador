@@ -72,7 +72,8 @@ public class ManagerService implements IManagerService, UserDetailsService {
      */
     @Override
     public void updatePasswordManager(String password, String id) {
-
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setPassword(passwordEncoder.encode(password));
     }
 
     /**
@@ -83,7 +84,8 @@ public class ManagerService implements IManagerService, UserDetailsService {
      */
     @Override
     public void updateUsernameManager(String username, String id) {
-
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setUsername(username);
     }
 
     /**
@@ -94,7 +96,8 @@ public class ManagerService implements IManagerService, UserDetailsService {
      */
     @Override
     public void updateNameManager(String name, String id) {
-
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setName(name);
     }
 
     /**
@@ -130,7 +133,7 @@ public class ManagerService implements IManagerService, UserDetailsService {
      * @throws NotFoundException - NotFoundException
      */
     @Override
-    public void deleteManager(Long id) {
+    public void deleteManagerById(Long id) {
         getManagerById(id);
         managerRepository.deleteById(id);
     }
