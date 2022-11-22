@@ -25,6 +25,12 @@ public class SellerService implements ISellerService {
 
     private final ProductAdvertisingService productService;
 
+    /**
+     * Método responsável por retornar o todos os vendedores.
+     * @author Mariana Saraiva
+     * @return Retorna uma lista de vendedores do tipo Seller.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public List<Seller> getAll() {
         List<Seller> sellerList = repository.findAll();
@@ -36,11 +42,25 @@ public class SellerService implements ISellerService {
         return sellerList;
     }
 
+    /**
+     * Método responsável por retornar o vendedor de acordo com o Id infomado.
+     * @author Mariana Saraiva
+     * @param id - Long
+     * @return Retorna o vendedor do tipo Seller.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public Seller getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new NotFoundException("Seller not found!"));
     }
 
+    /**
+     * Método responsável por salvar um novo vendedor.
+     * @author Mariana Saraiva
+     * @param seller - Seller
+     * @return Retorna o novo vendedor do tipo Seller.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public Seller save(Seller seller) {
         if (seller == null) {
@@ -50,6 +70,12 @@ public class SellerService implements ISellerService {
         return repository.save(seller);
     }
 
+    /**
+     * Método responsável por atualizar o vendedor de acordo com o Id.
+     * @author Mariana Saraiva
+     * @param seller - Seller
+     * @return Retorna o vendedor do tipo Seller.
+     */
     @Override
     public Seller update(Seller seller) {
         this.getById(seller.getSellerId());
@@ -57,6 +83,12 @@ public class SellerService implements ISellerService {
         return repository.save(seller);
     }
 
+    /**
+     * Método responsável por deletar o vendedor de acordo com o Id.
+     * @author Mariana Saraiva
+     * @param id - Long
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public void deleteById(Long id) {
         getById(id);
@@ -64,6 +96,14 @@ public class SellerService implements ISellerService {
         repository.deleteById(id);
     }
 
+    /**
+     * Método responsável ordenar os dados de acordo com a data de expiração do produto ou quantidade de produtos mais vendidos.
+     * @author Mariana Saraiva
+     * @param id - Long
+     * @param orderBy - String
+     * @return Retorna uma lista do tipo ProductSellerDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     @Override
     public List<ProductSellerDTO> filterProductsPerSeller(Long id, String orderBy) {
         if (orderBy.isEmpty()) {
@@ -86,7 +126,13 @@ public class SellerService implements ISellerService {
 
     }
 
-
+    /**
+     * Método responsável por retornar todos os produtos de acordo com a data de expiração do produto ou quantidade de produtos mais vendidos, por vendedor.
+     * @author Mariana Saraiva
+     * @param id - Long
+     * @return Retorna uma lista do tipo ProductSellerDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     public List<ProductSellerDTO> getSellerDTO(Long id) {
         ProductAdvertising productId = productService.getById(id);
 
@@ -111,6 +157,15 @@ public class SellerService implements ISellerService {
         return productQuantitySellerDTOList;
     }
 
+    /**
+     * Método responsável por buildar o retorno do ProductSellerDTO
+     * @author Mariana Saraiva
+     * @param id - Long
+     * @param seller - Seller
+     * @param batch - Batch
+     * @return Retorna um dto do tipo ProductSellerDTO.
+     * @throws NotFoundException - NotFoundException
+     */
     private static ProductSellerDTO buildSellerDTO(Long id, Seller seller, Batch batch) {
         return ProductSellerDTO.builder()
                 .productId(id)
