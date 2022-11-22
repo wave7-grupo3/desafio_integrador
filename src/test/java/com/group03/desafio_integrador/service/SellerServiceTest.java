@@ -162,4 +162,15 @@ class SellerServiceTest {
         assertThat(productSellerDTOList).isNotNull();
         assertThat(productSellerDTOList).asList();
     }
+
+    @Test
+    void filterTopRankedSeller_returnSucess_whenOrderBySeller() {
+        BDDMockito.when(sellerRepository.findAll())
+                .thenReturn(mockSellerList);
+
+        List<ProductSellerDTO> sellerDTOList = sellerService.filterTopRankedSeller("DESC");
+
+        assertThat(sellerDTOList).isNotNull();
+        assertThat(sellerDTOList).asList();
+    }
 }

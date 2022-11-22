@@ -76,7 +76,7 @@ public class SellerControllerTestIT {
         response.andExpect(status().isOk())
                 .andExpect(jsonPath("$.sellerName", CoreMatchers.is(mockSeller.getSellerName())));
     }
-//
+
 //    @Test
 //    void save_returnNewSeller_whenSucess() throws Exception {
 //
@@ -120,6 +120,17 @@ public class SellerControllerTestIT {
 
         ResultActions response = mockMvc.perform(
                 get("/api/v1/seller/list?productId=1&orderBy=QT")
+                        .contentType(MediaType.APPLICATION_JSON) );
+
+        response.andExpect(status().isOk())
+                .andExpect(jsonPath("$.[0].seller", CoreMatchers.is(mockSeller.getSellerName())));
+    }
+
+    @Test
+    void filterTopRankedSeller_returnProductSellerDTO_whenSuccess() throws Exception {
+
+        ResultActions response = mockMvc.perform(
+                get("/api/v1/seller/rating?order=desc")
                         .contentType(MediaType.APPLICATION_JSON) );
 
         response.andExpect(status().isOk())

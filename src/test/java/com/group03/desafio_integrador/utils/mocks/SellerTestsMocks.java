@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.utils.mocks;
 
 
+import com.group03.desafio_integrador.dto.ProductSellerDTO;
 import com.group03.desafio_integrador.entities.Batch;
 import com.group03.desafio_integrador.entities.ProductAdvertising;
 import com.group03.desafio_integrador.entities.Seller;
@@ -106,5 +107,12 @@ public class SellerTestsMocks {
                 30.0F,
                 LocalDate.parse("2022-12-30"),
                 BigDecimal.valueOf(150.00));
+    }
+
+    public static ProductSellerDTO mockSellerDTO() {
+        return ProductSellerDTO.builder()
+                .seller("Seller 1")
+                .sellerRating(16)
+                .build();
     }
 }
