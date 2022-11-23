@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.service.interfaces;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
+import com.group03.desafio_integrador.dto.ManagerDTO;
 import com.group03.desafio_integrador.entities.Manager;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface IManagerService {
      * @param manager - Manager
      * @throws UnprocessableEntityException - UnprocessableEntityException
      */
-    void saveManager(Manager manager);
+    ManagerDTO saveManager(Manager manager);
 
     /**
      * Método responsável pela atualização de um representante no banco de dados.
@@ -21,7 +22,7 @@ public interface IManagerService {
      * @param manager - Manager
      * @throws NotFoundException - NotFoundException
      */
-    Manager updateManager(Manager manager);
+    ManagerDTO updateManager(Manager manager);
 
     /**
      * Método responsável pela atualização da senha de um representante no banco de dados.
@@ -37,7 +38,7 @@ public interface IManagerService {
      * @param username - String
      * @throws NotFoundException - NotFoundException
      */
-    void updateUsernameManager(String username, String id);
+    ManagerDTO updateUsernameManager(String username, String id);
 
     /**
      * Método responsável pela atualização do nome de um representante no banco de dados.
@@ -45,7 +46,7 @@ public interface IManagerService {
      * @param name - String
      * @throws NotFoundException - NotFoundException
      */
-    void updateNameManager(String name, String id);
+    ManagerDTO updateNameManager(String name, String id);
 
     /**
      * Método responsável por listar todos os representantes cadastrados.
@@ -69,5 +70,4 @@ public interface IManagerService {
      * @throws NotFoundException - NotFoundException
      */
     void deleteManagerById(Long id);
-
 }

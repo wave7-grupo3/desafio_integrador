@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.service;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
 import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
+import com.group03.desafio_integrador.dto.ManagerDTO;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.repository.ManagerRepository;
 import com.group03.desafio_integrador.service.interfaces.IManagerService;
@@ -24,6 +25,14 @@ public class ManagerService implements IManagerService, UserDetailsService {
     private final ManagerRepository managerRepository;
     private final PasswordEncoder passwordEncoder;
 
+
+    /**
+     * Método que alimenta as informações do cliente para a API de segurança do Spring.
+     * Que serão carregadas e utilizadas durante o processo de autenticação.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws UsernameNotFoundException - UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Manager managerByUsername =  managerRepository.findByUsername(username);
@@ -43,13 +52,18 @@ public class ManagerService implements IManagerService, UserDetailsService {
      * @throws UnprocessableEntityException - UnprocessableEntityException
      */
     @Override
-    public void saveManager(Manager manager) {
+    public ManagerDTO saveManager(Manager manager) {
         Manager managerName = managerRepository.findByName(manager.getName());
         if (managerName != null) {
             throw new UnprocessableEntityException("Manager already exists");
         }
         manager.setPassword(passwordEncoder.encode(manager.getPassword()));
-        managerRepository.save(manager);
+        Manager managerCreated = managerRepository.save(manager);
+        return ManagerDTO.builder().
+                managerId(managerCreated.getManagerId())
+                .name(managerCreated.getName())
+                .username(managerCreated.getUsername())
+                .build();
     }
 
     /**
@@ -59,9 +73,14 @@ public class ManagerService implements IManagerService, UserDetailsService {
      * @throws NotFoundException - NotFoundException
      */
     @Override
-    public Manager updateManager(Manager manager) {
+    public ManagerDTO updateManager(Manager manager) {
         getManagerById(manager.getManagerId());
-        return managerRepository.save(manager);
+        Manager managerUpdated = managerRepository.save(manager);
+        return ManagerDTO.builder().
+                managerId(managerUpdated.getManagerId())
+                .name(managerUpdated.getName())
+                .username(managerUpdated.getUsername())
+                .build();
     }
 
     /**
@@ -74,6 +93,7 @@ public class ManagerService implements IManagerService, UserDetailsService {
     public void updatePasswordManager(String password, String id) {
         Manager managerById = getManagerById(Long.valueOf(id));
         managerById.setPassword(passwordEncoder.encode(password));
+        managerRepository.save(managerById);
     }
 
     /**
@@ -83,9 +103,17 @@ public class ManagerService implements IManagerService, UserDetailsService {
      * @throws NotFoundException - NotFoundException
      */
     @Override
-    public void updateUsernameManager(String username, String id) {
+    public ManagerDTO updateUsernameManager(String username, String id) {
         Manager managerById = getManagerById(Long.valueOf(id));
         managerById.setUsername(username);
+
+        Manager updated = managerRepository.save(managerById);
+
+        return ManagerDTO.builder()
+                .managerId(updated.getManagerId())
+                .name(updated.getName())
+                .username(updated.getUsername())
+                .build();
     }
 
     /**
@@ -95,9 +123,15 @@ public class ManagerService implements IManagerService, UserDetailsService {
      * @throws NotFoundException - NotFoundException
      */
     @Override
-    public void updateNameManager(String name, String id) {
+    public ManagerDTO updateNameManager(String name, String id) {
         Manager managerById = getManagerById(Long.valueOf(id));
         managerById.setName(name);
+        Manager updated = managerRepository.save(managerById);
+
+        return ManagerDTO.builder().managerId(updated.getManagerId())
+                .name(updated.getName())
+                .username(updated.getUsername())
+                .build();
     }
 
     /**
@@ -109,7 +143,7 @@ public class ManagerService implements IManagerService, UserDetailsService {
     @Override
     public List<Manager> getAll() {
         List<Manager> allManagers = managerRepository.findAll();
-        if (allManagers.isEmpty()) {
+        if (managerRepository.findAll().isEmpty()) {
             throw new NotFoundException("This search did not found any result!");
         }
         return allManagers;
