@@ -4,6 +4,7 @@ import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.OrderStatusEnum;
 import com.group03.desafio_integrador.repository.*;
+import com.group03.desafio_integrador.service.ManagerService;
 import com.group03.desafio_integrador.utils.mocks.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootApplication
@@ -37,14 +39,19 @@ public class DesafioIntegradorApplication {
                           BuyerRepository buyer,
                           CartProductRepository cart,
                           InboundOrderRepository inboundOrder,
-                          ManagerRepository manager,
+                          ManagerService manager,
                           ProductAdvertisingRepository product,
                           SectionRepository section,
                           SellerRepository seller,
                           ShoppingCartRepository shoppingCart,
                           WarehouseRepository warehouse) {
         return args -> {
-            List<Manager> managers = manager.saveAll(ManagerMock.managerFromDatabase());
+
+            for (Manager newManager : ManagerMock.managerFromDatabase()) {
+               manager.saveManager(newManager);
+            }
+
+            List<Manager> managers = manager.getAll();
 
             List<Seller> sellers = seller.saveAll(SellerMock.sellerFromDatabase());
 
@@ -53,10 +60,7 @@ public class DesafioIntegradorApplication {
             List<Warehouse> warehouses = warehouse.saveAll(WarehouseMock.warehouseFromDatabase(managers));
 
             List<Buyer> buyers = buyer.saveAll(BuyerMock.buyerFromDatabase());
-            System.out.println(buyers.size());
-            for (Buyer buyerI : buyers) {
-                System.out.print("++++===++++++++++++++++++++++++++++++++" + buyerI.getBuyerId() + "\n");
-            }
+
             List<ProductAdvertising> products = product.saveAll(ProductAdvertisingMock.productsAdvertisingFromDatabase(sellers));
 
             List<Batch> batches = batch.saveAll(BatchMock.BatchFromDatabase());
@@ -76,9 +80,6 @@ public class DesafioIntegradorApplication {
                     products.get(4),
                     newShoppingCart,
                     1));
-
-
-
         };
     }
 }

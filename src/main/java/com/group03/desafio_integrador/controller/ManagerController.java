@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.controller;
 
 import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
+import com.group03.desafio_integrador.dto.ManagerDTO;
 import com.group03.desafio_integrador.entities.Manager;
 import com.group03.desafio_integrador.service.interfaces.IManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/fresh-products/manager")
+@RequestMapping("/api/v6/fresh-products/manager")
 public class ManagerController {
 
     @Autowired
@@ -25,9 +27,8 @@ public class ManagerController {
      * @throws UnprocessableEntityException - UnprocessableEntityException
      */
     @PostMapping("/save")
-    public ResponseEntity<?> saveManager(@RequestBody Manager manager) {
-        managerService.saveManager(manager);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+    public ResponseEntity<ManagerDTO> saveManager(@RequestBody Manager manager) {
+        return new ResponseEntity<>(managerService.saveManager(manager), HttpStatus.CREATED);
     }
 
     /**
@@ -37,7 +38,7 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @PutMapping("/update/all")
-    public ResponseEntity<Manager> updateManager(@RequestBody Manager manager) {
+    public ResponseEntity<ManagerDTO> updateManager(@RequestBody Manager manager) {
         return ResponseEntity.ok(managerService.updateManager(manager));
     }
 
@@ -48,9 +49,8 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @PatchMapping("/update/name/{id}")
-    public ResponseEntity<Manager> updateNameManager(@RequestBody String name, @PathVariable String id) {
-        managerService.updateNameManager(name, id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ManagerDTO> updateNameManager(@RequestBody Manager name, @PathVariable String id) {
+        return ResponseEntity.ok(managerService.updateNameManager(name.getName(), id));
     }
 
     /**
@@ -60,9 +60,8 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @PatchMapping("/update/username/{id}")
-    public ResponseEntity<?> updateUsernameManager(@RequestBody String username, @PathVariable String id) {
-        managerService.updateUsernameManager(username, id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<ManagerDTO> updateUsernameManager(@RequestBody Manager username, @PathVariable String id) {
+        return ResponseEntity.ok(managerService.updateUsernameManager(username.getUsername(), id));
     }
 
     /**
@@ -72,9 +71,9 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @PatchMapping("/update/password/{id}")
-    public ResponseEntity<?> updatePasswordManager(@RequestBody String password, @PathVariable String id) {
-        managerService.updatePasswordManager(password, id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<String> updatePasswordManager(@RequestBody Manager password, @PathVariable String id) {
+        managerService.updatePasswordManager(password.getPassword(), id);
+        return ResponseEntity.ok("Successfully changed password!");
     }
 
     /**
@@ -84,8 +83,19 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @GetMapping
-    public ResponseEntity<List<Manager>> getAll() {
-        return ResponseEntity.ok(managerService.getAll());
+    public ResponseEntity<List<ManagerDTO>> getAll() {
+        List<ManagerDTO> managers = new ArrayList<>();
+
+        for (Manager manager : managerService.getAll()) {
+            ManagerDTO managerDTO = ManagerDTO.builder().managerId(manager.getManagerId())
+                    .name(manager.getName())
+                    .username(manager.getUsername())
+                    .build();
+
+            managers.add(managerDTO);
+        }
+
+        return ResponseEntity.ok(managers);
     }
 
     /**
@@ -95,8 +105,13 @@ public class ManagerController {
      * @throws NotFoundException - NotFoundException
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Manager> getManagerById(@PathVariable Long id) {
-        return ResponseEntity.ok(managerService.getManagerById(id));
+    public ResponseEntity<ManagerDTO> getManagerById(@PathVariable Long id) {
+        Manager managerById = managerService.getManagerById(id);
+
+        return ResponseEntity.ok(ManagerDTO.builder().managerId(managerById.getManagerId())
+                .name(managerById.getName())
+                .username(managerById.getUsername())
+                .build());
     }
 
     /**
@@ -107,7 +122,6 @@ public class ManagerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteManagerById(@PathVariable Long id) {
         managerService.deleteManagerById(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
-
 }
