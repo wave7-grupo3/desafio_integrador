@@ -11,10 +11,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Getter
-//@Setter
-//@AllArgsConstructor
-//@NoArgsConstructor
 public class SortingBatch {
     private SortingEnum filter;
     private List<Batch> batchList;

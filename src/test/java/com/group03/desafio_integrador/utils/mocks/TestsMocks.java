@@ -418,4 +418,8 @@ public class TestsMocks {
 
     }
 
+    public static Manager mockManager() {
+        return new Manager(1L, "Jason Momoa", "khal", "12345");
+    }
+
 }

@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Getter
-//@Setter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -19,8 +19,8 @@ public class Manager {
 
     private String name;
 
-    @OneToOne(mappedBy = "manager", cascade = CascadeType.PERSIST)
-    @JsonIgnoreProperties("manager")
-    private Warehouse warehouse;
+    @Column(nullable = false, unique = true)
+    private String username;
 
+    private String password;
 }

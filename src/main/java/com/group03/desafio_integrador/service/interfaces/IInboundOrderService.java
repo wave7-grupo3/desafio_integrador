@@ -18,7 +18,7 @@ public interface IInboundOrderService {
      * @throws NotFoundException - NotFoundException
      */
     // TODO: implementar Exception específica
-    BatchStockDTO save(InboundOrder inboundOrder) throws Exception;
+    BatchStockDTO save(InboundOrder inboundOrder, String managerAuth) throws Exception;
 
     /**
      * Método responsável por listar todos os pedidos de ordem do armazém.
@@ -42,7 +42,7 @@ public interface IInboundOrderService {
      * @return Retorna uma lista de ProductWarehouseDTO com todos os lotes de um produto em seu armazém e seção.
      * @throws Exception - Exception
      */
-    List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception;
+    List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId, String managerAuth) throws Exception;
 
     /**
      * Método responsável por retornar uma lista de ProductWarehouseStockDTO com lotes ordenados.

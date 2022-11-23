@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.controller;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.bean.JWTBean;
 import com.group03.desafio_integrador.dto.ProductWarehouseStockDTO;
 import com.group03.desafio_integrador.dto.PurchaseOrderDTO;
 import com.group03.desafio_integrador.dto.ShoppingCartTotalDTO;
@@ -33,6 +34,9 @@ public class ProductAdvertisingController {
 
     @Autowired
     private IInboundOrderService inboundOrderService;
+
+    @Autowired
+    private JWTBean jwtBean;
 
     /**
      * Rota responsável por retornar todos os produtos cadastrados.
@@ -101,7 +105,11 @@ public class ProductAdvertisingController {
      */
     @GetMapping(value="/list", params={"productId"})
     public ResponseEntity<List<ProductWarehouseStockDTO>> getAllProductWarehouseStock(@RequestParam("productId") Long productId) throws Exception {
-        return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId), HttpStatus.OK);
+        String username = jwtBean.getDecodedJWT().getSubject();
+        if(username == null) {
+            throw new NotFoundException("Nao autenticado");
+        }
+        return new ResponseEntity<>(inboundOrderService.getAllProductWarehouseStock(productId, username), HttpStatus.OK);
     }
 
     /**
@@ -116,7 +124,11 @@ public class ProductAdvertisingController {
             @RequestParam("productId") Long productId,
             @RequestParam("sorting") String sorting
     ) throws Exception {
-        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(productId);
+        String username = jwtBean.getDecodedJWT().getSubject();
+        if(username == null) {
+            throw new NotFoundException("Nao autenticado");
+        }
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(productId, username);
         return new ResponseEntity<>(inboundOrderService.getAllOrdinancesForBatches(productWarehouseStockDTOList, sorting), HttpStatus.OK);
     }
 

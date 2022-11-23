@@ -20,7 +20,6 @@ public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long warehouseId;
 
     @NotNull
@@ -32,5 +31,4 @@ public class Warehouse {
     @JoinColumn(name = "manager_id")
     @Valid
     private Manager manager;
-
 }

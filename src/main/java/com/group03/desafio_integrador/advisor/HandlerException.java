@@ -1,7 +1,9 @@
 package com.group03.desafio_integrador.advisor;
 
+import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +27,7 @@ public class HandlerException extends ResponseEntityExceptionHandler {
      * @param headers - HttpHeaders
      * @param status - HttpStatus
      * @param request - WebRequest
-     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     * @return Retorna uma entidade do tipo ExceptionDetails.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -49,10 +51,28 @@ public class HandlerException extends ResponseEntityExceptionHandler {
     }
 
     /**
+     * Método responsável pelo tratamento das exceções geradas ao tentar salvar um representante com uma chave que
+     * já existe na base com a constraint unique = true.
+     * @author Rosalia Padoin
+     * @param ex - NotFoundException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    protected ResponseEntity<Object> handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Unprocessable Entity!")
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message("It was not possible to execute your request because you are trying to register a username that already exists in the base")
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    /**
      * Método responsável pelo tratamento das exceções geradas quando a solicitação não for encontrada.
      * @author Ingrid Paulino
      * @param ex - NotFoundException
-     * @return exceptionDetails - Retorna uma entidade do tipo ExceptionDetails.
+     * @return Retorna uma entidade do tipo ExceptionDetails.
      */
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ExceptionDetails> handlerNotFoundException(NotFoundException ex) {
@@ -66,6 +86,12 @@ public class HandlerException extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Método responsável pelo tratamento das exceções geradas quando a solicitação não for encontrada.
+     * @author Rosalia Padoin, Carolina Hakamada, Ingrid Paulino
+     * @param ex - NotAcceptableException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
     @ExceptionHandler(NotAcceptableException.class)
     public ResponseEntity<ExceptionDetails> handlerNotAcceptableException(NotAcceptableException ex) {
         ExceptionDetails exceptionDetails = ExceptionDetails.builder()
@@ -75,5 +101,22 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .timeStamp(LocalDateTime.now())
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Método responsável pelo tratamento das exceções quando uma entidade nao for processada corretamente.
+     * @author Rosalia Padoin
+     * @param ex - UnprocessableEntityException
+     * @return Retorna uma entidade do tipo ExceptionDetails.
+     */
+    @ExceptionHandler(UnprocessableEntityException.class)
+    public ResponseEntity<ExceptionDetails> handlerUnprocessableEntityException(UnprocessableEntityException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Unprocessable Entity!")
+                .status(HttpStatus.UNPROCESSABLE_ENTITY.value())
+                .message(ex.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

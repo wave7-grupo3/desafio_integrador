@@ -97,16 +97,19 @@ class InboundOrderServiceTest {
 
     @Test
     void save_returnSuccess_whenValidData() throws Exception {
+
+        String username = "john";
+
         BDDMockito.doNothing().when(inboundOrderService)
-                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
+                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder), username);
 
         BDDMockito.when(inboundOrderRepository.save(ArgumentMatchers.any(InboundOrder.class)))
                 .thenReturn(mockInboundOrder);
 
-        BatchStockDTO inboundResponse = inboundOrderService.save(mockCreateInboundOrder);
+        BatchStockDTO inboundResponse = inboundOrderService.save(mockCreateInboundOrder, username);
 
         BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
-                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder));
+                .validateOrder(ArgumentMatchers.eq(mockCreateInboundOrder), username);
 
         assertThat(inboundResponse).isNotNull();
         assertThat(inboundResponse.getBatchStock().containsAll(mockInboundOrder.getBatchList())).isTrue();
@@ -154,12 +157,12 @@ class InboundOrderServiceTest {
                 .thenReturn(mockCreateInboundOrderList);
 
         BDDMockito.doNothing().when(inboundOrderService)
-              .validateOrder(ArgumentMatchers.any(InboundOrder.class));
+              .validateOrder(ArgumentMatchers.any(InboundOrder.class), ArgumentMatchers.anyString());
 
-        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(1L);
+        List<ProductWarehouseStockDTO> productWarehouseStockDTOList = inboundOrderService.getAllProductWarehouseStock(1L, "john");
 
         BDDMockito.verify(inboundOrderService, BDDMockito.times(1))
-                .validateOrder(ArgumentMatchers.any(InboundOrder.class));
+                .validateOrder(ArgumentMatchers.any(InboundOrder.class), ArgumentMatchers.anyString());
 
         assertThat(productWarehouseStockDTOList).isNotNull();
     }
@@ -175,16 +178,16 @@ class InboundOrderServiceTest {
    @Test
     void validateOrder_doNotThrowError_whenValidData() throws Exception {
         doNothing().when(inboundOrderService)
-                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class), ArgumentMatchers.anyString());
         doNothing().when(inboundOrderService)
                 .validateProducts(ArgumentMatchers.anyList());
         doNothing().when(inboundOrderService)
                 .validateSection(ArgumentMatchers.eq(mockCreateInboundOrder));
 
-        inboundOrderService.validateOrder(mockCreateInboundOrder);
+        inboundOrderService.validateOrder(mockCreateInboundOrder, "john");
 
         verify(inboundOrderService, times(1))
-                .validateWarehouse(ArgumentMatchers.any(Warehouse.class));
+                .validateWarehouse(ArgumentMatchers.any(Warehouse.class), ArgumentMatchers.anyString());
 
         verify(inboundOrderService, times(1))
                 .validateProducts(ArgumentMatchers.anyList());
@@ -199,7 +202,7 @@ class InboundOrderServiceTest {
                 .when(warehouseService)
                 .getById(ArgumentMatchers.anyLong());
 
-        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> inboundOrderService.validateOrder(mockCreateInboundOrder));
+        NotFoundException notFoundException = assertThrows(NotFoundException.class, () -> inboundOrderService.validateOrder(mockCreateInboundOrder, "john"));
 
         assertThat(notFoundException.getMessage()).isEqualTo("Manager not found for this Warehouse!");
     }

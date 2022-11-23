@@ -7,6 +7,7 @@ import com.group03.desafio_integrador.dto.*;
 import com.group03.desafio_integrador.entities.*;
 import com.group03.desafio_integrador.entities.entities_enum.SortingEnum;
 import com.group03.desafio_integrador.repository.InboundOrderRepository;
+import com.group03.desafio_integrador.repository.ManagerRepository;
 import com.group03.desafio_integrador.service.interfaces.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class InboundOrderService implements IInboundOrderService {
     private final InboundOrderRepository inboundOrderRepository;
+    private final ManagerRepository managerRepository;
     private final IProductAdvertisingService productService;
     private final IWarehouseService warehouseService;
     private final ISectionService sectionService;
@@ -68,8 +70,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @author Gabriel Morais
      */
     @Override
-    public BatchStockDTO save(InboundOrder inboundOrder) throws Exception {
-        validateOrder(inboundOrder);
+    public BatchStockDTO save(InboundOrder inboundOrder, String managerAuth) throws Exception {
+        validateOrder(inboundOrder, managerAuth);
 
         InboundOrder order = inboundOrderRepository.save(inboundOrder);
 
@@ -82,10 +84,10 @@ public class InboundOrderService implements IInboundOrderService {
      * @param inboundOrder - do tipo InboundOrder
      * @author Gabriel Morais
      */
-    public void validateOrder(InboundOrder inboundOrder) throws Exception {
+    public void validateOrder(InboundOrder inboundOrder, String managerAuth) throws Exception {
         List<Batch> batchList = inboundOrder.getBatchList();
 
-        validateWarehouse(inboundOrder.getWarehouseId());
+        validateWarehouse(inboundOrder.getWarehouseId(), managerAuth);
         validateProducts(batchList);
         validateSection(inboundOrder);
     }
@@ -93,15 +95,17 @@ public class InboundOrderService implements IInboundOrderService {
     /**
      * Método responsável por realizar a verificação se o armazém existe e se possui um representante.
      *
-     * @param warehouseId - do tipo Warehouse
+     * @param warehouseId - Warehouse
+     * @param managerAuth - String
      * @throws NotFoundException - NotFoundException
      * @author Gabriel Morais
      */
-    protected void validateWarehouse(Warehouse warehouseId) throws Exception {
-
+    protected void validateWarehouse(Warehouse warehouseId, String managerAuth) throws Exception {
         Warehouse warehouse = warehouseService.getById(warehouseId.getWarehouseId());
+        Manager manager = managerRepository.findByUsername(managerAuth);
 
-        if (warehouse.getManager() == null) {
+        if (warehouse.getManager() == null || !warehouse.getManager().getManagerId().equals(manager
+                .getManagerId())) {
             throw new NotFoundException("Manager not found for this Warehouse!");
         }
     }
@@ -168,6 +172,14 @@ public class InboundOrderService implements IInboundOrderService {
     }
 
     /**
+<<<<<<< HEAD
+     * Método responsável por fornecer uma lista de produtos do armazém filtrado pelo seu id.
+     * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+     * @param sectionDto - do tipo SectionDTO
+     * @param productWarehouse - lista do tipo ProductWarehouseStockDTO
+     * @return lista de warehouses e sections que possuem certo produto em seu estoque.
+     * @author Gabriel Morais
+=======
 
      * Método responsável por retornar um filtro de warehouses e sections que possuem certo produto em seu estoque.
      *
@@ -175,6 +187,7 @@ public class InboundOrderService implements IInboundOrderService {
      * @param productWarehouse - lista do tipo ProductWarehouseStockDTO
      * @return lista de warehouses e sections que possuem certo produto em seu estoque.
      * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
+>>>>>>> develop
      */
     private static List<ProductWarehouseStockDTO> getFilterWarehouseById(SectionDTO sectionDto, List<ProductWarehouseStockDTO> productWarehouse) {
         return productWarehouse.stream()
@@ -189,7 +202,8 @@ public class InboundOrderService implements IInboundOrderService {
      * @return Retorna uma lista de dto do tipo ProductWarehouseStockDTO.
      * @author Amanda Zotelli, Carolina Hakamada, Gabriel Morais, Ingrid Paulino, Mariana Saraiva e Rosalia Padoin
      */
-    public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId) throws Exception {
+    public List<ProductWarehouseStockDTO> getAllProductWarehouseStock(Long productId, String managerAuth) throws Exception {
+
 
         List<InboundOrder> inboundOrderList = getAll();
         List<Batch> batchStream;
@@ -197,7 +211,7 @@ public class InboundOrderService implements IInboundOrderService {
         List<ValidationErrorDetail> errorDetails = new ArrayList<>();
 
         for (InboundOrder inbound : inboundOrderList) {
-            validateOrder(inbound);
+            validateOrder(inbound, managerAuth);
             batchStream = getBatchStreamFilteredByProductId(productId, inbound);
             SectionDTO sectionDto = buildSectionDTO(inbound);
             verifyBatchDueDate(productId, batchStream, errorDetails);

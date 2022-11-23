@@ -1,0 +1,174 @@
+package com.group03.desafio_integrador.service;
+
+import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.UnprocessableEntityException;
+import com.group03.desafio_integrador.dto.ManagerDTO;
+import com.group03.desafio_integrador.entities.Manager;
+import com.group03.desafio_integrador.repository.ManagerRepository;
+import com.group03.desafio_integrador.service.interfaces.IManagerService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+@Transactional
+public class ManagerService implements IManagerService, UserDetailsService {
+
+    private final ManagerRepository managerRepository;
+    private final PasswordEncoder passwordEncoder;
+
+
+    /**
+     * Método que alimenta as informações do cliente para a API de segurança do Spring.
+     * Que serão carregadas e utilizadas durante o processo de autenticação.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws UsernameNotFoundException - UsernameNotFoundException
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Manager managerByUsername =  managerRepository.findByUsername(username);
+
+        if (managerByUsername == null) {
+            throw new UsernameNotFoundException("Manager not found in database!");
+        }
+
+        return new org.springframework.security.core.userdetails
+                .User(managerByUsername.getUsername(), managerByUsername.getPassword(), new ArrayList<>());
+    }
+
+    /**
+     * Método responsável pela inclusão de um novo representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param manager - Manager
+     * @throws UnprocessableEntityException - UnprocessableEntityException
+     */
+    @Override
+    public ManagerDTO saveManager(Manager manager) {
+        Manager managerName = managerRepository.findByName(manager.getName());
+        if (managerName != null) {
+            throw new UnprocessableEntityException("Manager already exists");
+        }
+        manager.setPassword(passwordEncoder.encode(manager.getPassword()));
+        Manager managerCreated = managerRepository.save(manager);
+        return ManagerDTO.builder().
+                managerId(managerCreated.getManagerId())
+                .name(managerCreated.getName())
+                .username(managerCreated.getUsername())
+                .build();
+    }
+
+    /**
+     * Método responsável pela atualização de mais de um dado de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param manager - Manager
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public ManagerDTO updateManager(Manager manager) {
+        getManagerById(manager.getManagerId());
+        Manager managerUpdated = managerRepository.save(manager);
+        return ManagerDTO.builder().
+                managerId(managerUpdated.getManagerId())
+                .name(managerUpdated.getName())
+                .username(managerUpdated.getUsername())
+                .build();
+    }
+
+    /**
+     * Método responsável pela atualização da senha de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param password - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public void updatePasswordManager(String password, String id) {
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setPassword(passwordEncoder.encode(password));
+        managerRepository.save(managerById);
+    }
+
+    /**
+     * Método responsável pela atualização do username de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param username - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public ManagerDTO updateUsernameManager(String username, String id) {
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setUsername(username);
+
+        Manager updated = managerRepository.save(managerById);
+
+        return ManagerDTO.builder()
+                .managerId(updated.getManagerId())
+                .name(updated.getName())
+                .username(updated.getUsername())
+                .build();
+    }
+
+    /**
+     * Método responsável pela atualização do nome de um representante no banco de dados.
+     * @author Rosalia Padoin
+     * @param name - String
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public ManagerDTO updateNameManager(String name, String id) {
+        Manager managerById = getManagerById(Long.valueOf(id));
+        managerById.setName(name);
+        Manager updated = managerRepository.save(managerById);
+
+        return ManagerDTO.builder().managerId(updated.getManagerId())
+                .name(updated.getName())
+                .username(updated.getUsername())
+                .build();
+    }
+
+    /**
+     * Método responsável por listar todos os representantes cadastrados.
+     * @author Rosalia Padoin
+     * @return Retorna uma lista contendo entidades do tipo Manager.
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public List<Manager> getAll() {
+        List<Manager> allManagers = managerRepository.findAll();
+        if (managerRepository.findAll().isEmpty()) {
+            throw new NotFoundException("This search did not found any result!");
+        }
+        return allManagers;
+    }
+
+    /**
+     * Método responsável por buscar um representante conforme Id informado.
+     * @author Rosalia Padoin
+     * @return Retorna uma entidade do tipo Manager.
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public Manager getManagerById(Long id) {
+        return managerRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Manager with id " + id + " not found!"));
+    }
+
+    /**
+     * Método responsável por excluir um representante conforme Id informado.
+     * @author Rosalia Padoin
+     * @throws NotFoundException - NotFoundException
+     */
+    @Override
+    public void deleteManagerById(Long id) {
+        getManagerById(id);
+        managerRepository.deleteById(id);
+    }
+}

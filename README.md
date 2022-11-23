@@ -119,9 +119,15 @@ Enter your individual information
 Enter your individual info
 :warning: Go to Postman's Private [here]().
 
-#### Rosália Padoin
-Enter your individual information
-:warning: Go to Postman's Individual [here]().
+#### Rosália Padoin Oliveira
+Creation and implementation of an authentication and authorization route, using JWT - Json Web Token,
+for the Manager entity, which in this project, refers to the representative/administrator of a warehouse.
+As a consequence of this feature, the necessary CRUD routes were developed and implemented for the same entity,
+making it possible to create, read, update, and delete its data, foreseeing successes and exceptions.
+After the implementation of this demand, the information that is under the responsibility of a warehouse, which in this act will be consumed
+manipulated by its representative, as well as other routes that directly or indirectly use it, need a valid login to access its database.
+to access its database.
+:warning: Go to Postman's Individual [here](https://documenter.getpostman.com/view/23627905/2s8YsnWvkg).
 
 
 ## How to access the project
@@ -267,10 +273,16 @@ Inserir as informações individuais
 Inserir as informações individuais
 :warning: Acesse a Individual do Postman [aqui]().
 
-#### Rosália Padoin
-Inserir as informações individuais
-:warning: Acesse a Individual do Postman [aqui]().
+#### Rosalia Padoin Oliveira
+Criação e implementação de uma rota de autenticação e autorização, utilizando JWT - Json Web Token,
+para a entidade Manager, que neste projeto, refere-se ao representante/administrador de um armazém.
+Por consequência desta feature, foi desenvolvido e implementado as rotas necessárias de um CRUD para a mesma entidade, 
+possibilitando criar, ler, atualizar e deletar seus dados, prevendo sucessos e exceções.
+Após a implementação desta demanda, as informações que estão sob a responsabilidade de um armazém, que neste ato serão consumidas
+e/ou manipuladas por seu representante, bem como demais rotas que direta ou indiretamente se utilizam delas, necessitam de um login
+válido para acesso a sua base de dados.
 
+:warning: Acesse a Individual do Postman [aqui](https://documenter.getpostman.com/view/23627905/2s8YsnWvkg).
 
 ## Como acessar o projeto
 :warning: Acessar o repositório do desafio [aqui](https://github.com/wave7-grupo3/desafio_integrador)

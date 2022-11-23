@@ -20,7 +20,6 @@ public class Seller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @NotNull
     private Long sellerId;
 
     @NotBlank
@@ -30,7 +29,5 @@ public class Seller {
     @OneToMany(mappedBy = "seller", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("seller")
     @Valid
-    @Size(min = 1)
     private List<ProductAdvertising> productAdvertisingList;
-
 }
