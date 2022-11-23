@@ -96,6 +96,8 @@ A ferramenta escolhida para documentar a API foi o Postman e Swagger
 
 :warning: Acesse a documentação do Postman [aqui](https://documenter.getpostman.com/view/23629202/2s8YmULKrm).
 
+Acesse a User Story [aqui](https://docs.google.com/document/d/1FGpDMK1Iz_lc3wj778N_MjueqO4Pi38X/edit#)
+
 ## Diagrama de Entidade-Relacionamento (DER)
 
 ![alt text](src/main/resources/mer/mer.png)
