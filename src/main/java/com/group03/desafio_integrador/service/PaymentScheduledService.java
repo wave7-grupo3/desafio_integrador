@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -24,10 +25,14 @@ public class PaymentScheduledService {
     @Autowired
     private ShoppingCartRepository shoppingCartRepository;
 
+    /**
+     * Rotina para processamento de pagamentos feitos através de boleto bancário
+     */
     @Scheduled(cron = "0 * * ? * *")
-    public void testecron() {
+    public void verifyPaymentBankSlip() {
         log.info("verificando pagamentos");
         List<PaymentCart> paymentsBankSlip = paymentCartRepository.findAllByPaymentType(PaymentTypeEnum.BANK_SLIP);
+        List<PaymentCart> paymentCartList = new ArrayList<>();
 
         if (!paymentsBankSlip.isEmpty()) {
             log.info("processando pagamentos");
@@ -35,10 +40,10 @@ public class PaymentScheduledService {
                 if (paymentCart.getPaymentStatus().equals(PaymentStatusEnum.OPEN)) {
                     ShoppingCart shoppingCart = shoppingCartRepository.findByPaymentCartId(paymentCart.getId());
 
-                    shoppingCart.setOrderStatus(OrderStatusEnum.FINALIZADO);
                     paymentCart.setPaymentStatus(PaymentStatusEnum.PAID);
+                    shoppingCart.setOrderStatus(OrderStatusEnum.FINALIZADO);
+                    shoppingCart.setPaymentCart(paymentCart);
 
-                    paymentCartRepository.save(paymentCart);
                     shoppingCartRepository.save(shoppingCart);
                     sendEmail(shoppingCart);
                 }
@@ -47,6 +52,10 @@ public class PaymentScheduledService {
 
     }
 
+    /**
+     * Método responsável por notificar pagamento
+     * @param shoppingCart
+     */
     public void sendEmail(ShoppingCart shoppingCart) {
         JavaMailService.sendMail(shoppingCart.getBuyer().getBuyerName(), shoppingCart.getBuyer().getEmail());
     }

@@ -16,3 +16,4 @@ public class ExceptionDetails {
 
     List<ValidationErrorDetail> errors;
 }
+

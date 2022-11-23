@@ -2,6 +2,7 @@ package com.group03.desafio_integrador.advisor;
 
 import com.group03.desafio_integrador.advisor.exceptions.NotAcceptableException;
 import com.group03.desafio_integrador.advisor.exceptions.NotFoundException;
+import com.group03.desafio_integrador.advisor.exceptions.PaymentInvalidException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -73,6 +74,18 @@ public class HandlerException extends ResponseEntityExceptionHandler {
                 .status(HttpStatus.NOT_ACCEPTABLE.value())
                 .message(ex.getMessage())
                 .timeStamp(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    @ExceptionHandler(PaymentInvalidException.class)
+    public ResponseEntity<ExceptionDetails> handlerPaymentInvalidException(PaymentInvalidException ex) {
+        ExceptionDetails exceptionDetails = ExceptionDetails.builder()
+                .title("Invalid entry for payment!")
+                .status(HttpStatus.NOT_ACCEPTABLE.value())
+                .message(ex.getMessage())
+                .timeStamp(LocalDateTime.now())
+                .errors(ex.getErrors())
                 .build();
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_ACCEPTABLE);
     }

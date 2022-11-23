@@ -1,6 +1,7 @@
 package com.group03.desafio_integrador.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -14,9 +15,15 @@ public class JavaMailService {
     // @Value("${string.datasource.email}")
     // private static String email;
     //@Autowired
-    //@Value("${string.datasource.passwordemail}")
+//    @Value("${string.datasource.passwordemail}")
     private String password;
-    public static void sendMail(String name, String emailCliente) {
+
+    /**
+     * Método responsável por enviar email de pagamento
+     * @param name
+     * @param emailCliente
+     */
+    public synchronized static void sendMail(String name, String emailCliente) {
         log.info("[JAVA-MAIL] Sending email to: " + emailCliente);
 
         Properties props = new Properties();
@@ -29,7 +36,7 @@ public class JavaMailService {
         props.put("mail.smtp.starttls.enable", "true");
 
         String email = "gabrielmorais96@gmail.com";
-        String password = "towreqtnvgdztibh";
+        String password =  "towreqtnvgdztibh";
 
         Session session = Session.getDefaultInstance(props,
                 new javax.mail.Authenticator() {
@@ -45,11 +52,11 @@ public class JavaMailService {
             Address[] toUser = InternetAddress.parse(emailCliente);
 
             message.setRecipients(Message.RecipientType.TO, toUser);
-            message.setSubject("Sua compra chegou, aproveite!");//Assunto
-            message.setText("Olá" + name + ", sua compra chegou, aproveite!" +
-                    "Fizemos a entrega na Rua José Ribeiro Filho 35, Belo Horizonte CEP 31330500." +
-                    "Esperamos que você esteja contente com os produtos. Caso contrário, você pode devolvê-los até sábado 5 de novembro.\n" +
-                    "\n"
+            message.setSubject("Seu Pagamento foi processado!");//Assunto
+            message.setText(
+                    "Olá " + name + ", seu pagamento foi aprovado!\n" +
+                    "Logo em breve seu produto será enviado.\n" +
+                    "Esperamos que você esteja contente com os produtos. :)\n"
             );
 
             Transport.send(message);

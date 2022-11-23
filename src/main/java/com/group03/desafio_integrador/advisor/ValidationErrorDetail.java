@@ -4,8 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ValidationErrorDetail {
     private String field;
