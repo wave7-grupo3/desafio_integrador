@@ -206,11 +206,11 @@ public class SellerService implements ISellerService {
         }
 
         if ("DESC".equalsIgnoreCase(order)) {
-            productSellerDTOList.stream()
+            productSellerDTOList = productSellerDTOList.stream()
                     .sorted(Comparator.comparing(ProductSellerDTO::getSellerRating).reversed())
                     .collect(Collectors.toList());
         } else {
-            productSellerDTOList.stream()
+            productSellerDTOList = productSellerDTOList.stream()
                     .sorted(Comparator.comparing(ProductSellerDTO::getSellerRating))
                     .collect(Collectors.toList());
         }
